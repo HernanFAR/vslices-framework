@@ -204,3 +204,9 @@ De este modo, se consigue un codigo bastante consiso, legible y mantenible (¡Co
 La idea, es que si hay nuevos casos de uso, solo se crea un nuevo archivo, y se repite el patrón: se define la presentación, se define como se abarcará la lógica, se define la interface, se agrega la implementación y se realiza el testing.
 
 ¡Invito a ver el codigo a fondo! Esta perfectamente ejecutable tal como esta ahora mismo :)
+
+## Información extra
+
+Explicación dinamica de las arquitecturas mencionadas: https://www.youtube.com/watch?v=JubdZIdLQ4M
+
+Explicación del concepto de silo de vertical slices: https://www.youtube.com/watch?v=S0zC0u5tIx8
