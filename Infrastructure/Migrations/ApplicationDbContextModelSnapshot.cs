@@ -3,7 +3,6 @@ using System;
 using Infrastructure.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -16,38 +15,25 @@ namespace Infrastructure.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.5")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
-
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.5");
 
             modelBuilder.Entity("Domain.Question", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("ClusteredKey")
-                        .HasColumnType("int");
+                        .HasColumnType("TEXT");
 
                     b.Property<Guid>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<Guid?>("UpdatedById")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
-
-                    b.HasIndex("ClusteredKey");
-
-                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("ClusteredKey"));
 
                     b.ToTable("T_Question", (string)null);
                 });

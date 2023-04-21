@@ -2,6 +2,7 @@ using Core.UseCases;
 using FluentValidation;
 using Infrastructure.EntityFramework;
 using Infrastructure.UseCases;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,7 +36,16 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services
     .AddDbContext<ApplicationDbContext>(opts =>
     {
-        opts.UseSqlServer("Server=localhost;Database=QuestionDatabase;Trusted_Connection=Yes;TrustServerCertificate=True;");
+        const string connectionString = "DataSource=mydatabase.db;";
+
+        var connection = new SqliteConnection(connectionString);
+
+        connection.Open();
+        connection.Close();
+
+        connection.Dispose();
+
+        opts.UseSqlite(connectionString);
     });
 
 var app = builder.Build();

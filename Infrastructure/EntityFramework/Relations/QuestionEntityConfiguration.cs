@@ -15,15 +15,7 @@ internal class QuestionEntityConfiguration : IEntityTypeConfiguration<Question>
     {
         builder.ToTable("T_Question");
 
-        builder.HasKey(x => x.Id)
-            .IsClustered(false);
-
-        builder.Property<int>("ClusteredKey")
-            .IsRequired()
-            .ValueGeneratedNever();
-
-        builder.HasIndex("ClusteredKey")
-            .IsClustered();
+        builder.HasKey(x => x.Id);
 
         builder.Property(e => e.Name)
             .IsRequired();
