@@ -1,5 +1,6 @@
-﻿namespace Application.UseCases;
+﻿namespace Core.UseCases;
 
+// Presentación
 public class GetQuestionEndpoint : IEndpointDefinition
 {
     public void DefineEndpoint(IEndpointRouteBuilder builder)
@@ -27,6 +28,7 @@ public class GetQuestionEndpoint : IEndpointDefinition
     }
 }
 
+// Lógica
 public record GetQuestionDto(Guid Id, string Name, Guid CreatedById, Guid? UpdatedById);
 
 public record GetQuestionQuery(Guid Id) : IRequest<OneOf<GetQuestionDto, NotFound>>;

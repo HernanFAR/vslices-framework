@@ -1,5 +1,6 @@
-﻿namespace Application.UseCases;
+﻿namespace Core.UseCases;
 
+// Presentación
 public record CreateQuestionContract(string Name);
 
 public class CreateQuestionEndpoint : IEndpointDefinition
@@ -35,6 +36,7 @@ public class CreateQuestionEndpoint : IEndpointDefinition
 
 }
 
+// Lógica
 public record CreateQuestionCommand(string Name, Guid CreatedBy) : IRequest<OneOf<Guid, Error<string[]>>>;
 
 public class CreateQuestionHandler : IRequestHandler<CreateQuestionCommand, OneOf<Guid, Error<string[]>>>

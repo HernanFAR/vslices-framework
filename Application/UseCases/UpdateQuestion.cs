@@ -1,5 +1,6 @@
-﻿namespace Application.UseCases;
+﻿namespace Core.UseCases;
 
+// Presentación
 public record UpdateQuestionContract(string Name);
 
 public class UpdateQuestionEndpoint : IEndpointDefinition
@@ -37,6 +38,7 @@ public class UpdateQuestionEndpoint : IEndpointDefinition
     }
 }
 
+// Lógica
 public record UpdateQuestionCommand(Guid Id, string Name, Guid UpdatedById) : IRequest<OneOf<Success, NotFound, Error<string[]>>>;
 
 public class UpdateQuestionHandler : IRequestHandler<UpdateQuestionCommand, OneOf<Success, NotFound, Error<string[]>>>

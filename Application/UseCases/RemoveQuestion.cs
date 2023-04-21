@@ -1,5 +1,6 @@
-﻿namespace Application.UseCases;
+﻿namespace Core.UseCases;
 
+// Presentación
 public class RemoveQuestionEndpoint : IEndpointDefinition
 {
     public void DefineEndpoint(IEndpointRouteBuilder builder)
@@ -34,6 +35,7 @@ public class RemoveQuestionEndpoint : IEndpointDefinition
     }
 }
 
+// Lógica
 public record RemoveQuestionCommand(Guid Id, Guid RemovedById) : IRequest<OneOf<Success, NotFound, Error<string[]>>>;
 
 public class RemoveQuestionHandler : IRequestHandler<RemoveQuestionCommand, OneOf<Success, NotFound, Error<string[]>>>

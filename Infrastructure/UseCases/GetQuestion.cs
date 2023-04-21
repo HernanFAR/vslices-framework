@@ -1,4 +1,4 @@
-﻿using Application.UseCases;
+﻿using Core.UseCases;
 using Infrastructure.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 

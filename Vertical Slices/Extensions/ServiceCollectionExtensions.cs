@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 
-namespace Vertical_Slices.Extensions;
+// ReSharper disable once CheckNamespace
+namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {

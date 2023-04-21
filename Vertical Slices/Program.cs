@@ -1,9 +1,8 @@
-using Application.UseCases;
+using Core.UseCases;
 using FluentValidation;
 using Infrastructure.EntityFramework;
 using Infrastructure.UseCases;
 using Microsoft.EntityFrameworkCore;
-using Vertical_Slices.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
