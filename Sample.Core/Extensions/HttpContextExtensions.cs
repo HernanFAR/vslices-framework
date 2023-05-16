@@ -1,4 +1,5 @@
-﻿namespace Sample.Core.Extensions;
+﻿// ReSharper disable once CheckNamespace
+namespace Microsoft.AspNetCore.Http;
 
 public static class HttpContextExtensions
 {

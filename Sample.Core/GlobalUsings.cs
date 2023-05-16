@@ -5,3 +5,6 @@ global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.Routing;
 global using OneOf;
 global using OneOf.Types;
+global using Sample.Domain;
+global using Sample.Infrastructure.EntityFramework;
+global using Microsoft.Extensions.DependencyInjection;

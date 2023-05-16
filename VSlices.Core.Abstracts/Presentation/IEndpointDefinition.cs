@@ -1,6 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Sample.Core.Interfaces;
+namespace VSlices.Core.Abstracts.Presentation;
 
 public interface ISimpleEndpointDefinition
 {

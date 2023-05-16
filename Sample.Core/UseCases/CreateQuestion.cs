@@ -1,8 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Sample.Core.Extensions;
-using Sample.Core.Interfaces;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Sample.Domain;
-using Sample.Infrastructure.EntityFramework;
+using VSlices.Core.Abstracts.BusinessLogic;
+using VSlices.Core.Abstracts.DataAccess;
+using VSlices.Core.Abstracts.Presentation;
+using VSlices.Core.Abstracts.Responses;
 
 namespace Sample.Core.UseCases;
 
@@ -38,10 +42,19 @@ public class CreateQuestionEndpoint : IEndpointDefinition
 
         var response = await sender.HandleAsync(command, cancellationToken);
 
-        return response
-            .Match<IResult>(
+        return response.Match<IResult>(
                 e => TypedResults.Created($"/api/question/{e}"),
-                e => TypedResults.UnprocessableEntity(e.Value));
+                e =>
+                {
+                    return e.Kind switch
+                    {
+                        FailureKind.UserNotAllowed => TypedResults.Forbid(),
+                        FailureKind.NotFoundResource => TypedResults.NotFound(),
+                        FailureKind.ConcurrencyError => TypedResults.Conflict(),
+                        FailureKind.Validation => TypedResults.UnprocessableEntity(e.Errors),
+                        _ => throw new ArgumentOutOfRangeException(nameof(e.Kind), "A not valid FailureKind value was returned")
+                    };
+                });
     }
 
 }
@@ -49,7 +62,7 @@ public class CreateQuestionEndpoint : IEndpointDefinition
 // Lógica
 public record CreateQuestionCommand(string Name, Guid CreatedBy);
 
-public class CreateQuestionHandler
+public class CreateQuestionHandler : IFullyValidatedHandler<CreateQuestionCommand, Guid, Question>
 {
     private readonly ICreateQuestionRepository _repository;
     private readonly IValidator<CreateQuestionCommand> _contractValidator;
@@ -64,32 +77,60 @@ public class CreateQuestionHandler
         _domainValidator = domainValidator;
     }
 
-    public async Task<OneOf<Guid, Error<string[]>>> HandleAsync(CreateQuestionCommand request, 
+    public async Task<OneOf<Guid, BusinessFailure>> HandleAsync(CreateQuestionCommand request,
         CancellationToken cancellationToken = default)
     {
-        var contractValidationResult = await _contractValidator.ValidateAsync(request, cancellationToken);
+        var contractValidationResult = await ValidateRequestAsync(request, cancellationToken);
 
-        if (!contractValidationResult.IsValid)
+        if (contractValidationResult.IsT1)
         {
-            return new Error<string[]>(contractValidationResult
-                .Errors.Select(e => e.ErrorMessage)
-                .ToArray());
+            return contractValidationResult.AsT1;
         }
 
         var question = new Question(request.Name, request.CreatedBy);
 
-        var domainValidationResult = await _domainValidator.ValidateAsync(question, cancellationToken);
+        var domainValidationResult = await ValidateDomainAsync(question, cancellationToken);
 
-        if (!domainValidationResult.IsValid)
+        if (domainValidationResult.IsT1)
         {
-            return new Error<string[]>(domainValidationResult
-                .Errors.Select(e => e.ErrorMessage)
-                .ToArray());
+            return domainValidationResult.AsT1;
         }
 
-        await _repository.SaveQuestion(question, cancellationToken);
+        var dataAccessResult = await _repository.CreateAsync(question, cancellationToken);
+
+        if (dataAccessResult.IsT1)
+        {
+            return dataAccessResult.AsT1;
+        }
 
         return question.Id;
+    }
+
+    public async Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(CreateQuestionCommand request, CancellationToken cancellationToken = default)
+    {
+        var contractValidationResult = await _contractValidator.ValidateAsync(request, cancellationToken);
+
+        if (contractValidationResult.IsValid) return new Success();
+
+        var errors = contractValidationResult
+            .Errors.Select(e => e.ErrorMessage)
+            .ToArray();
+
+        return BusinessFailure.Of.Validation(errors);
+
+    }
+
+    public async Task<OneOf<Success, BusinessFailure>> ValidateDomainAsync(Question domain, CancellationToken cancellationToken = default)
+    {
+        var domainValidationResult = await _domainValidator.ValidateAsync(domain, cancellationToken);
+
+        if (domainValidationResult.IsValid) return new Success();
+        var errors = domainValidationResult
+            .Errors.Select(e => e.ErrorMessage)
+            .ToArray();
+
+        return BusinessFailure.Of.Validation(errors);
+
     }
 }
 
@@ -106,25 +147,37 @@ public class CreateQuestionValidator : AbstractValidator<CreateQuestionCommand>
     }
 }
 
-public interface ICreateQuestionRepository
+public interface ICreateQuestionRepository : ICreatableRepository<Question>
 {
-    Task SaveQuestion(Question question, CancellationToken cancellationToken = default);
-
 }
 
 public class CreateQuestionRepository : ICreateQuestionRepository
 {
     private readonly ApplicationDbContext _context;
+    private readonly ILogger<CreateQuestionRepository> _logger;
 
-    public CreateQuestionRepository(ApplicationDbContext context)
+    public CreateQuestionRepository(ApplicationDbContext context, ILogger<CreateQuestionRepository> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
-    public async Task SaveQuestion(Question question, CancellationToken cancellationToken = default)
+    public async Task<OneOf<Success, BusinessFailure>> CreateAsync(Question question, CancellationToken cancellationToken = default)
     {
         _context.Add(question);
 
-        await _context.SaveChangesAsync(cancellationToken);
+        try
+        {
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return new Success();
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            _logger.LogWarning(ex, "Hubo un error de concurrencia al momento de actualizar la entidad {Entity}", 
+                JsonSerializer.Serialize(question));
+
+            return BusinessFailure.Of.ConcurrencyError(Array.Empty<string>());
+        }
     }
 }

@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Sample.Core.Interfaces;
-using Sample.Infrastructure.EntityFramework;
+using VSlices.Core.Abstracts.BusinessLogic;
+using VSlices.Core.Abstracts.DataAccess;
+using VSlices.Core.Abstracts.Presentation;
+using VSlices.Core.Abstracts.Responses;
 
 namespace Sample.Core.UseCases;
 
@@ -34,7 +35,17 @@ public class GetQuestionEndpoint : IEndpointDefinition
 
         return response.Match<IResult>(
             e => TypedResults.Ok(e),
-            _ => TypedResults.NotFound());
+            e =>
+            {
+                return e.Kind switch
+                {
+                    FailureKind.UserNotAllowed => TypedResults.Forbid(),
+                    FailureKind.NotFoundResource => TypedResults.NotFound(),
+                    FailureKind.ConcurrencyError => TypedResults.Conflict(),
+                    FailureKind.Validation => TypedResults.UnprocessableEntity(e.Errors),
+                    _ => throw new ArgumentOutOfRangeException(nameof(e.Kind), "A not valid FailureKind value was returned")
+                };
+            });
     }
 }
 
@@ -43,7 +54,7 @@ public record GetQuestionDto(Guid Id, string Name, Guid CreatedById, Guid? Updat
 
 public record GetQuestionQuery(Guid Id);
 
-public class GetQuestionHandler
+public class GetQuestionHandler : IHandler<GetQuestionQuery, GetQuestionDto>
 {
     private readonly IGetQuestionRepository _repository;
 
@@ -52,20 +63,15 @@ public class GetQuestionHandler
         _repository = repository;
     }
 
-    public async Task<OneOf<GetQuestionDto, NotFound>> HandleAsync(GetQuestionQuery request, CancellationToken cancellationToken)
+    public async Task<OneOf<GetQuestionDto, BusinessFailure>> HandleAsync(GetQuestionQuery request, CancellationToken cancellationToken)
     {
-        var question = await _repository
-            .GetQuestionAsync(request.Id, cancellationToken);
-
-        return question is not null ?
-            question :
-            new NotFound();
+        return await _repository.ReadAsync(request.Id, cancellationToken);
     }
 }
 
-public interface IGetQuestionRepository
+public interface IGetQuestionRepository : IReadableRepository<GetQuestionDto, Guid>
 {
-    Task<GetQuestionDto?> GetQuestionAsync(Guid id, CancellationToken cancellationToken = default);
+
 }
 
 public class GetQuestionRepository : IGetQuestionRepository
@@ -77,11 +83,15 @@ public class GetQuestionRepository : IGetQuestionRepository
         _context = context;
     }
 
-    public async Task<GetQuestionDto?> GetQuestionAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<OneOf<GetQuestionDto, BusinessFailure>> ReadAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await _context.Questions
+        var question = await _context.Questions
             .Where(e => e.Id == id)
             .Select(e => new GetQuestionDto(e.Id, e.Name, e.CreatedById, e.UpdatedById))
             .FirstOrDefaultAsync(cancellationToken);
+
+        return question is not null
+            ? question
+            : BusinessFailure.Of.NotFoundResource(Array.Empty<string>());
     }
 }

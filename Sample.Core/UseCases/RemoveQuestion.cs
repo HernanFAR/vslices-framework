@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Sample.Core.Extensions;
-using Sample.Core.Interfaces;
-using Sample.Domain;
-using Sample.Infrastructure.EntityFramework;
+using System.Text.Json;
+using Microsoft.Extensions.Logging;
+using VSlices.Core.Abstracts.Presentation;
+using VSlices.Core.Abstracts.Responses;
+using FluentValidation;
+using VSlices.Core.Abstracts.BusinessLogic;
+using VSlices.Core.Abstracts.DataAccess;
 
 namespace Sample.Core.UseCases;
 
@@ -40,18 +42,26 @@ public class RemoveQuestionEndpoint : IEndpointDefinition
 
         var response = await handler.HandleAsync(command, cancellationToken);
 
-        return response
-            .Match(
+        return response.Match(
                 e => Results.NoContent(),
-                e => Results.NotFound(),
-                e => Results.UnprocessableEntity(e.Value));
+                e =>
+                {
+                    return e.Kind switch
+                    {
+                        FailureKind.UserNotAllowed => TypedResults.Forbid(),
+                        FailureKind.NotFoundResource => TypedResults.NotFound(),
+                        FailureKind.ConcurrencyError => TypedResults.Conflict(),
+                        FailureKind.Validation => TypedResults.UnprocessableEntity(e.Errors),
+                        _ => throw new ArgumentOutOfRangeException(nameof(e.Kind), "A not valid FailureKind value was returned")
+                    };
+                });
     }
 }
 
 // Lógica
 public record RemoveQuestionCommand(Guid Id, Guid RemovedById);
 
-public class RemoveQuestionHandler
+public class RemoveQuestionHandler : IFullyValidatedHandler<RemoveQuestionCommand, Success, Question>
 {
     private readonly IRemoveQuestionRepository _repository;
     private readonly IValidator<RemoveQuestionCommand> _contractValidator;
@@ -66,36 +76,64 @@ public class RemoveQuestionHandler
         _domainValidator = domainValidator;
     }
 
-    public async Task<OneOf<Success, NotFound, Error<string[]>>> HandleAsync(RemoveQuestionCommand request, CancellationToken cancellationToken)
+    public async Task<OneOf<Success, BusinessFailure>> HandleAsync(RemoveQuestionCommand request, CancellationToken cancellationToken)
     {
-        var contractValidationResult = await _contractValidator.ValidateAsync(request, cancellationToken);
+        var contractValidationResult = await ValidateRequestAsync(request, cancellationToken);
 
-        if (!contractValidationResult.IsValid)
+        if (contractValidationResult.IsT1)
         {
-            return new Error<string[]>(contractValidationResult
-                .Errors.Select(e => e.ErrorMessage)
-                .ToArray());
+            return contractValidationResult.AsT1;
         }
 
         var question = await _repository.GetQuestion(request.Id, cancellationToken);
 
         if (question is null)
         {
-            return new NotFound();
+            return BusinessFailure.Of.NotFoundResource(Array.Empty<string>());
         }
 
-        var domainValidationResult = await _domainValidator.ValidateAsync(question, cancellationToken);
+        var domainValidationResult = await ValidateDomainAsync(question, cancellationToken);
 
-        if (!domainValidationResult.IsValid)
+        if (domainValidationResult.IsT1)
         {
-            return new Error<string[]>(domainValidationResult
-                .Errors.Select(e => e.ErrorMessage)
-                .ToArray());
+            return domainValidationResult.AsT1;
         }
 
-        await _repository.RemoveQuestion(question, cancellationToken);
+        var dataAccessResult = await _repository.RemoveAsync(question, cancellationToken);
+
+        if (dataAccessResult.IsT1)
+        {
+            return dataAccessResult.AsT1;
+        }
 
         return new Success();
+    }
+
+    public async Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(RemoveQuestionCommand request, CancellationToken cancellationToken = default)
+    {
+        var contractValidationResult = await _contractValidator.ValidateAsync(request, cancellationToken);
+
+        if (contractValidationResult.IsValid) return new Success();
+
+        var errors = contractValidationResult
+            .Errors.Select(e => e.ErrorMessage)
+            .ToArray();
+
+        return BusinessFailure.Of.Validation(errors);
+
+    }
+
+    public async Task<OneOf<Success, BusinessFailure>> ValidateDomainAsync(Question domain, CancellationToken cancellationToken = default)
+    {
+        var domainValidationResult = await _domainValidator.ValidateAsync(domain, cancellationToken);
+
+        if (domainValidationResult.IsValid) return new Success();
+        var errors = domainValidationResult
+            .Errors.Select(e => e.ErrorMessage)
+            .ToArray();
+
+        return BusinessFailure.Of.Validation(errors);
+
     }
 }
 
@@ -109,21 +147,21 @@ public class RemoveQuestionValidator : AbstractValidator<RemoveQuestionCommand>
     }
 }
 
-public interface IRemoveQuestionRepository
+public interface IRemoveQuestionRepository : IRemovableRepository<Question>
 {
     Task<Question?> GetQuestion(Guid id, CancellationToken cancellationToken = default);
-
-    Task RemoveQuestion(Question question, CancellationToken cancellationToken = default);
 
 }
 
 public class RemoveQuestionRepository : IRemoveQuestionRepository
 {
     private readonly ApplicationDbContext _context;
+    private readonly ILogger<RemoveQuestionRepository> _logger;
 
-    public RemoveQuestionRepository(ApplicationDbContext context)
+    public RemoveQuestionRepository(ApplicationDbContext context, ILogger<RemoveQuestionRepository> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     public async Task<Question?> GetQuestion(Guid id, CancellationToken cancellationToken = default)
@@ -132,10 +170,22 @@ public class RemoveQuestionRepository : IRemoveQuestionRepository
             .FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
     }
 
-    public async Task RemoveQuestion(Question question, CancellationToken cancellationToken = default)
+    public async Task<OneOf<Success, BusinessFailure>> RemoveAsync(Question question, CancellationToken cancellationToken = default)
     {
         _context.Remove(question);
 
-        await _context.SaveChangesAsync(cancellationToken);
+        try
+        {
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return new Success();
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            _logger.LogWarning(ex, "Hubo un error de concurrencia al momento de eliminar la entidad {Entity}",
+                JsonSerializer.Serialize(question));
+
+            return BusinessFailure.Of.ConcurrencyError(Array.Empty<string>());
+        }
     }
 }

@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Sample.Core.Interfaces;
-using Sample.Infrastructure.EntityFramework;
+using VSlices.Core.Abstracts.BusinessLogic;
+using VSlices.Core.Abstracts.DataAccess;
+using VSlices.Core.Abstracts.Presentation;
+using VSlices.Core.Abstracts.Responses;
 
 namespace Sample.Core.UseCases;
 
@@ -28,7 +29,19 @@ public class GetAllQuestionsEndpoint : IEndpointDefinition
     {
         var response = await handler.HandleAsync(GetAllQuestionsQuery.Instance, cancellationToken);
 
-        return Results.Ok(response);
+        return response.Match<IResult>(
+            e => TypedResults.Ok(e),
+            e =>
+            {
+                return e.Kind switch
+                {
+                    FailureKind.UserNotAllowed => TypedResults.Forbid(),
+                    FailureKind.NotFoundResource => TypedResults.NotFound(),
+                    FailureKind.ConcurrencyError => TypedResults.Conflict(),
+                    FailureKind.Validation => TypedResults.UnprocessableEntity(e.Errors),
+                    _ => throw new ArgumentOutOfRangeException(nameof(e.Kind), "A not valid FailureKind value was returned")
+                };
+            });
     }
 }
 
@@ -41,7 +54,7 @@ public record GetAllQuestionsQuery
     public static GetAllQuestionsQuery Instance => Lazy.Value;
 }
 
-public class GetAllQuestionsHandler
+public class GetAllQuestionsHandler : IHandler<GetAllQuestionsQuery, GetAllQuestionsDto[]>
 {
     private readonly IGetAllQuestionsRepository _repository;
 
@@ -50,16 +63,14 @@ public class GetAllQuestionsHandler
         _repository = repository;
     }
 
-    public async Task<GetAllQuestionsDto[]> HandleAsync(GetAllQuestionsQuery _, CancellationToken cancellationToken)
+    public async Task<OneOf<GetAllQuestionsDto[], BusinessFailure>> HandleAsync(GetAllQuestionsQuery _, CancellationToken cancellationToken)
     {
-        return await _repository
-            .GetAllQuestionsAsync(cancellationToken);
+        return await _repository.ReadAsync(cancellationToken);
     }
 }
 
-public interface IGetAllQuestionsRepository
+public interface IGetAllQuestionsRepository : IReadableRepository<GetAllQuestionsDto[]>
 {
-    Task<GetAllQuestionsDto[]> GetAllQuestionsAsync(CancellationToken cancellationToken = default);
 }
 
 public class GetAllQuestionsRepository : IGetAllQuestionsRepository
@@ -71,7 +82,7 @@ public class GetAllQuestionsRepository : IGetAllQuestionsRepository
         _context = context;
     }
 
-    public async Task<GetAllQuestionsDto[]> GetAllQuestionsAsync(CancellationToken cancellationToken = default)
+    public async Task<OneOf<GetAllQuestionsDto[], BusinessFailure>> ReadAsync(CancellationToken cancellationToken = default)
     {
         return await _context.Questions
             .Select(e => new GetAllQuestionsDto(e.Id, e.Name, e.CreatedById, e.UpdatedById))

@@ -1,7 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Sample.Infrastructure.EntityFramework;
 
 namespace Sample.Core;
 

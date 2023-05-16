@@ -13,12 +13,12 @@
 	<ItemGroup>
 	  <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.5.2" />
 	  <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
-	  <PackageReference Include="OneOf" Version="3.0.243" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Sample.Domain\Sample.Domain.csproj" />
 	  <ProjectReference Include="..\Sample.Shared\Sample.Shared.csproj" />
+	  <ProjectReference Include="..\VSlices.Core.Abstracts\VSlices.Core.Abstracts.csproj" />
 	</ItemGroup>
 
 

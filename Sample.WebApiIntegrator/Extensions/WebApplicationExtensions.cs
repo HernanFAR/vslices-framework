@@ -1,4 +1,4 @@
-﻿using Sample.Core.Interfaces;
+﻿using VSlices.Core.Abstracts.Presentation;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.AspNetCore.Builder;
