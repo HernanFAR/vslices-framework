@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OneOf;
+﻿using OneOf;
 using OneOf.Types;
 using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.DataAccess;
@@ -30,7 +25,7 @@ public abstract class AbstractUpdateHandler<TRequest, TResponse, TDomain> : IHan
         }
 
         var domainEntity = await GetDomainEntityAsync(request, cancellationToken);
-        
+
         var dataAccessResult = await _repository.UpdateAsync(domainEntity, cancellationToken);
 
         if (dataAccessResult.IsT1)
@@ -40,13 +35,13 @@ public abstract class AbstractUpdateHandler<TRequest, TResponse, TDomain> : IHan
 
         return await GetResponseAsync(domainEntity, request, cancellationToken);
     }
-    
+
     protected abstract Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
         CancellationToken cancellationToken);
 
     protected abstract Task<TDomain> GetDomainEntityAsync(TRequest request,
         CancellationToken cancellationToken);
-    
+
     protected abstract Task<TResponse> GetResponseAsync(TDomain domainEntity, TRequest request,
         CancellationToken cancellationToken);
 }
@@ -198,7 +193,7 @@ public abstract class AbstractUpdateFullyValidatedHandler<TRequest, TResponse, T
     protected abstract Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
-    protected abstract Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request, 
+    protected abstract Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
         CancellationToken cancellationToken);
 
     protected abstract Task<TDomain> GetDomainEntityAsync(TRequest request,

@@ -1,2 +1,2 @@
 ﻿namespace Sample.Core;
-public class Anchor {  }
+public class Anchor { }

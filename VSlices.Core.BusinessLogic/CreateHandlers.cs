@@ -39,7 +39,7 @@ public abstract class AbstractCreateHandler<TRequest, TResponse, TDomain> : IHan
     protected abstract Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
-    protected abstract Task<TDomain> GetDomainEntityAsync(TRequest request, 
+    protected abstract Task<TDomain> GetDomainEntityAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
     protected abstract Task<TResponse> GetResponseAsync(TDomain domainEntity, TRequest request,
@@ -89,7 +89,7 @@ public abstract class AbstractCreateRequestValidatedHandler<TRequest, TResponse,
     protected abstract Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
-    protected abstract Task<TDomain> GetDomainEntityAsync(TRequest request, 
+    protected abstract Task<TDomain> GetDomainEntityAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
     protected abstract Task<TResponse> GetResponseAsync(TDomain domainEntity, TRequest request,
@@ -136,7 +136,7 @@ public abstract class AbstractCreateDomainValidatedHandler<TRequest, TResponse, 
     protected abstract Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
-    protected abstract Task<TDomain> GetDomainEntityAsync(TRequest request, 
+    protected abstract Task<TDomain> GetDomainEntityAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
     protected abstract Task<OneOf<Success, BusinessFailure>> ValidateDomainAsync(TDomain domain,
@@ -196,7 +196,7 @@ public abstract class AbstractCreateFullyValidatedHandler<TRequest, TResponse, T
     protected abstract Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
-    protected abstract Task<TDomain> GetDomainEntityAsync(TRequest request, 
+    protected abstract Task<TDomain> GetDomainEntityAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
     protected abstract Task<OneOf<Success, BusinessFailure>> ValidateDomainAsync(TDomain request,

@@ -1,10 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Text.Json;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Presentation;
 using VSlices.Core.Abstracts.Responses;
-using VSlices.Core.BusinessLogic;
 using VSlices.Core.BusinessLogic.FluentValidation;
 using VSlices.Core.DataAccess;
 
@@ -76,7 +74,7 @@ public class UpdateQuestionHandler : AbstractUpdateFullyFluentValidatedHandler<U
     {
         _repository = repository;
     }
-    
+
     protected override async Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(UpdateQuestionCommand request, CancellationToken cancellationToken)
     {
         var existQuestion = await _repository.AnyAsync(request.Id, cancellationToken);
@@ -127,7 +125,7 @@ public interface IUpdateQuestionRepository : IUpdateableRepository<Question>
 public class UpdateQuestionRepository : EFUpdateableRepository<ApplicationDbContext, Question>, IUpdateQuestionRepository
 {
     private readonly ApplicationDbContext _context;
-    
+
     public UpdateQuestionRepository(ApplicationDbContext context, ILogger<UpdateQuestionRepository> logger)
         : base(context, logger)
     {

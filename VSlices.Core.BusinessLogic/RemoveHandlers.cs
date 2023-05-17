@@ -35,7 +35,7 @@ public abstract class AbstractRemoveHandler<TRequest, TResponse, TDomain> : IHan
 
         return await GetResponseAsync(domainEntity, request, cancellationToken);
     }
-    
+
     protected abstract Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
         CancellationToken cancellationToken);
 
@@ -132,7 +132,7 @@ public abstract class AbstractRemoveDomainValidatedHandler<TRequest, TResponse, 
 
         return await GetResponseAsync(domainEntity, request, cancellationToken);
     }
-    
+
     protected abstract Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
         CancellationToken cancellationToken);
 

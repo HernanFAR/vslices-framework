@@ -1,3 +1,3 @@
 ﻿namespace Sample.Domain;
 
-public class Anchor {  }
+public class Anchor { }

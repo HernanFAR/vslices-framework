@@ -1,15 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using OneOf;
 using OneOf.Types;
 using System.Text.Json;
-using Microsoft.Extensions.Logging;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.Core.DataAccess;
 
 public abstract class EFRemovableRepository<TDbContext, TEntity> : IRemovableRepository<TEntity>
-    where TDbContext : DbContext 
+    where TDbContext : DbContext
     where TEntity : class
 {
     private readonly TDbContext _context;
@@ -21,10 +21,10 @@ public abstract class EFRemovableRepository<TDbContext, TEntity> : IRemovableRep
         _logger = logger;
     }
 
-    protected virtual string ConcurrencyMessageTemplate 
+    protected virtual string ConcurrencyMessageTemplate
         => "There was a concurrency error when removing entity of type {EntityType}, with data {Entity}";
 
-    public virtual async  Task<OneOf<Success, BusinessFailure>> RemoveAsync(TEntity entity, CancellationToken cancellationToken = default)
+    public virtual async Task<OneOf<Success, BusinessFailure>> RemoveAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         _context.Set<TEntity>().Remove(entity);
 

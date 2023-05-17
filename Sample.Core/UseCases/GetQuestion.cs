@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Presentation;
 using VSlices.Core.Abstracts.Responses;
@@ -57,7 +56,7 @@ public record GetQuestionQuery(Guid Id);
 
 public class GetQuestionHandler : AbstractReadRequestValidatedHandler<GetQuestionQuery, Guid, GetQuestionDto>
 {
-    public GetQuestionHandler(IGetQuestionRepository repository) 
+    public GetQuestionHandler(IGetQuestionRepository repository)
         : base(repository) { }
 
     protected override async Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(GetQuestionQuery request, CancellationToken cancellationToken)
@@ -66,7 +65,7 @@ public class GetQuestionHandler : AbstractReadRequestValidatedHandler<GetQuestio
     protected override async Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(GetQuestionQuery request, CancellationToken cancellationToken)
         => new Success();
 
-    protected override async Task<Guid> RequestToSearchOptionsAsync(GetQuestionQuery request, CancellationToken cancellationToken) 
+    protected override async Task<Guid> RequestToSearchOptionsAsync(GetQuestionQuery request, CancellationToken cancellationToken)
         => request.Id;
 }
 

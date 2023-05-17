@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
-using OneOf.Types;
 using OneOf;
+using OneOf.Types;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Responses;
 

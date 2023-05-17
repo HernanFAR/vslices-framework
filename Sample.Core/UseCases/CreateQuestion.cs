@@ -1,10 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System.Text.Json;
+﻿using Microsoft.Extensions.Logging;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Presentation;
 using VSlices.Core.Abstracts.Responses;
-using VSlices.Core.BusinessLogic;
 using VSlices.Core.BusinessLogic.FluentValidation;
 using VSlices.Core.DataAccess;
 
@@ -63,7 +60,7 @@ public class CreateQuestionEndpoint : IEndpointDefinition
 public record CreateQuestionCommand(string Name, Guid CreatedBy);
 
 public class CreateQuestionHandler : AbstractCreateFullyFluentValidatedHandler<CreateQuestionCommand, Guid, Question>
-{ 
+{
     public CreateQuestionHandler(
         IValidator<CreateQuestionCommand> requestValidator,
         IValidator<Question> domainValidator,
@@ -99,6 +96,6 @@ public interface ICreateQuestionRepository : ICreatableRepository<Question>
 
 public class CreateQuestionRepository : EFCreatableRepository<ApplicationDbContext, Question>, ICreateQuestionRepository
 {
-    public CreateQuestionRepository(ApplicationDbContext context, ILogger<CreateQuestionRepository> logger) 
+    public CreateQuestionRepository(ApplicationDbContext context, ILogger<CreateQuestionRepository> logger)
         : base(context, logger) { }
 }

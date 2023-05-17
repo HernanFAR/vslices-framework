@@ -1,11 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Text.Json;
-using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Presentation;
 using VSlices.Core.Abstracts.Responses;
-using VSlices.Core.BusinessLogic;
 using VSlices.Core.BusinessLogic.FluentValidation;
 using VSlices.Core.DataAccess;
 
@@ -19,8 +16,7 @@ public class RemoveQuestionEndpoint : IEndpointDefinition
         builder.MapDelete("/api/question/{id}", RemoveQuestionAsync)
             .WithSwaggerOperationInfo("Elimina pregunta", "Elimina una pregunta, en base a su identificador")
             .Produces(StatusCodes.Status204NoContent)
-            .Produces(StatusCodes.Status404NotFound)
-            .Produces(StatusCodes.Status422UnprocessableEntity);
+            .Produces(StatusCodes.Status404NotFound);
 
     }
 
@@ -45,18 +41,18 @@ public class RemoveQuestionEndpoint : IEndpointDefinition
         var response = await handler.HandleAsync(command, cancellationToken);
 
         return response.Match(
-                _ => Results.NoContent(),
-                e =>
+            _ => Results.NoContent(),
+            e =>
+            {
+                return e.Kind switch
                 {
-                    return e.Kind switch
-                    {
-                        FailureKind.UserNotAllowed => TypedResults.Forbid(),
-                        FailureKind.NotFoundResource => TypedResults.NotFound(),
-                        FailureKind.ConcurrencyError => TypedResults.Conflict(),
-                        FailureKind.Validation => TypedResults.UnprocessableEntity(e.Errors),
-                        _ => throw new ArgumentOutOfRangeException(nameof(e.Kind), "A not valid FailureKind value was returned")
-                    };
-                });
+                    FailureKind.UserNotAllowed => TypedResults.Forbid(),
+                    FailureKind.NotFoundResource => TypedResults.NotFound(),
+                    FailureKind.ConcurrencyError => TypedResults.Conflict(),
+                    FailureKind.Validation => TypedResults.UnprocessableEntity(e.Errors),
+                    _ => throw new ArgumentOutOfRangeException(nameof(e.Kind), "A not valid FailureKind value was returned")
+                };
+            });
     }
 }
 
@@ -87,10 +83,10 @@ public class RemoveQuestionHandler : AbstractRemoveFullyFluentValidatedHandler<R
         return new Success();
     }
 
-    protected override async Task<Question> GetDomainEntityAsync(RemoveQuestionCommand request, CancellationToken cancellationToken) 
+    protected override async Task<Question> GetDomainEntityAsync(RemoveQuestionCommand request, CancellationToken cancellationToken)
         => await _repository.GetAsync(request.Id, cancellationToken);
 
-    protected override async Task<Success> GetResponseAsync(Question domainEntity, RemoveQuestionCommand request, CancellationToken cancellationToken) 
+    protected override async Task<Success> GetResponseAsync(Question domainEntity, RemoveQuestionCommand request, CancellationToken cancellationToken)
         => new Success();
 }
 
@@ -115,9 +111,9 @@ public interface IRemoveQuestionRepository : IRemovableRepository<Question>
 public class RemoveQuestionRepository : EFRemovableRepository<ApplicationDbContext, Question>, IRemoveQuestionRepository
 {
     private readonly ApplicationDbContext _context;
-    
+
     public RemoveQuestionRepository(ApplicationDbContext context, ILogger<RemoveQuestionRepository> logger)
-        : base (context, logger)
+        : base(context, logger)
     {
         _context = context;
     }
