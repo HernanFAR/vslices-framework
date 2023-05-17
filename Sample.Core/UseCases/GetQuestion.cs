@@ -3,6 +3,7 @@ using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Presentation;
 using VSlices.Core.Abstracts.Responses;
+using VSlices.Core.BusinessLogic;
 
 namespace Sample.Core.UseCases;
 
@@ -54,19 +55,19 @@ public record GetQuestionDto(Guid Id, string Name, Guid CreatedById, Guid? Updat
 
 public record GetQuestionQuery(Guid Id);
 
-public class GetQuestionHandler : IHandler<GetQuestionQuery, GetQuestionDto>
+public class GetQuestionHandler : AbstractReadRequestValidatedHandler<GetQuestionQuery, Guid, GetQuestionDto>
 {
-    private readonly IGetQuestionRepository _repository;
+    public GetQuestionHandler(IGetQuestionRepository repository) 
+        : base(repository) { }
 
-    public GetQuestionHandler(IGetQuestionRepository repository)
-    {
-        _repository = repository;
-    }
+    protected override async Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(GetQuestionQuery request, CancellationToken cancellationToken)
+        => new Success();
 
-    public async Task<OneOf<GetQuestionDto, BusinessFailure>> HandleAsync(GetQuestionQuery request, CancellationToken cancellationToken)
-    {
-        return await _repository.ReadAsync(request.Id, cancellationToken);
-    }
+    protected override async Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(GetQuestionQuery request, CancellationToken cancellationToken)
+        => new Success();
+
+    protected override async Task<Guid> RequestToSearchOptionsAsync(GetQuestionQuery request, CancellationToken cancellationToken) 
+        => request.Id;
 }
 
 public interface IGetQuestionRepository : IReadableRepository<GetQuestionDto, Guid>

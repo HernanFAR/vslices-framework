@@ -18,7 +18,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\Sample.Domain\Sample.Domain.csproj" />
 	  <ProjectReference Include="..\Sample.Shared\Sample.Shared.csproj" />
-	  <ProjectReference Include="..\VSlices.Core.Abstracts\VSlices.Core.Abstracts.csproj" />
+	  <ProjectReference Include="..\VSlices.Core.BusinessLogic\VSlices.Core.BusinessLogic.csproj" />
 	</ItemGroup>
 
 

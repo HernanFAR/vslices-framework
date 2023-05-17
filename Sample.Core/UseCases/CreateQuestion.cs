@@ -7,6 +7,7 @@ using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Presentation;
 using VSlices.Core.Abstracts.Responses;
+using VSlices.Core.BusinessLogic;
 
 namespace Sample.Core.UseCases;
 
@@ -33,14 +34,14 @@ public class CreateQuestionEndpoint : IEndpointDefinition
     public static async Task<IResult> CreateQuestionAsync(
         [FromBody] CreateQuestionContract createQuestionContract,
         [FromServices] IHttpContextAccessor contextAccessor,
-        [FromServices] CreateQuestionHandler sender,
+        [FromServices] CreateQuestionHandler handler,
         CancellationToken cancellationToken)
     {
         var command = new CreateQuestionCommand(
             createQuestionContract.Name,
             contextAccessor.GetIdentityId());
 
-        var response = await sender.HandleAsync(command, cancellationToken);
+        var response = await handler.HandleAsync(command, cancellationToken);
 
         return response.Match<IResult>(
                 e => TypedResults.Created($"/api/question/{e}"),
@@ -62,51 +63,20 @@ public class CreateQuestionEndpoint : IEndpointDefinition
 // Lógica
 public record CreateQuestionCommand(string Name, Guid CreatedBy);
 
-public class CreateQuestionHandler : IFullyValidatedHandler<CreateQuestionCommand, Guid, Question>
+public class CreateQuestionHandler : AbstractCreateFullyValidatedHandler<CreateQuestionCommand, Guid, Question>
 {
-    private readonly ICreateQuestionRepository _repository;
     private readonly IValidator<CreateQuestionCommand> _contractValidator;
     private readonly IValidator<Question> _domainValidator;
 
     public CreateQuestionHandler(ICreateQuestionRepository repository,
         IValidator<CreateQuestionCommand> contractValidator,
-        IValidator<Question> domainValidator)
+        IValidator<Question> domainValidator) : base(repository)
     {
-        _repository = repository;
         _contractValidator = contractValidator;
         _domainValidator = domainValidator;
     }
 
-    public async Task<OneOf<Guid, BusinessFailure>> HandleAsync(CreateQuestionCommand request,
-        CancellationToken cancellationToken = default)
-    {
-        var contractValidationResult = await ValidateRequestAsync(request, cancellationToken);
-
-        if (contractValidationResult.IsT1)
-        {
-            return contractValidationResult.AsT1;
-        }
-
-        var question = new Question(request.Name, request.CreatedBy);
-
-        var domainValidationResult = await ValidateDomainAsync(question, cancellationToken);
-
-        if (domainValidationResult.IsT1)
-        {
-            return domainValidationResult.AsT1;
-        }
-
-        var dataAccessResult = await _repository.CreateAsync(question, cancellationToken);
-
-        if (dataAccessResult.IsT1)
-        {
-            return dataAccessResult.AsT1;
-        }
-
-        return question.Id;
-    }
-
-    public async Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(CreateQuestionCommand request, CancellationToken cancellationToken = default)
+    protected override async Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(CreateQuestionCommand request, CancellationToken cancellationToken = default)
     {
         var contractValidationResult = await _contractValidator.ValidateAsync(request, cancellationToken);
 
@@ -120,7 +90,13 @@ public class CreateQuestionHandler : IFullyValidatedHandler<CreateQuestionComman
 
     }
 
-    public async Task<OneOf<Success, BusinessFailure>> ValidateDomainAsync(Question domain, CancellationToken cancellationToken = default)
+    protected override async Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(CreateQuestionCommand request, CancellationToken cancellationToken) 
+        => new Success();
+
+    protected override async Task<Question> GetDomainEntityAsync(CreateQuestionCommand request, CancellationToken cancellationToken) 
+        => new Question(request.Name, request.CreatedBy);
+
+    protected override async Task<OneOf<Success, BusinessFailure>> ValidateDomainAsync(Question domain, CancellationToken cancellationToken = default)
     {
         var domainValidationResult = await _domainValidator.ValidateAsync(domain, cancellationToken);
 
@@ -132,6 +108,9 @@ public class CreateQuestionHandler : IFullyValidatedHandler<CreateQuestionComman
         return BusinessFailure.Of.Validation(errors);
 
     }
+
+    protected override async Task<Guid> GetResponseAsync(Question domainEntity, CreateQuestionCommand request, CancellationToken cancellationToken) 
+        => domainEntity.Id;
 }
 
 public class CreateQuestionValidator : AbstractValidator<CreateQuestionCommand>

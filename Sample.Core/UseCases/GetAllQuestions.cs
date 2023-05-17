@@ -3,6 +3,7 @@ using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Presentation;
 using VSlices.Core.Abstracts.Responses;
+using VSlices.Core.BusinessLogic;
 
 namespace Sample.Core.UseCases;
 
@@ -54,19 +55,20 @@ public record GetAllQuestionsQuery
     public static GetAllQuestionsQuery Instance => Lazy.Value;
 }
 
-public class GetAllQuestionsHandler : IHandler<GetAllQuestionsQuery, GetAllQuestionsDto[]>
+public class GetAllQuestionsHandler : AbstractBasicReadRequestValidatedHandler<GetAllQuestionsQuery, GetAllQuestionsDto[]>
 {
     private readonly IGetAllQuestionsRepository _repository;
 
-    public GetAllQuestionsHandler(IGetAllQuestionsRepository repository)
+    public GetAllQuestionsHandler(IGetAllQuestionsRepository repository) : base(repository)
     {
         _repository = repository;
     }
 
-    public async Task<OneOf<GetAllQuestionsDto[], BusinessFailure>> HandleAsync(GetAllQuestionsQuery _, CancellationToken cancellationToken)
-    {
-        return await _repository.ReadAsync(cancellationToken);
-    }
+    protected override async Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(GetAllQuestionsQuery request, CancellationToken cancellationToken)
+        => new Success();
+
+    protected override async Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(GetAllQuestionsQuery request, CancellationToken cancellationToken)
+        => new Success();
 }
 
 public interface IGetAllQuestionsRepository : IReadableRepository<GetAllQuestionsDto[]>

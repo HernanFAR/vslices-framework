@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
 using Microsoft.Extensions.Logging;
-using VSlices.Core.Abstracts.Presentation;
-using VSlices.Core.Abstracts.Responses;
-using FluentValidation;
+using System.Text.Json;
 using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.DataAccess;
+using VSlices.Core.Abstracts.Presentation;
+using VSlices.Core.Abstracts.Responses;
+using VSlices.Core.BusinessLogic;
 
 namespace Sample.Core.UseCases;
 
@@ -64,7 +64,7 @@ public class UpdateQuestionEndpoint : IEndpointDefinition
 // Lógica
 public record UpdateQuestionCommand(Guid Id, string Name, Guid UpdatedById);
 
-public class UpdateQuestionHandler : IFullyValidatedHandler<UpdateQuestionCommand, Success, Question>
+public class UpdateQuestionHandler : AbstractUpdateFullyValidatedHandler<UpdateQuestionCommand, Success, Question>
 {
     private readonly IUpdateQuestionRepository _repository;
     private readonly IValidator<UpdateQuestionCommand> _contractValidator;
@@ -72,49 +72,14 @@ public class UpdateQuestionHandler : IFullyValidatedHandler<UpdateQuestionComman
 
     public UpdateQuestionHandler(IUpdateQuestionRepository repository,
         IValidator<UpdateQuestionCommand> contractValidator,
-        IValidator<Question> domainValidator)
+        IValidator<Question> domainValidator) : base(repository)
     {
         _repository = repository;
         _contractValidator = contractValidator;
         _domainValidator = domainValidator;
     }
-
-    public async Task<OneOf<Success, BusinessFailure>> HandleAsync(UpdateQuestionCommand request, CancellationToken cancellationToken)
-    {
-        var contractValidationResult = await ValidateRequestAsync(request, cancellationToken);
-
-        if (contractValidationResult.IsT1)
-        {
-            return contractValidationResult.AsT1;
-        }
-
-        var question = await _repository.GetQuestion(request.Id, cancellationToken);
-
-        if (question is null)
-        {
-            return BusinessFailure.Of.NotFoundResource(Array.Empty<string>());
-        }
-
-        question.UpdateState(request.Name, request.UpdatedById);
-
-        var domainValidationResult = await ValidateDomainAsync(question, cancellationToken);
-
-        if (domainValidationResult.IsT1)
-        {
-            return domainValidationResult.AsT1;
-        }
-
-        var dataAccessResult = await _repository.UpdateAsync(question, cancellationToken);
-
-        if (dataAccessResult.IsT1)
-        {
-            return dataAccessResult.AsT1;
-        }
-
-        return new Success();
-    }
-
-    public async Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(UpdateQuestionCommand request, CancellationToken cancellationToken = default)
+    
+    protected override async Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(UpdateQuestionCommand request, CancellationToken cancellationToken = default)
     {
         var contractValidationResult = await _contractValidator.ValidateAsync(request, cancellationToken);
 
@@ -128,11 +93,27 @@ public class UpdateQuestionHandler : IFullyValidatedHandler<UpdateQuestionComman
 
     }
 
-    public async Task<OneOf<Success, BusinessFailure>> ValidateDomainAsync(Question domain, CancellationToken cancellationToken = default)
+    protected override async Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(UpdateQuestionCommand request, CancellationToken cancellationToken)
+    {
+        var existQuestion = await _repository.AnyAsync(request.Id, cancellationToken);
+
+        if (!existQuestion)
+        {
+            return BusinessFailure.Of.NotFoundResource(Array.Empty<string>());
+        }
+
+        return new Success();
+    }
+
+    protected override async Task<Question> GetDomainEntityAsync(UpdateQuestionCommand request, CancellationToken cancellationToken) => 
+        await _repository.GetAsync(request.Id, cancellationToken);
+
+    protected override async Task<OneOf<Success, BusinessFailure>> ValidateDomainAsync(Question domain, CancellationToken cancellationToken = default)
     {
         var domainValidationResult = await _domainValidator.ValidateAsync(domain, cancellationToken);
 
         if (domainValidationResult.IsValid) return new Success();
+
         var errors = domainValidationResult
             .Errors.Select(e => e.ErrorMessage)
             .ToArray();
@@ -140,6 +121,9 @@ public class UpdateQuestionHandler : IFullyValidatedHandler<UpdateQuestionComman
         return BusinessFailure.Of.Validation(errors);
 
     }
+
+    protected override async Task<Success> GetResponseAsync(Question domainEntity, UpdateQuestionCommand request, CancellationToken cancellationToken) 
+        => new Success();
 }
 
 public class UpdateQuestionValidator : AbstractValidator<UpdateQuestionCommand>
@@ -157,8 +141,10 @@ public class UpdateQuestionValidator : AbstractValidator<UpdateQuestionCommand>
 
 public interface IUpdateQuestionRepository : IUpdateableRepository<Question>
 {
-    Task<Question?> GetQuestion(Guid id, CancellationToken cancellationToken = default);
-    
+    Task<bool> AnyAsync(Guid id, CancellationToken cancellationToken = default);
+
+    Task<Question> GetAsync(Guid id, CancellationToken cancellationToken = default);
+
 
 }
 
@@ -173,10 +159,16 @@ public class UpdateQuestionRepository : IUpdateQuestionRepository
         _logger = logger;
     }
 
-    public async Task<Question?> GetQuestion(Guid id, CancellationToken cancellationToken = default)
+    public async Task<bool> AnyAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _context.Questions
-            .FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
+            .AnyAsync(e => e.Id == id, cancellationToken);
+    }
+
+    public async Task<Question> GetAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await _context.Questions
+            .FirstAsync(e => e.Id == id, cancellationToken);
     }
 
     public async Task<OneOf<Success, BusinessFailure>> UpdateAsync(Question question,

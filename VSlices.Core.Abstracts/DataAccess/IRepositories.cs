@@ -25,7 +25,7 @@ public interface IReadableRepository<TDto>
     Task<OneOf<TDto, BusinessFailure>> ReadAsync(CancellationToken cancellationToken = default);
 }
 
-public interface IReadableRepository<TDto, TOptions>
+public interface IReadableRepository<TDto, TSearchOptions>
 {
-    Task<OneOf<TDto, BusinessFailure>> ReadAsync(TOptions options, CancellationToken cancellationToken = default);
+    Task<OneOf<TDto, BusinessFailure>> ReadAsync(TSearchOptions options, CancellationToken cancellationToken = default);
 }

@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
 using Microsoft.Extensions.Logging;
-using VSlices.Core.Abstracts.Presentation;
-using VSlices.Core.Abstracts.Responses;
-using FluentValidation;
+using System.Text.Json;
 using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.DataAccess;
+using VSlices.Core.Abstracts.Presentation;
+using VSlices.Core.Abstracts.Responses;
+using VSlices.Core.BusinessLogic;
 
 namespace Sample.Core.UseCases;
 
@@ -43,7 +43,7 @@ public class RemoveQuestionEndpoint : IEndpointDefinition
         var response = await handler.HandleAsync(command, cancellationToken);
 
         return response.Match(
-                e => Results.NoContent(),
+                _ => Results.NoContent(),
                 e =>
                 {
                     return e.Kind switch
@@ -61,7 +61,7 @@ public class RemoveQuestionEndpoint : IEndpointDefinition
 // Lógica
 public record RemoveQuestionCommand(Guid Id, Guid RemovedById);
 
-public class RemoveQuestionHandler : IFullyValidatedHandler<RemoveQuestionCommand, Success, Question>
+public class RemoveQuestionHandler : AbstractRemoveFullyValidatedHandler<RemoveQuestionCommand, Success, Question>
 {
     private readonly IRemoveQuestionRepository _repository;
     private readonly IValidator<RemoveQuestionCommand> _contractValidator;
@@ -69,47 +69,14 @@ public class RemoveQuestionHandler : IFullyValidatedHandler<RemoveQuestionComman
 
     public RemoveQuestionHandler(IRemoveQuestionRepository repository,
         IValidator<RemoveQuestionCommand> contractValidator,
-        IValidator<Question> domainValidator)
+        IValidator<Question> domainValidator) : base(repository)
     {
         _repository = repository;
         _contractValidator = contractValidator;
         _domainValidator = domainValidator;
     }
 
-    public async Task<OneOf<Success, BusinessFailure>> HandleAsync(RemoveQuestionCommand request, CancellationToken cancellationToken)
-    {
-        var contractValidationResult = await ValidateRequestAsync(request, cancellationToken);
-
-        if (contractValidationResult.IsT1)
-        {
-            return contractValidationResult.AsT1;
-        }
-
-        var question = await _repository.GetQuestion(request.Id, cancellationToken);
-
-        if (question is null)
-        {
-            return BusinessFailure.Of.NotFoundResource(Array.Empty<string>());
-        }
-
-        var domainValidationResult = await ValidateDomainAsync(question, cancellationToken);
-
-        if (domainValidationResult.IsT1)
-        {
-            return domainValidationResult.AsT1;
-        }
-
-        var dataAccessResult = await _repository.RemoveAsync(question, cancellationToken);
-
-        if (dataAccessResult.IsT1)
-        {
-            return dataAccessResult.AsT1;
-        }
-
-        return new Success();
-    }
-
-    public async Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(RemoveQuestionCommand request, CancellationToken cancellationToken = default)
+    protected override async Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(RemoveQuestionCommand request, CancellationToken cancellationToken = default)
     {
         var contractValidationResult = await _contractValidator.ValidateAsync(request, cancellationToken);
 
@@ -123,7 +90,22 @@ public class RemoveQuestionHandler : IFullyValidatedHandler<RemoveQuestionComman
 
     }
 
-    public async Task<OneOf<Success, BusinessFailure>> ValidateDomainAsync(Question domain, CancellationToken cancellationToken = default)
+    protected override async Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(RemoveQuestionCommand request, CancellationToken cancellationToken)
+    {
+        var exist = await _repository.AnyAsync(request.Id, cancellationToken);
+
+        if (!exist)
+        {
+            return BusinessFailure.Of.NotFoundResource();
+        }
+
+        return new Success();
+    }
+
+    protected override async Task<Question> GetDomainEntityAsync(RemoveQuestionCommand request, CancellationToken cancellationToken) 
+        => await _repository.GetAsync(request.Id, cancellationToken);
+
+    protected override async Task<OneOf<Success, BusinessFailure>> ValidateDomainAsync(Question domain, CancellationToken cancellationToken = default)
     {
         var domainValidationResult = await _domainValidator.ValidateAsync(domain, cancellationToken);
 
@@ -135,6 +117,9 @@ public class RemoveQuestionHandler : IFullyValidatedHandler<RemoveQuestionComman
         return BusinessFailure.Of.Validation(errors);
 
     }
+
+    protected override async Task<Success> GetResponseAsync(Question domainEntity, RemoveQuestionCommand request, CancellationToken cancellationToken) 
+        => new Success();
 }
 
 public class RemoveQuestionValidator : AbstractValidator<RemoveQuestionCommand>
@@ -149,7 +134,9 @@ public class RemoveQuestionValidator : AbstractValidator<RemoveQuestionCommand>
 
 public interface IRemoveQuestionRepository : IRemovableRepository<Question>
 {
-    Task<Question?> GetQuestion(Guid id, CancellationToken cancellationToken = default);
+    Task<bool> AnyAsync(Guid id, CancellationToken cancellationToken = default);
+
+    Task<Question> GetAsync(Guid id, CancellationToken cancellationToken = default);
 
 }
 
@@ -164,10 +151,16 @@ public class RemoveQuestionRepository : IRemoveQuestionRepository
         _logger = logger;
     }
 
-    public async Task<Question?> GetQuestion(Guid id, CancellationToken cancellationToken = default)
+    public async Task<bool> AnyAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _context.Questions
-            .FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
+            .AnyAsync(e => e.Id == id, cancellationToken);
+    }
+
+    public async Task<Question> GetAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await _context.Questions
+            .FirstAsync(e => e.Id == id, cancellationToken);
     }
 
     public async Task<OneOf<Success, BusinessFailure>> RemoveAsync(Question question, CancellationToken cancellationToken = default)
