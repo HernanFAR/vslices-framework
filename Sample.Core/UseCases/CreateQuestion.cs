@@ -1,13 +1,11 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Sample.Domain;
-using VSlices.Core.Abstracts.BusinessLogic;
+using System.Text.Json;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Presentation;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.BusinessLogic;
+using VSlices.Core.BusinessLogic.FluentValidation;
 
 namespace Sample.Core.UseCases;
 
@@ -63,53 +61,21 @@ public class CreateQuestionEndpoint : IEndpointDefinition
 // Lógica
 public record CreateQuestionCommand(string Name, Guid CreatedBy);
 
-public class CreateQuestionHandler : AbstractCreateFullyValidatedHandler<CreateQuestionCommand, Guid, Question>
-{
-    private readonly IValidator<CreateQuestionCommand> _contractValidator;
-    private readonly IValidator<Question> _domainValidator;
+public class CreateQuestionHandler : AbstractCreateFullyFluentValidatedHandler<CreateQuestionCommand, Guid, Question>
+{ 
+    public CreateQuestionHandler(
+        IValidator<CreateQuestionCommand> requestValidator,
+        IValidator<Question> domainValidator,
+        ICreateQuestionRepository repository) : base(requestValidator, domainValidator, repository)
+    { }
 
-    public CreateQuestionHandler(ICreateQuestionRepository repository,
-        IValidator<CreateQuestionCommand> contractValidator,
-        IValidator<Question> domainValidator) : base(repository)
-    {
-        _contractValidator = contractValidator;
-        _domainValidator = domainValidator;
-    }
-
-    protected override async Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(CreateQuestionCommand request, CancellationToken cancellationToken = default)
-    {
-        var contractValidationResult = await _contractValidator.ValidateAsync(request, cancellationToken);
-
-        if (contractValidationResult.IsValid) return new Success();
-
-        var errors = contractValidationResult
-            .Errors.Select(e => e.ErrorMessage)
-            .ToArray();
-
-        return BusinessFailure.Of.Validation(errors);
-
-    }
-
-    protected override async Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(CreateQuestionCommand request, CancellationToken cancellationToken) 
+    protected override async Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(CreateQuestionCommand request, CancellationToken cancellationToken)
         => new Success();
 
-    protected override async Task<Question> GetDomainEntityAsync(CreateQuestionCommand request, CancellationToken cancellationToken) 
+    protected override async Task<Question> GetDomainEntityAsync(CreateQuestionCommand request, CancellationToken cancellationToken)
         => new Question(request.Name, request.CreatedBy);
 
-    protected override async Task<OneOf<Success, BusinessFailure>> ValidateDomainAsync(Question domain, CancellationToken cancellationToken = default)
-    {
-        var domainValidationResult = await _domainValidator.ValidateAsync(domain, cancellationToken);
-
-        if (domainValidationResult.IsValid) return new Success();
-        var errors = domainValidationResult
-            .Errors.Select(e => e.ErrorMessage)
-            .ToArray();
-
-        return BusinessFailure.Of.Validation(errors);
-
-    }
-
-    protected override async Task<Guid> GetResponseAsync(Question domainEntity, CreateQuestionCommand request, CancellationToken cancellationToken) 
+    protected override async Task<Guid> GetResponseAsync(Question domainEntity, CreateQuestionCommand request, CancellationToken cancellationToken)
         => domainEntity.Id;
 }
 
@@ -153,7 +119,7 @@ public class CreateQuestionRepository : ICreateQuestionRepository
         }
         catch (DbUpdateConcurrencyException ex)
         {
-            _logger.LogWarning(ex, "Hubo un error de concurrencia al momento de actualizar la entidad {Entity}", 
+            _logger.LogWarning(ex, "Hubo un error de concurrencia al momento de actualizar la entidad {Entity}",
                 JsonSerializer.Serialize(question));
 
             return BusinessFailure.Of.ConcurrencyError(Array.Empty<string>());

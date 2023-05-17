@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Presentation;
 using VSlices.Core.Abstracts.Responses;
@@ -57,12 +56,7 @@ public record GetAllQuestionsQuery
 
 public class GetAllQuestionsHandler : AbstractBasicReadRequestValidatedHandler<GetAllQuestionsQuery, GetAllQuestionsDto[]>
 {
-    private readonly IGetAllQuestionsRepository _repository;
-
-    public GetAllQuestionsHandler(IGetAllQuestionsRepository repository) : base(repository)
-    {
-        _repository = repository;
-    }
+    public GetAllQuestionsHandler(IGetAllQuestionsRepository repository) : base(repository) { }
 
     protected override async Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(GetAllQuestionsQuery request, CancellationToken cancellationToken)
         => new Success();

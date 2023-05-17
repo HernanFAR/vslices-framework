@@ -139,7 +139,7 @@ public abstract class AbstractCreateDomainValidatedHandler<TRequest, TResponse, 
     protected abstract Task<TDomain> GetDomainEntityAsync(TRequest request, 
         CancellationToken cancellationToken = default);
 
-    protected abstract Task<OneOf<Success, BusinessFailure>> ValidateDomainAsync(TDomain request,
+    protected abstract Task<OneOf<Success, BusinessFailure>> ValidateDomainAsync(TDomain domain,
         CancellationToken cancellationToken = default);
 
     protected abstract Task<TResponse> GetResponseAsync(TDomain domainEntity, TRequest request,

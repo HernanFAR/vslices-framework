@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.Abstracts", "V
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.BusinessLogic", "VSlices.Core.BusinessLogic\VSlices.Core.BusinessLogic.csproj", "{34A5731E-BA8A-453D-991B-743EA7AF233B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSlices.Core.BusinessLogic.FluentValidation", "VSlices.Core.BusinessLogic.FluentValidation\VSlices.Core.BusinessLogic.FluentValidation.csproj", "{7E3C3A6D-E865-48F6-BEF9-8D8695952245}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{34A5731E-BA8A-453D-991B-743EA7AF233B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34A5731E-BA8A-453D-991B-743EA7AF233B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34A5731E-BA8A-453D-991B-743EA7AF233B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E3C3A6D-E865-48F6-BEF9-8D8695952245}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E3C3A6D-E865-48F6-BEF9-8D8695952245}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E3C3A6D-E865-48F6-BEF9-8D8695952245}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E3C3A6D-E865-48F6-BEF9-8D8695952245}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +66,7 @@ Global
 		{D1716C07-43CB-4CC4-B135-AFF1D10C3DD1} = {FCE3CB34-FAE4-49F7-80DC-25194BBCEB6C}
 		{1CFAE6A3-7928-439E-B090-78924A0FCA58} = {E846D8C9-E927-43E8-8B46-CEA3ADB50F6F}
 		{34A5731E-BA8A-453D-991B-743EA7AF233B} = {E846D8C9-E927-43E8-8B46-CEA3ADB50F6F}
+		{7E3C3A6D-E865-48F6-BEF9-8D8695952245} = {E846D8C9-E927-43E8-8B46-CEA3ADB50F6F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {653AE7A1-A4C4-42F2-9804-FE7E032C3E8C}

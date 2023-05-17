@@ -6,6 +6,7 @@ using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Presentation;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.BusinessLogic;
+using VSlices.Core.BusinessLogic.FluentValidation;
 
 namespace Sample.Core.UseCases;
 
@@ -61,33 +62,16 @@ public class RemoveQuestionEndpoint : IEndpointDefinition
 // Lógica
 public record RemoveQuestionCommand(Guid Id, Guid RemovedById);
 
-public class RemoveQuestionHandler : AbstractRemoveFullyValidatedHandler<RemoveQuestionCommand, Success, Question>
+public class RemoveQuestionHandler : AbstractRemoveFullyFluentValidatedHandler<RemoveQuestionCommand, Success, Question>
 {
     private readonly IRemoveQuestionRepository _repository;
-    private readonly IValidator<RemoveQuestionCommand> _contractValidator;
-    private readonly IValidator<Question> _domainValidator;
 
-    public RemoveQuestionHandler(IRemoveQuestionRepository repository,
+    public RemoveQuestionHandler(
         IValidator<RemoveQuestionCommand> contractValidator,
-        IValidator<Question> domainValidator) : base(repository)
+        IValidator<Question> domainValidator,
+        IRemoveQuestionRepository repository) : base(contractValidator, domainValidator, repository)
     {
         _repository = repository;
-        _contractValidator = contractValidator;
-        _domainValidator = domainValidator;
-    }
-
-    protected override async Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(RemoveQuestionCommand request, CancellationToken cancellationToken = default)
-    {
-        var contractValidationResult = await _contractValidator.ValidateAsync(request, cancellationToken);
-
-        if (contractValidationResult.IsValid) return new Success();
-
-        var errors = contractValidationResult
-            .Errors.Select(e => e.ErrorMessage)
-            .ToArray();
-
-        return BusinessFailure.Of.Validation(errors);
-
     }
 
     protected override async Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(RemoveQuestionCommand request, CancellationToken cancellationToken)
@@ -104,19 +88,6 @@ public class RemoveQuestionHandler : AbstractRemoveFullyValidatedHandler<RemoveQ
 
     protected override async Task<Question> GetDomainEntityAsync(RemoveQuestionCommand request, CancellationToken cancellationToken) 
         => await _repository.GetAsync(request.Id, cancellationToken);
-
-    protected override async Task<OneOf<Success, BusinessFailure>> ValidateDomainAsync(Question domain, CancellationToken cancellationToken = default)
-    {
-        var domainValidationResult = await _domainValidator.ValidateAsync(domain, cancellationToken);
-
-        if (domainValidationResult.IsValid) return new Success();
-        var errors = domainValidationResult
-            .Errors.Select(e => e.ErrorMessage)
-            .ToArray();
-
-        return BusinessFailure.Of.Validation(errors);
-
-    }
 
     protected override async Task<Success> GetResponseAsync(Question domainEntity, RemoveQuestionCommand request, CancellationToken cancellationToken) 
         => new Success();

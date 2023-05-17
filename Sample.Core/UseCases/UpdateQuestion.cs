@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
-using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Presentation;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.BusinessLogic;
+using VSlices.Core.BusinessLogic.FluentValidation;
 
 namespace Sample.Core.UseCases;
 
@@ -64,35 +64,18 @@ public class UpdateQuestionEndpoint : IEndpointDefinition
 // Lógica
 public record UpdateQuestionCommand(Guid Id, string Name, Guid UpdatedById);
 
-public class UpdateQuestionHandler : AbstractUpdateFullyValidatedHandler<UpdateQuestionCommand, Success, Question>
+public class UpdateQuestionHandler : AbstractUpdateFullyFluentValidatedHandler<UpdateQuestionCommand, Success, Question>
 {
     private readonly IUpdateQuestionRepository _repository;
-    private readonly IValidator<UpdateQuestionCommand> _contractValidator;
-    private readonly IValidator<Question> _domainValidator;
 
-    public UpdateQuestionHandler(IUpdateQuestionRepository repository,
-        IValidator<UpdateQuestionCommand> contractValidator,
-        IValidator<Question> domainValidator) : base(repository)
+    public UpdateQuestionHandler(
+        IValidator<UpdateQuestionCommand> requestValidator,
+        IValidator<Question> domainValidator,
+        IUpdateQuestionRepository repository) : base(requestValidator, domainValidator, repository)
     {
         _repository = repository;
-        _contractValidator = contractValidator;
-        _domainValidator = domainValidator;
     }
     
-    protected override async Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(UpdateQuestionCommand request, CancellationToken cancellationToken = default)
-    {
-        var contractValidationResult = await _contractValidator.ValidateAsync(request, cancellationToken);
-
-        if (contractValidationResult.IsValid) return new Success();
-
-        var errors = contractValidationResult
-            .Errors.Select(e => e.ErrorMessage)
-            .ToArray();
-
-        return BusinessFailure.Of.Validation(errors);
-
-    }
-
     protected override async Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(UpdateQuestionCommand request, CancellationToken cancellationToken)
     {
         var existQuestion = await _repository.AnyAsync(request.Id, cancellationToken);
@@ -105,24 +88,10 @@ public class UpdateQuestionHandler : AbstractUpdateFullyValidatedHandler<UpdateQ
         return new Success();
     }
 
-    protected override async Task<Question> GetDomainEntityAsync(UpdateQuestionCommand request, CancellationToken cancellationToken) => 
+    protected override async Task<Question> GetDomainEntityAsync(UpdateQuestionCommand request, CancellationToken cancellationToken) =>
         await _repository.GetAsync(request.Id, cancellationToken);
-
-    protected override async Task<OneOf<Success, BusinessFailure>> ValidateDomainAsync(Question domain, CancellationToken cancellationToken = default)
-    {
-        var domainValidationResult = await _domainValidator.ValidateAsync(domain, cancellationToken);
-
-        if (domainValidationResult.IsValid) return new Success();
-
-        var errors = domainValidationResult
-            .Errors.Select(e => e.ErrorMessage)
-            .ToArray();
-
-        return BusinessFailure.Of.Validation(errors);
-
-    }
-
-    protected override async Task<Success> GetResponseAsync(Question domainEntity, UpdateQuestionCommand request, CancellationToken cancellationToken) 
+    
+    protected override async Task<Success> GetResponseAsync(Question domainEntity, UpdateQuestionCommand request, CancellationToken cancellationToken)
         => new Success();
 }
 
