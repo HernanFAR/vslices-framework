@@ -39,19 +39,7 @@ public class CreateQuestionEndpoint : IEndpointDefinition
 
         var response = await handler.HandleAsync(command, cancellationToken);
 
-        return response.Match<IResult>(
-                e => TypedResults.Created($"/api/question/{e}"),
-                e =>
-                {
-                    return e.Kind switch
-                    {
-                        FailureKind.UserNotAllowed => TypedResults.Forbid(),
-                        FailureKind.NotFoundResource => TypedResults.NotFound(),
-                        FailureKind.ConcurrencyError => TypedResults.Conflict(),
-                        FailureKind.Validation => TypedResults.UnprocessableEntity(e.Errors),
-                        _ => throw new ArgumentOutOfRangeException(nameof(e.Kind), "A not valid FailureKind value was returned")
-                    };
-                });
+        return response.MatchEndpointResult(e => TypedResults.Created($"/api/question/{e}"));
     }
 
 }

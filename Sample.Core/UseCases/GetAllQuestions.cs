@@ -29,19 +29,7 @@ public class GetAllQuestionsEndpoint : IEndpointDefinition
     {
         var response = await handler.HandleAsync(GetAllQuestionsQuery.Instance, cancellationToken);
 
-        return response.Match<IResult>(
-            e => TypedResults.Ok(e),
-            e =>
-            {
-                return e.Kind switch
-                {
-                    FailureKind.UserNotAllowed => TypedResults.Forbid(),
-                    FailureKind.NotFoundResource => TypedResults.NotFound(),
-                    FailureKind.ConcurrencyError => TypedResults.Conflict(),
-                    FailureKind.Validation => TypedResults.UnprocessableEntity(e.Errors),
-                    _ => throw new ArgumentOutOfRangeException(nameof(e.Kind), "A not valid FailureKind value was returned")
-                };
-            });
+        return response.MatchEndpointResult(TypedResults.Ok);
     }
 }
 

@@ -44,19 +44,7 @@ public class UpdateQuestionEndpoint : IEndpointDefinition
 
         var response = await handler.HandleAsync(command, cancellationToken);
 
-        return response.Match(
-                e => Results.NoContent(),
-                e =>
-                {
-                    return e.Kind switch
-                    {
-                        FailureKind.UserNotAllowed => TypedResults.Forbid(),
-                        FailureKind.NotFoundResource => TypedResults.NotFound(),
-                        FailureKind.ConcurrencyError => TypedResults.Conflict(),
-                        FailureKind.Validation => TypedResults.UnprocessableEntity(e.Errors),
-                        _ => throw new ArgumentOutOfRangeException(nameof(e.Kind), "A not valid FailureKind value was returned")
-                    };
-                });
+        return response.MatchEndpointResult(_ => Results.NoContent());
     }
 }
 
