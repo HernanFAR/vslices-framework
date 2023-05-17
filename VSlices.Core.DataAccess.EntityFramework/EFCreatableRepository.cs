@@ -1,12 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OneOf;
 using OneOf.Types;
-using System.Text.Json;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Responses;
 
-namespace VSlices.Core.DataAccess;
+namespace VSlices.Core.DataAccess.EntityFramework;
 
 public abstract class EFCreatableRepository<TDbContext, TEntity> : ICreatableRepository<TEntity>
     where TDbContext : DbContext
@@ -24,7 +24,8 @@ public abstract class EFCreatableRepository<TDbContext, TEntity> : ICreatableRep
     protected virtual string ConcurrencyMessageTemplate
         => "There was a concurrency error when creating entity of type {EntityType}, with data {Entity}";
 
-    public virtual async Task<OneOf<Success, BusinessFailure>> CreateAsync(TEntity entity, CancellationToken cancellationToken = default)
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "CA2254", Justification = "Logging template can be translated to other languages in this way")]
+    public virtual async ValueTask<OneOf<Success, BusinessFailure>> CreateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         _context.Set<TEntity>().Add(entity);
 
@@ -59,7 +60,8 @@ public abstract class EFCreatableRepository<TDbContext, TDomain, TEntity> : ICre
     protected virtual string ConcurrencyMessageTemplate
         => "There was a concurrency error when creating entity of type {EntityType}, with data {Entity}";
 
-    public virtual async Task<OneOf<Success, BusinessFailure>> CreateAsync(TDomain domain, CancellationToken cancellationToken = default)
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "CA2254", Justification = "Logging template can be translated to other languages in this way")]
+    public virtual async ValueTask<OneOf<Success, BusinessFailure>> CreateAsync(TDomain domain, CancellationToken cancellationToken = default)
     {
         var databaseEntity = await DomainToDatabaseEntityAsync(domain, cancellationToken);
 
@@ -79,5 +81,5 @@ public abstract class EFCreatableRepository<TDbContext, TDomain, TEntity> : ICre
         }
     }
 
-    protected abstract Task<TEntity> DomainToDatabaseEntityAsync(TDomain domain, CancellationToken cancellationToken = default);
+    protected abstract ValueTask<TEntity> DomainToDatabaseEntityAsync(TDomain domain, CancellationToken cancellationToken = default);
 }

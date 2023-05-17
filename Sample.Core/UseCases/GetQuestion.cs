@@ -23,7 +23,7 @@ public class GetQuestionEndpoint : IEndpointDefinition
         services.AddScoped<IGetQuestionRepository, GetQuestionRepository>();
     }
 
-    public static async Task<IResult> GetQuestionAsync(
+    public static async ValueTask<IResult> GetQuestionAsync(
         [FromRoute] string id,
         [FromServices] IHttpContextAccessor contextAccessor,
         [FromServices] GetQuestionHandler handler,
@@ -47,14 +47,14 @@ public class GetQuestionHandler : AbstractReadRequestValidatedHandler<GetQuestio
     public GetQuestionHandler(IGetQuestionRepository repository)
         : base(repository) { }
 
-    protected override async Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(GetQuestionQuery request, CancellationToken cancellationToken)
-        => new Success();
+    protected override ValueTask<OneOf<Success, BusinessFailure>> ValidateRequestAsync(GetQuestionQuery request, CancellationToken cancellationToken)
+        => ValueTask.FromResult<OneOf<Success, BusinessFailure>>(new Success());
 
-    protected override async Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(GetQuestionQuery request, CancellationToken cancellationToken)
-        => new Success();
+    protected override ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(GetQuestionQuery request, CancellationToken cancellationToken)
+        => ValueTask.FromResult<OneOf<Success, BusinessFailure>>(new Success());
 
-    protected override async Task<Guid> RequestToSearchOptionsAsync(GetQuestionQuery request, CancellationToken cancellationToken)
-        => request.Id;
+    protected override ValueTask<Guid> RequestToSearchOptionsAsync(GetQuestionQuery request, CancellationToken cancellationToken)
+        => ValueTask.FromResult(request.Id);
 }
 
 public interface IGetQuestionRepository : IReadableRepository<GetQuestionDto, Guid>
@@ -71,7 +71,7 @@ public class GetQuestionRepository : IGetQuestionRepository
         _context = context;
     }
 
-    public async Task<OneOf<GetQuestionDto, BusinessFailure>> ReadAsync(Guid id, CancellationToken cancellationToken = default)
+    public async ValueTask<OneOf<GetQuestionDto, BusinessFailure>> ReadAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var question = await _context.Questions
             .Where(e => e.Id == id)

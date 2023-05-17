@@ -5,5 +5,5 @@ namespace VSlices.Core.Abstracts.BusinessLogic;
 
 public interface IHandler<in TRequest, TSuccessResponse>
 {
-    Task<OneOf<TSuccessResponse, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default);
+    ValueTask<OneOf<TSuccessResponse, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default);
 }

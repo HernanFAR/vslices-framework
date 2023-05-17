@@ -22,7 +22,7 @@ public class GetAllQuestionsEndpoint : IEndpointDefinition
         services.AddScoped<IGetAllQuestionsRepository, GetAllQuestionsRepository>();
     }
 
-    public static async Task<IResult> GetAllQuestionsAsync(
+    public static async ValueTask<IResult> GetAllQuestionsAsync(
         [FromServices] IHttpContextAccessor contextAccessor,
         [FromServices] GetAllQuestionsHandler handler,
         CancellationToken cancellationToken)
@@ -46,11 +46,11 @@ public class GetAllQuestionsHandler : AbstractBasicReadRequestValidatedHandler<G
 {
     public GetAllQuestionsHandler(IGetAllQuestionsRepository repository) : base(repository) { }
 
-    protected override async Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(GetAllQuestionsQuery request, CancellationToken cancellationToken)
-        => new Success();
+    protected override ValueTask<OneOf<Success, BusinessFailure>> ValidateRequestAsync(GetAllQuestionsQuery request, CancellationToken cancellationToken)
+        => ValueTask.FromResult<OneOf<Success, BusinessFailure>>(new Success());
 
-    protected override async Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(GetAllQuestionsQuery request, CancellationToken cancellationToken)
-        => new Success();
+    protected override ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(GetAllQuestionsQuery request, CancellationToken cancellationToken)
+        => ValueTask.FromResult<OneOf<Success, BusinessFailure>>(new Success());
 }
 
 public interface IGetAllQuestionsRepository : IReadableRepository<GetAllQuestionsDto[]>
@@ -66,7 +66,7 @@ public class GetAllQuestionsRepository : IGetAllQuestionsRepository
         _context = context;
     }
 
-    public async Task<OneOf<GetAllQuestionsDto[], BusinessFailure>> ReadAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<OneOf<GetAllQuestionsDto[], BusinessFailure>> ReadAsync(CancellationToken cancellationToken = default)
     {
         return await _context.Questions
             .Select(e => new GetAllQuestionsDto(e.Id, e.Name, e.CreatedById, e.UpdatedById))

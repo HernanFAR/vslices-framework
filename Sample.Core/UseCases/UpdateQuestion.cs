@@ -5,6 +5,7 @@ using VSlices.Core.Abstracts.Presentation;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.BusinessLogic.FluentValidation;
 using VSlices.Core.DataAccess;
+using VSlices.Core.DataAccess.EntityFramework;
 
 namespace Sample.Core.UseCases;
 
@@ -28,7 +29,7 @@ public class UpdateQuestionEndpoint : IEndpointDefinition
         services.AddScoped<IUpdateQuestionRepository, UpdateQuestionRepository>();
     }
 
-    public static async Task<IResult> UpdateQuestionAsync(
+    public static async ValueTask<IResult> UpdateQuestionAsync(
         [FromRoute] string id,
         [FromBody] UpdateQuestionContract createQuestionContract,
         [FromServices] IHttpContextAccessor contextAccessor,
@@ -63,7 +64,7 @@ public class UpdateQuestionHandler : AbstractUpdateFullyFluentValidatedHandler<U
         _repository = repository;
     }
 
-    protected override async Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(UpdateQuestionCommand request, CancellationToken cancellationToken)
+    protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(UpdateQuestionCommand request, CancellationToken cancellationToken)
     {
         var existQuestion = await _repository.AnyAsync(request.Id, cancellationToken);
 
@@ -75,7 +76,7 @@ public class UpdateQuestionHandler : AbstractUpdateFullyFluentValidatedHandler<U
         return new Success();
     }
 
-    protected override async Task<Question> GetDomainEntityAsync(UpdateQuestionCommand request, CancellationToken cancellationToken)
+    protected override async ValueTask<Question> GetDomainEntityAsync(UpdateQuestionCommand request, CancellationToken cancellationToken)
     {
         var question = await _repository.GetAsync(request.Id, cancellationToken);
 
@@ -100,9 +101,9 @@ public class UpdateQuestionValidator : AbstractValidator<UpdateQuestionCommand>
 
 public interface IUpdateQuestionRepository : IUpdateableRepository<Question>
 {
-    Task<bool> AnyAsync(Guid id, CancellationToken cancellationToken = default);
+    ValueTask<bool> AnyAsync(Guid id, CancellationToken cancellationToken = default);
 
-    Task<Question> GetAsync(Guid id, CancellationToken cancellationToken = default);
+    ValueTask<Question> GetAsync(Guid id, CancellationToken cancellationToken = default);
 
 
 }
@@ -117,13 +118,13 @@ public class UpdateQuestionRepository : EFUpdateableRepository<ApplicationDbCont
         _context = context;
     }
 
-    public async Task<bool> AnyAsync(Guid id, CancellationToken cancellationToken = default)
+    public async ValueTask<bool> AnyAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _context.Questions
             .AnyAsync(e => e.Id == id, cancellationToken);
     }
 
-    public async Task<Question> GetAsync(Guid id, CancellationToken cancellationToken = default)
+    public async ValueTask<Question> GetAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _context.Questions
             .FirstAsync(e => e.Id == id, cancellationToken);

@@ -4,6 +4,7 @@ using VSlices.Core.Abstracts.Presentation;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.BusinessLogic.FluentValidation;
 using VSlices.Core.DataAccess;
+using VSlices.Core.DataAccess.EntityFramework;
 
 namespace Sample.Core.UseCases;
 
@@ -27,7 +28,7 @@ public class CreateQuestionEndpoint : IEndpointDefinition
         services.AddScoped<ICreateQuestionRepository, CreateQuestionRepository>();
     }
 
-    public static async Task<IResult> CreateQuestionAsync(
+    public static async ValueTask<IResult> CreateQuestionAsync(
         [FromBody] CreateQuestionContract createQuestionContract,
         [FromServices] IHttpContextAccessor contextAccessor,
         [FromServices] CreateQuestionHandler handler,
@@ -55,14 +56,14 @@ public class CreateQuestionHandler : AbstractCreateFullyFluentValidatedHandler<C
         ICreateQuestionRepository repository) : base(requestValidator, domainValidator, repository)
     { }
 
-    protected override async Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(CreateQuestionCommand request, CancellationToken cancellationToken = default)
-        => new Success();
+    protected override ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(CreateQuestionCommand request, CancellationToken cancellationToken = default)
+        => ValueTask.FromResult<OneOf<Success, BusinessFailure>>(new Success());
 
-    protected override async Task<Question> GetDomainEntityAsync(CreateQuestionCommand request, CancellationToken cancellationToken = default)
-        => new Question(request.Name, request.CreatedBy);
+    protected override ValueTask<Question> GetDomainEntityAsync(CreateQuestionCommand request, CancellationToken cancellationToken = default)
+        => ValueTask.FromResult(new Question(request.Name, request.CreatedBy));
 
-    protected override async Task<Guid> GetResponseAsync(Question domainEntity, CreateQuestionCommand request, CancellationToken cancellationToken = default)
-        => domainEntity.Id;
+    protected override ValueTask<Guid> GetResponseAsync(Question domainEntity, CreateQuestionCommand request, CancellationToken cancellationToken = default)
+        => ValueTask.FromResult(domainEntity.Id);
 }
 
 public class CreateQuestionValidator : AbstractValidator<CreateQuestionCommand>

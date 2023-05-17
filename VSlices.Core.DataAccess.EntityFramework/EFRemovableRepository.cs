@@ -1,12 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OneOf;
 using OneOf.Types;
-using System.Text.Json;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Responses;
 
-namespace VSlices.Core.DataAccess;
+namespace VSlices.Core.DataAccess.EntityFramework;
 
 public abstract class EFRemovableRepository<TDbContext, TEntity> : IRemovableRepository<TEntity>
     where TDbContext : DbContext
@@ -24,7 +24,8 @@ public abstract class EFRemovableRepository<TDbContext, TEntity> : IRemovableRep
     protected virtual string ConcurrencyMessageTemplate
         => "There was a concurrency error when removing entity of type {EntityType}, with data {Entity}";
 
-    public virtual async Task<OneOf<Success, BusinessFailure>> RemoveAsync(TEntity entity, CancellationToken cancellationToken = default)
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "CA2254", Justification = "Logging template can be translated to other languages in this way")]
+    public virtual async ValueTask<OneOf<Success, BusinessFailure>> RemoveAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         _context.Set<TEntity>().Remove(entity);
 
@@ -59,7 +60,8 @@ public abstract class EFRemovableRepository<TDbContext, TDomain, TEntity> : IRem
     protected virtual string ConcurrencyMessageTemplate
         => "There was a concurrency error when removing entity of type {EntityType}, with data {Entity}";
 
-    public virtual async Task<OneOf<Success, BusinessFailure>> RemoveAsync(TDomain domain, CancellationToken cancellationToken = default)
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "CA2254", Justification = "Logging template can be translated to other languages in this way")]
+    public virtual async ValueTask<OneOf<Success, BusinessFailure>> RemoveAsync(TDomain domain, CancellationToken cancellationToken = default)
     {
         var databaseEntity = await DomainToDatabaseEntityAsync(domain, cancellationToken);
 
@@ -79,5 +81,5 @@ public abstract class EFRemovableRepository<TDbContext, TDomain, TEntity> : IRem
         }
     }
 
-    protected abstract Task<TEntity> DomainToDatabaseEntityAsync(TDomain domain, CancellationToken cancellationToken = default);
+    protected abstract ValueTask<TEntity> DomainToDatabaseEntityAsync(TDomain domain, CancellationToken cancellationToken = default);
 }

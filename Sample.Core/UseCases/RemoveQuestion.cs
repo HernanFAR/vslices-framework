@@ -5,6 +5,7 @@ using VSlices.Core.Abstracts.Presentation;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.BusinessLogic.FluentValidation;
 using VSlices.Core.DataAccess;
+using VSlices.Core.DataAccess.EntityFramework;
 
 namespace Sample.Core.UseCases;
 
@@ -26,7 +27,7 @@ public class RemoveQuestionEndpoint : IEndpointDefinition
         services.AddScoped<IRemoveQuestionRepository, RemoveQuestionRepository>();
     }
 
-    public static async Task<IResult> RemoveQuestionAsync(
+    public static async ValueTask<IResult> RemoveQuestionAsync(
         [FromRoute] string id,
         [FromServices] IHttpContextAccessor contextAccessor,
         [FromServices] RemoveQuestionHandler handler,
@@ -59,7 +60,7 @@ public class RemoveQuestionHandler : AbstractRemoveFullyFluentValidatedHandler<R
         _repository = repository;
     }
 
-    protected override async Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(RemoveQuestionCommand request, CancellationToken cancellationToken)
+    protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(RemoveQuestionCommand request, CancellationToken cancellationToken)
     {
         var exist = await _repository.AnyAsync(request.Id, cancellationToken);
 
@@ -71,7 +72,7 @@ public class RemoveQuestionHandler : AbstractRemoveFullyFluentValidatedHandler<R
         return new Success();
     }
 
-    protected override async Task<Question> GetDomainEntityAsync(RemoveQuestionCommand request, CancellationToken cancellationToken)
+    protected override async ValueTask<Question> GetDomainEntityAsync(RemoveQuestionCommand request, CancellationToken cancellationToken)
         => await _repository.GetAsync(request.Id, cancellationToken);
 
 }
@@ -88,9 +89,9 @@ public class RemoveQuestionValidator : AbstractValidator<RemoveQuestionCommand>
 
 public interface IRemoveQuestionRepository : IRemovableRepository<Question>
 {
-    Task<bool> AnyAsync(Guid id, CancellationToken cancellationToken = default);
+    ValueTask<bool> AnyAsync(Guid id, CancellationToken cancellationToken = default);
 
-    Task<Question> GetAsync(Guid id, CancellationToken cancellationToken = default);
+    ValueTask<Question> GetAsync(Guid id, CancellationToken cancellationToken = default);
 
 }
 
@@ -104,13 +105,13 @@ public class RemoveQuestionRepository : EFRemovableRepository<ApplicationDbConte
         _context = context;
     }
 
-    public async Task<bool> AnyAsync(Guid id, CancellationToken cancellationToken = default)
+    public async ValueTask<bool> AnyAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _context.Questions
             .AnyAsync(e => e.Id == id, cancellationToken);
     }
 
-    public async Task<Question> GetAsync(Guid id, CancellationToken cancellationToken = default)
+    public async ValueTask<Question> GetAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _context.Questions
             .FirstAsync(e => e.Id == id, cancellationToken);

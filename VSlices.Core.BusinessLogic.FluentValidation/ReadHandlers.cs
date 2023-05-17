@@ -15,7 +15,7 @@ public abstract class AbstractReadRequestFluentValidatedHandler<TRequest, TSearc
         _requestValidator = requestValidator;
     }
 
-    protected override async Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(TRequest request, CancellationToken cancellationToken = default)
+    protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateRequestAsync(TRequest request, CancellationToken cancellationToken = default)
     {
         var requestValidationResult = await _requestValidator.ValidateAsync(request, cancellationToken);
 
@@ -38,7 +38,7 @@ public abstract class AbstractReadRequestFluentValidatedHandler<TRequest, TRespo
         _requestValidator = requestValidator;
     }
 
-    protected override async Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(TRequest request, CancellationToken cancellationToken = default)
+    protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateRequestAsync(TRequest request, CancellationToken cancellationToken = default)
     {
         var requestValidationResult = await _requestValidator.ValidateAsync(request, cancellationToken);
 
@@ -61,7 +61,7 @@ public abstract class AbstractBasicReadRequestFluentValidatedHandler<TRequest, T
         _requestValidator = requestValidator;
     }
 
-    protected override async Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(TRequest request, CancellationToken cancellationToken = default)
+    protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateRequestAsync(TRequest request, CancellationToken cancellationToken = default)
     {
         var requestValidationResult = await _requestValidator.ValidateAsync(request, cancellationToken);
 

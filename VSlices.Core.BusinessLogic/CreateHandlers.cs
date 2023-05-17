@@ -15,7 +15,7 @@ public abstract class AbstractCreateHandler<TRequest, TResponse, TDomain> : IHan
         _repository = repository;
     }
 
-    public virtual async Task<OneOf<TResponse, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<OneOf<TResponse, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
     {
         var useCaseValidationResult = await ValidateUseCaseRulesAsync(request, cancellationToken);
 
@@ -36,13 +36,13 @@ public abstract class AbstractCreateHandler<TRequest, TResponse, TDomain> : IHan
         return await GetResponseAsync(domainEntity, request, cancellationToken);
     }
 
-    protected abstract Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
+    protected abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
-    protected abstract Task<TDomain> GetDomainEntityAsync(TRequest request,
+    protected abstract ValueTask<TDomain> GetDomainEntityAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
-    protected abstract Task<TResponse> GetResponseAsync(TDomain domainEntity, TRequest request,
+    protected abstract ValueTask<TResponse> GetResponseAsync(TDomain domainEntity, TRequest request,
         CancellationToken cancellationToken = default);
 }
 
@@ -55,7 +55,7 @@ public abstract class AbstractCreateRequestValidatedHandler<TRequest, TResponse,
         _repository = repository;
     }
 
-    public virtual async Task<OneOf<TResponse, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<OneOf<TResponse, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
     {
         var requestValidationResult = await ValidateRequestAsync(request, cancellationToken);
 
@@ -83,16 +83,16 @@ public abstract class AbstractCreateRequestValidatedHandler<TRequest, TResponse,
         return await GetResponseAsync(domainEntity, request, cancellationToken);
     }
 
-    protected abstract Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(TRequest request,
+    protected abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateRequestAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
-    protected abstract Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
+    protected abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
-    protected abstract Task<TDomain> GetDomainEntityAsync(TRequest request,
+    protected abstract ValueTask<TDomain> GetDomainEntityAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
-    protected abstract Task<TResponse> GetResponseAsync(TDomain domainEntity, TRequest request,
+    protected abstract ValueTask<TResponse> GetResponseAsync(TDomain domainEntity, TRequest request,
         CancellationToken cancellationToken = default);
 }
 
@@ -105,7 +105,7 @@ public abstract class AbstractCreateDomainValidatedHandler<TRequest, TResponse, 
         _repository = repository;
     }
 
-    public virtual async Task<OneOf<TResponse, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<OneOf<TResponse, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
     {
         var useCaseValidationResult = await ValidateUseCaseRulesAsync(request, cancellationToken);
 
@@ -133,16 +133,16 @@ public abstract class AbstractCreateDomainValidatedHandler<TRequest, TResponse, 
         return await GetResponseAsync(domainEntity, request, cancellationToken);
     }
 
-    protected abstract Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
+    protected abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
-    protected abstract Task<TDomain> GetDomainEntityAsync(TRequest request,
+    protected abstract ValueTask<TDomain> GetDomainEntityAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
-    protected abstract Task<OneOf<Success, BusinessFailure>> ValidateDomainAsync(TDomain domain,
+    protected abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateDomainAsync(TDomain domain,
         CancellationToken cancellationToken = default);
 
-    protected abstract Task<TResponse> GetResponseAsync(TDomain domainEntity, TRequest request,
+    protected abstract ValueTask<TResponse> GetResponseAsync(TDomain domainEntity, TRequest request,
         CancellationToken cancellationToken = default);
 }
 
@@ -155,7 +155,7 @@ public abstract class AbstractCreateFullyValidatedHandler<TRequest, TResponse, T
         _repository = repository;
     }
 
-    public virtual async Task<OneOf<TResponse, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<OneOf<TResponse, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
     {
         var requestValidationResult = await ValidateRequestAsync(request, cancellationToken);
 
@@ -190,19 +190,19 @@ public abstract class AbstractCreateFullyValidatedHandler<TRequest, TResponse, T
         return await GetResponseAsync(domainEntity, request, cancellationToken);
     }
 
-    protected abstract Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(TRequest request,
+    protected abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateRequestAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
-    protected abstract Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
+    protected abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
-    protected abstract Task<TDomain> GetDomainEntityAsync(TRequest request,
+    protected abstract ValueTask<TDomain> GetDomainEntityAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
-    protected abstract Task<OneOf<Success, BusinessFailure>> ValidateDomainAsync(TDomain request,
+    protected abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateDomainAsync(TDomain request,
         CancellationToken cancellationToken = default);
 
-    protected abstract Task<TResponse> GetResponseAsync(TDomain domainEntity, TRequest request,
+    protected abstract ValueTask<TResponse> GetResponseAsync(TDomain domainEntity, TRequest request,
         CancellationToken cancellationToken = default);
 }
 
@@ -215,7 +215,7 @@ public abstract class AbstractCreateHandler<TRequest, TDomain> : IHandler<TReque
         _repository = repository;
     }
 
-    public virtual async Task<OneOf<Success, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<OneOf<Success, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
     {
         var useCaseValidationResult = await ValidateUseCaseRulesAsync(request, cancellationToken);
 
@@ -236,14 +236,15 @@ public abstract class AbstractCreateHandler<TRequest, TDomain> : IHandler<TReque
         return await GetResponseAsync(domainEntity, request, cancellationToken);
     }
 
-    protected abstract Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
+    protected abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
-    protected abstract Task<TDomain> GetDomainEntityAsync(TRequest request,
+    protected abstract ValueTask<TDomain> GetDomainEntityAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
-    protected Task<Success> GetResponseAsync(TDomain _, TRequest __, CancellationToken ___ = default)
-        => Task.FromResult(new Success());
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060", Justification = "Can not use two or more _")]
+    protected ValueTask<Success> GetResponseAsync(TDomain _, TRequest r, CancellationToken c = default)
+        => ValueTask.FromResult(new Success());
 }
 
 public abstract class AbstractCreateRequestValidatedHandler<TRequest, TDomain> : IHandler<TRequest, Success>
@@ -255,7 +256,7 @@ public abstract class AbstractCreateRequestValidatedHandler<TRequest, TDomain> :
         _repository = repository;
     }
 
-    public virtual async Task<OneOf<Success, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<OneOf<Success, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
     {
         var requestValidationResult = await ValidateRequestAsync(request, cancellationToken);
 
@@ -283,17 +284,18 @@ public abstract class AbstractCreateRequestValidatedHandler<TRequest, TDomain> :
         return await GetResponseAsync(domainEntity, request, cancellationToken);
     }
 
-    protected abstract Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(TRequest request,
+    protected abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateRequestAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
-    protected abstract Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
+    protected abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
-    protected abstract Task<TDomain> GetDomainEntityAsync(TRequest request,
+    protected abstract ValueTask<TDomain> GetDomainEntityAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
-    protected Task<Success> GetResponseAsync(TDomain _, TRequest __, CancellationToken ___ = default)
-        => Task.FromResult(new Success());
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060", Justification = "Can not use two or more _")]
+    protected ValueTask<Success> GetResponseAsync(TDomain _, TRequest r, CancellationToken c = default)
+        => ValueTask.FromResult(new Success());
 }
 
 public abstract class AbstractCreateDomainValidatedHandler<TRequest, TDomain> : IHandler<TRequest, Success>
@@ -305,7 +307,7 @@ public abstract class AbstractCreateDomainValidatedHandler<TRequest, TDomain> : 
         _repository = repository;
     }
 
-    public virtual async Task<OneOf<Success, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<OneOf<Success, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
     {
         var useCaseValidationResult = await ValidateUseCaseRulesAsync(request, cancellationToken);
 
@@ -333,17 +335,18 @@ public abstract class AbstractCreateDomainValidatedHandler<TRequest, TDomain> : 
         return await GetResponseAsync(domainEntity, request, cancellationToken);
     }
 
-    protected abstract Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
+    protected abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
-    protected abstract Task<TDomain> GetDomainEntityAsync(TRequest request,
+    protected abstract ValueTask<TDomain> GetDomainEntityAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
-    protected abstract Task<OneOf<Success, BusinessFailure>> ValidateDomainAsync(TDomain domain,
+    protected abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateDomainAsync(TDomain domain,
         CancellationToken cancellationToken = default);
 
-    protected Task<Success> GetResponseAsync(TDomain _, TRequest __, CancellationToken ___ = default)
-        => Task.FromResult(new Success());
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060", Justification = "Can not use two or more _")]
+    protected ValueTask<Success> GetResponseAsync(TDomain _, TRequest r, CancellationToken c = default)
+        => ValueTask.FromResult(new Success());
 }
 
 public abstract class AbstractCreateFullyValidatedHandler<TRequest, TDomain> : IHandler<TRequest, Success>
@@ -355,7 +358,7 @@ public abstract class AbstractCreateFullyValidatedHandler<TRequest, TDomain> : I
         _repository = repository;
     }
 
-    public virtual async Task<OneOf<Success, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<OneOf<Success, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
     {
         var requestValidationResult = await ValidateRequestAsync(request, cancellationToken);
 
@@ -390,18 +393,19 @@ public abstract class AbstractCreateFullyValidatedHandler<TRequest, TDomain> : I
         return await GetResponseAsync(domainEntity, request, cancellationToken);
     }
 
-    protected abstract Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(TRequest request,
+    protected abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateRequestAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
-    protected abstract Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
+    protected abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
-    protected abstract Task<TDomain> GetDomainEntityAsync(TRequest request,
+    protected abstract ValueTask<TDomain> GetDomainEntityAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
-    protected abstract Task<OneOf<Success, BusinessFailure>> ValidateDomainAsync(TDomain request,
+    protected abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateDomainAsync(TDomain request,
         CancellationToken cancellationToken = default);
 
-    protected Task<Success> GetResponseAsync(TDomain _, TRequest __, CancellationToken ___ = default)
-        => Task.FromResult(new Success());
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060", Justification = "Can not use two or more _")]
+    protected ValueTask<Success> GetResponseAsync(TDomain _, TRequest r, CancellationToken c = default)
+        => ValueTask.FromResult(new Success());
 }

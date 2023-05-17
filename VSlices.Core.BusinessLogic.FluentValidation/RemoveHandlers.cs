@@ -15,7 +15,7 @@ public abstract class AbstractRemoveRequestFluentValidatedHandler<TRequest, TRes
         _requestValidator = requestValidator;
     }
 
-    protected override async Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(TRequest request, CancellationToken cancellationToken = default)
+    protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateRequestAsync(TRequest request, CancellationToken cancellationToken = default)
     {
         var requestValidationResult = await _requestValidator.ValidateAsync(request, cancellationToken);
 
@@ -38,7 +38,7 @@ public abstract class AbstractRemoveDomainFluentValidatedHandler<TRequest, TResp
         _domainValidator = domainValidator;
     }
 
-    protected override async Task<OneOf<Success, BusinessFailure>> ValidateDomainAsync(TDomain domain, CancellationToken cancellationToken = default)
+    protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateDomainAsync(TDomain domain, CancellationToken cancellationToken = default)
     {
         var domainValidationResult = await _domainValidator.ValidateAsync(domain, cancellationToken);
 
@@ -64,7 +64,7 @@ public abstract class AbstractRemoveFullyFluentValidatedHandler<TRequest, TRespo
         _domainValidator = domainValidator;
     }
 
-    protected override async Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(TRequest request, CancellationToken cancellationToken = default)
+    protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateRequestAsync(TRequest request, CancellationToken cancellationToken = default)
     {
         var requestValidationResult = await _requestValidator.ValidateAsync(request, cancellationToken);
 
@@ -77,7 +77,7 @@ public abstract class AbstractRemoveFullyFluentValidatedHandler<TRequest, TRespo
         return BusinessFailure.Of.Validation(errors);
     }
 
-    protected override async Task<OneOf<Success, BusinessFailure>> ValidateDomainAsync(TDomain domain, CancellationToken cancellationToken = default)
+    protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateDomainAsync(TDomain domain, CancellationToken cancellationToken = default)
     {
         var domainValidationResult = await _domainValidator.ValidateAsync(domain, cancellationToken);
 
@@ -100,7 +100,7 @@ public abstract class AbstractRemoveRequestFluentValidatedHandler<TRequest, TDom
         _requestValidator = requestValidator;
     }
 
-    protected override async Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(TRequest request, CancellationToken cancellationToken = default)
+    protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateRequestAsync(TRequest request, CancellationToken cancellationToken = default)
     {
         var requestValidationResult = await _requestValidator.ValidateAsync(request, cancellationToken);
 
@@ -123,7 +123,7 @@ public abstract class AbstractRemoveDomainFluentValidatedHandler<TRequest, TDoma
         _domainValidator = domainValidator;
     }
 
-    protected override async Task<OneOf<Success, BusinessFailure>> ValidateDomainAsync(TDomain domain, CancellationToken cancellationToken = default)
+    protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateDomainAsync(TDomain domain, CancellationToken cancellationToken = default)
     {
         var domainValidationResult = await _domainValidator.ValidateAsync(domain, cancellationToken);
 
@@ -149,7 +149,7 @@ public abstract class AbstractRemoveFullyFluentValidatedHandler<TRequest, TDomai
         _domainValidator = domainValidator;
     }
 
-    protected override async Task<OneOf<Success, BusinessFailure>> ValidateRequestAsync(TRequest request, CancellationToken cancellationToken = default)
+    protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateRequestAsync(TRequest request, CancellationToken cancellationToken = default)
     {
         var requestValidationResult = await _requestValidator.ValidateAsync(request, cancellationToken);
 
@@ -162,7 +162,7 @@ public abstract class AbstractRemoveFullyFluentValidatedHandler<TRequest, TDomai
         return BusinessFailure.Of.Validation(errors);
     }
 
-    protected override async Task<OneOf<Success, BusinessFailure>> ValidateDomainAsync(TDomain domain, CancellationToken cancellationToken = default)
+    protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateDomainAsync(TDomain domain, CancellationToken cancellationToken = default)
     {
         var domainValidationResult = await _domainValidator.ValidateAsync(domain, cancellationToken);
 
