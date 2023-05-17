@@ -51,7 +51,7 @@ public class UpdateQuestionEndpoint : IEndpointDefinition
 // Lógica
 public record UpdateQuestionCommand(Guid Id, string Name, Guid UpdatedById);
 
-public class UpdateQuestionHandler : AbstractUpdateFullyFluentValidatedHandler<UpdateQuestionCommand, Success, Question>
+public class UpdateQuestionHandler : AbstractUpdateFullyFluentValidatedHandler<UpdateQuestionCommand, Question>
 {
     private readonly IUpdateQuestionRepository _repository;
 
@@ -83,9 +83,6 @@ public class UpdateQuestionHandler : AbstractUpdateFullyFluentValidatedHandler<U
 
         return question;
     }
-
-    protected override async Task<Success> GetResponseAsync(Question domainEntity, UpdateQuestionCommand request, CancellationToken cancellationToken)
-        => new Success();
 }
 
 public class UpdateQuestionValidator : AbstractValidator<UpdateQuestionCommand>

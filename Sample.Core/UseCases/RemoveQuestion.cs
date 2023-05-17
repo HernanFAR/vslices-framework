@@ -47,7 +47,7 @@ public class RemoveQuestionEndpoint : IEndpointDefinition
 // Lógica
 public record RemoveQuestionCommand(Guid Id, Guid RemovedById);
 
-public class RemoveQuestionHandler : AbstractRemoveFullyFluentValidatedHandler<RemoveQuestionCommand, Success, Question>
+public class RemoveQuestionHandler : AbstractRemoveFullyFluentValidatedHandler<RemoveQuestionCommand, Question>
 {
     private readonly IRemoveQuestionRepository _repository;
 
@@ -74,8 +74,6 @@ public class RemoveQuestionHandler : AbstractRemoveFullyFluentValidatedHandler<R
     protected override async Task<Question> GetDomainEntityAsync(RemoveQuestionCommand request, CancellationToken cancellationToken)
         => await _repository.GetAsync(request.Id, cancellationToken);
 
-    protected override async Task<Success> GetResponseAsync(Question domainEntity, RemoveQuestionCommand request, CancellationToken cancellationToken)
-        => new Success();
 }
 
 public class RemoveQuestionValidator : AbstractValidator<RemoveQuestionCommand>
