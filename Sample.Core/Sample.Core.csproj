@@ -19,6 +19,7 @@
 	  <ProjectReference Include="..\Sample.Domain\Sample.Domain.csproj" />
 	  <ProjectReference Include="..\Sample.Shared\Sample.Shared.csproj" />
 	  <ProjectReference Include="..\VSlices.Core.BusinessLogic.FluentValidation\VSlices.Core.BusinessLogic.FluentValidation.csproj" />
+	  <ProjectReference Include="..\VSlices.Core.DataAccess.EntityFramework\VSlices.Core.DataAccess.EntityFramework.csproj" />
 	</ItemGroup>
 
 

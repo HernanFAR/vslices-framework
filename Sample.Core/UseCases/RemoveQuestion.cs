@@ -7,6 +7,7 @@ using VSlices.Core.Abstracts.Presentation;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.BusinessLogic;
 using VSlices.Core.BusinessLogic.FluentValidation;
+using VSlices.Core.DataAccess;
 
 namespace Sample.Core.UseCases;
 
@@ -111,15 +112,14 @@ public interface IRemoveQuestionRepository : IRemovableRepository<Question>
 
 }
 
-public class RemoveQuestionRepository : IRemoveQuestionRepository
+public class RemoveQuestionRepository : EFRemovableRepository<ApplicationDbContext, Question>, IRemoveQuestionRepository
 {
     private readonly ApplicationDbContext _context;
-    private readonly ILogger<RemoveQuestionRepository> _logger;
-
+    
     public RemoveQuestionRepository(ApplicationDbContext context, ILogger<RemoveQuestionRepository> logger)
+        : base (context, logger)
     {
         _context = context;
-        _logger = logger;
     }
 
     public async Task<bool> AnyAsync(Guid id, CancellationToken cancellationToken = default)
@@ -132,24 +132,5 @@ public class RemoveQuestionRepository : IRemoveQuestionRepository
     {
         return await _context.Questions
             .FirstAsync(e => e.Id == id, cancellationToken);
-    }
-
-    public async Task<OneOf<Success, BusinessFailure>> RemoveAsync(Question question, CancellationToken cancellationToken = default)
-    {
-        _context.Remove(question);
-
-        try
-        {
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return new Success();
-        }
-        catch (DbUpdateConcurrencyException ex)
-        {
-            _logger.LogWarning(ex, "Hubo un error de concurrencia al momento de eliminar la entidad {Entity}",
-                JsonSerializer.Serialize(question));
-
-            return BusinessFailure.Of.ConcurrencyError(Array.Empty<string>());
-        }
     }
 }

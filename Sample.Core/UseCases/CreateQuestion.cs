@@ -6,6 +6,7 @@ using VSlices.Core.Abstracts.Presentation;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.BusinessLogic;
 using VSlices.Core.BusinessLogic.FluentValidation;
+using VSlices.Core.DataAccess;
 
 namespace Sample.Core.UseCases;
 
@@ -69,13 +70,13 @@ public class CreateQuestionHandler : AbstractCreateFullyFluentValidatedHandler<C
         ICreateQuestionRepository repository) : base(requestValidator, domainValidator, repository)
     { }
 
-    protected override async Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(CreateQuestionCommand request, CancellationToken cancellationToken)
+    protected override async Task<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(CreateQuestionCommand request, CancellationToken cancellationToken = default)
         => new Success();
 
-    protected override async Task<Question> GetDomainEntityAsync(CreateQuestionCommand request, CancellationToken cancellationToken)
+    protected override async Task<Question> GetDomainEntityAsync(CreateQuestionCommand request, CancellationToken cancellationToken = default)
         => new Question(request.Name, request.CreatedBy);
 
-    protected override async Task<Guid> GetResponseAsync(Question domainEntity, CreateQuestionCommand request, CancellationToken cancellationToken)
+    protected override async Task<Guid> GetResponseAsync(Question domainEntity, CreateQuestionCommand request, CancellationToken cancellationToken = default)
         => domainEntity.Id;
 }
 
@@ -96,33 +97,8 @@ public interface ICreateQuestionRepository : ICreatableRepository<Question>
 {
 }
 
-public class CreateQuestionRepository : ICreateQuestionRepository
+public class CreateQuestionRepository : EFCreatableRepository<ApplicationDbContext, Question>, ICreateQuestionRepository
 {
-    private readonly ApplicationDbContext _context;
-    private readonly ILogger<CreateQuestionRepository> _logger;
-
-    public CreateQuestionRepository(ApplicationDbContext context, ILogger<CreateQuestionRepository> logger)
-    {
-        _context = context;
-        _logger = logger;
-    }
-
-    public async Task<OneOf<Success, BusinessFailure>> CreateAsync(Question question, CancellationToken cancellationToken = default)
-    {
-        _context.Add(question);
-
-        try
-        {
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return new Success();
-        }
-        catch (DbUpdateConcurrencyException ex)
-        {
-            _logger.LogWarning(ex, "Hubo un error de concurrencia al momento de actualizar la entidad {Entity}",
-                JsonSerializer.Serialize(question));
-
-            return BusinessFailure.Of.ConcurrencyError(Array.Empty<string>());
-        }
-    }
+    public CreateQuestionRepository(ApplicationDbContext context, ILogger<CreateQuestionRepository> logger) 
+        : base(context, logger) { }
 }

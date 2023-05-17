@@ -6,6 +6,7 @@ using VSlices.Core.Abstracts.Presentation;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.BusinessLogic;
 using VSlices.Core.BusinessLogic.FluentValidation;
+using VSlices.Core.DataAccess;
 
 namespace Sample.Core.UseCases;
 
@@ -88,9 +89,15 @@ public class UpdateQuestionHandler : AbstractUpdateFullyFluentValidatedHandler<U
         return new Success();
     }
 
-    protected override async Task<Question> GetDomainEntityAsync(UpdateQuestionCommand request, CancellationToken cancellationToken) =>
-        await _repository.GetAsync(request.Id, cancellationToken);
-    
+    protected override async Task<Question> GetDomainEntityAsync(UpdateQuestionCommand request, CancellationToken cancellationToken)
+    {
+        var question = await _repository.GetAsync(request.Id, cancellationToken);
+
+        question.UpdateState(request.Name, request.UpdatedById);
+
+        return question;
+    }
+
     protected override async Task<Success> GetResponseAsync(Question domainEntity, UpdateQuestionCommand request, CancellationToken cancellationToken)
         => new Success();
 }
@@ -117,15 +124,14 @@ public interface IUpdateQuestionRepository : IUpdateableRepository<Question>
 
 }
 
-public class UpdateQuestionRepository : IUpdateQuestionRepository
+public class UpdateQuestionRepository : EFUpdateableRepository<ApplicationDbContext, Question>, IUpdateQuestionRepository
 {
     private readonly ApplicationDbContext _context;
-    private readonly ILogger<UpdateQuestionRepository> _logger;
-
+    
     public UpdateQuestionRepository(ApplicationDbContext context, ILogger<UpdateQuestionRepository> logger)
+        : base(context, logger)
     {
         _context = context;
-        _logger = logger;
     }
 
     public async Task<bool> AnyAsync(Guid id, CancellationToken cancellationToken = default)
@@ -138,25 +144,5 @@ public class UpdateQuestionRepository : IUpdateQuestionRepository
     {
         return await _context.Questions
             .FirstAsync(e => e.Id == id, cancellationToken);
-    }
-
-    public async Task<OneOf<Success, BusinessFailure>> UpdateAsync(Question question,
-        CancellationToken cancellationToken = default)
-    {
-        _context.Update(question);
-
-        try
-        {
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return new Success();
-        }
-        catch (DbUpdateConcurrencyException ex)
-        {
-            _logger.LogWarning(ex, "Hubo un error de concurrencia al momento de eliminar la entidad {Entity}",
-                JsonSerializer.Serialize(question));
-
-            return BusinessFailure.Of.ConcurrencyError(Array.Empty<string>());
-        }
     }
 }
