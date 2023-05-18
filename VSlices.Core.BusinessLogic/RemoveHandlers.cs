@@ -6,11 +6,11 @@ using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.Core.BusinessLogic;
 
-public abstract class AbstractRemoveHandler<TRequest, TResponse, TDomain> : IHandler<TRequest, TResponse>
+public abstract class RemoveHandler<TRequest, TResponse, TDomain> : IHandler<TRequest, TResponse>
 {
     private readonly IRemovableRepository<TDomain> _repository;
 
-    protected AbstractRemoveHandler(IRemovableRepository<TDomain> repository)
+    protected RemoveHandler(IRemovableRepository<TDomain> repository)
     {
         _repository = repository;
     }
@@ -46,11 +46,11 @@ public abstract class AbstractRemoveHandler<TRequest, TResponse, TDomain> : IHan
         CancellationToken cancellationToken);
 }
 
-public abstract class AbstractRemoveRequestValidatedHandler<TRequest, TResponse, TDomain> : IHandler<TRequest, TResponse>
+public abstract class RequestValidatedRemoveHandler<TRequest, TResponse, TDomain> : IHandler<TRequest, TResponse>
 {
     private readonly IRemovableRepository<TDomain> _repository;
 
-    protected AbstractRemoveRequestValidatedHandler(IRemovableRepository<TDomain> repository)
+    protected RequestValidatedRemoveHandler(IRemovableRepository<TDomain> repository)
     {
         _repository = repository;
     }
@@ -96,11 +96,11 @@ public abstract class AbstractRemoveRequestValidatedHandler<TRequest, TResponse,
         CancellationToken cancellationToken);
 }
 
-public abstract class AbstractRemoveDomainValidatedHandler<TRequest, TResponse, TDomain> : IHandler<TRequest, TResponse>
+public abstract class DomainValidatedRemoveHandler<TRequest, TResponse, TDomain> : IHandler<TRequest, TResponse>
 {
     private readonly IRemovableRepository<TDomain> _repository;
 
-    protected AbstractRemoveDomainValidatedHandler(IRemovableRepository<TDomain> repository)
+    protected DomainValidatedRemoveHandler(IRemovableRepository<TDomain> repository)
     {
         _repository = repository;
     }
@@ -146,11 +146,11 @@ public abstract class AbstractRemoveDomainValidatedHandler<TRequest, TResponse, 
         CancellationToken cancellationToken);
 }
 
-public abstract class AbstractRemoveFullyValidatedHandler<TRequest, TResponse, TDomain> : IHandler<TRequest, TResponse>
+public abstract class FullyValidatedRemoveHandler<TRequest, TResponse, TDomain> : IHandler<TRequest, TResponse>
 {
     private readonly IRemovableRepository<TDomain> _repository;
 
-    protected AbstractRemoveFullyValidatedHandler(IRemovableRepository<TDomain> repository)
+    protected FullyValidatedRemoveHandler(IRemovableRepository<TDomain> repository)
     {
         _repository = repository;
     }
@@ -206,11 +206,11 @@ public abstract class AbstractRemoveFullyValidatedHandler<TRequest, TResponse, T
         CancellationToken cancellationToken);
 }
 
-public abstract class AbstractRemoveHandler<TRequest, TDomain> : IHandler<TRequest, Success>
+public abstract class RemoveHandler<TRequest, TDomain> : IHandler<TRequest, Success>
 {
     private readonly IRemovableRepository<TDomain> _repository;
 
-    protected AbstractRemoveHandler(IRemovableRepository<TDomain> repository)
+    protected RemoveHandler(IRemovableRepository<TDomain> repository)
     {
         _repository = repository;
     }
@@ -247,11 +247,11 @@ public abstract class AbstractRemoveHandler<TRequest, TDomain> : IHandler<TReque
         => ValueTask.FromResult(new Success());
 }
 
-public abstract class AbstractRemoveRequestValidatedHandler<TRequest, TDomain> : IHandler<TRequest, Success>
+public abstract class RequestValidatedRemoveHandler<TRequest, TDomain> : IHandler<TRequest, Success>
 {
     private readonly IRemovableRepository<TDomain> _repository;
 
-    protected AbstractRemoveRequestValidatedHandler(IRemovableRepository<TDomain> repository)
+    protected RequestValidatedRemoveHandler(IRemovableRepository<TDomain> repository)
     {
         _repository = repository;
     }
@@ -298,11 +298,11 @@ public abstract class AbstractRemoveRequestValidatedHandler<TRequest, TDomain> :
         => ValueTask.FromResult(new Success());
 }
 
-public abstract class AbstractRemoveDomainValidatedHandler<TRequest, TDomain> : IHandler<TRequest, Success>
+public abstract class DomainValidatedRemoveHandler<TRequest, TDomain> : IHandler<TRequest, Success>
 {
     private readonly IRemovableRepository<TDomain> _repository;
 
-    protected AbstractRemoveDomainValidatedHandler(IRemovableRepository<TDomain> repository)
+    protected DomainValidatedRemoveHandler(IRemovableRepository<TDomain> repository)
     {
         _repository = repository;
     }
@@ -349,11 +349,11 @@ public abstract class AbstractRemoveDomainValidatedHandler<TRequest, TDomain> : 
         => ValueTask.FromResult(new Success());
 }
 
-public abstract class AbstractRemoveFullyValidatedHandler<TRequest, TDomain> : IHandler<TRequest, Success>
+public abstract class FullyValidatedRemoveHandler<TRequest, TDomain> : IHandler<TRequest, Success>
 {
     private readonly IRemovableRepository<TDomain> _repository;
 
-    protected AbstractRemoveFullyValidatedHandler(IRemovableRepository<TDomain> repository)
+    protected FullyValidatedRemoveHandler(IRemovableRepository<TDomain> repository)
     {
         _repository = repository;
     }

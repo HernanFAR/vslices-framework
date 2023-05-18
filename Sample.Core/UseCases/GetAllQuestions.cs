@@ -42,7 +42,7 @@ public record GetAllQuestionsQuery
     public static GetAllQuestionsQuery Instance => Lazy.Value;
 }
 
-public class GetAllQuestionsHandler : AbstractBasicReadRequestValidatedHandler<GetAllQuestionsQuery, GetAllQuestionsDto[]>
+public class GetAllQuestionsHandler : RequestValidatedBasicReadHandler<GetAllQuestionsQuery, GetAllQuestionsDto[]>
 {
     public GetAllQuestionsHandler(IGetAllQuestionsRepository repository) : base(repository) { }
 

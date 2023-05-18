@@ -6,11 +6,11 @@ using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.Core.BusinessLogic.FluentValidation;
 
-public abstract class AbstractReadRequestFluentValidatedHandler<TRequest, TSearchOptions, TResponse> : AbstractReadRequestValidatedHandler<TRequest, TSearchOptions, TResponse>
+public abstract class RequestFluentValidatedReadHandler<TRequest, TSearchOptions, TResponse> : RequestValidatedReadHandler<TRequest, TSearchOptions, TResponse>
 {
     private readonly IValidator<TRequest> _requestValidator;
 
-    protected AbstractReadRequestFluentValidatedHandler(IValidator<TRequest> requestValidator, IReadableRepository<TResponse, TSearchOptions> repository) : base(repository)
+    protected RequestFluentValidatedReadHandler(IValidator<TRequest> requestValidator, IReadableRepository<TResponse, TSearchOptions> repository) : base(repository)
     {
         _requestValidator = requestValidator;
     }
@@ -29,11 +29,11 @@ public abstract class AbstractReadRequestFluentValidatedHandler<TRequest, TSearc
     }
 }
 
-public abstract class AbstractReadRequestFluentValidatedHandler<TRequest, TResponse> : AbstractReadRequestValidatedHandler<TRequest, TResponse>
+public abstract class RequestFluentValidatedReadHandler<TRequest, TResponse> : RequestValidatedReadHandler<TRequest, TResponse>
 {
     private readonly IValidator<TRequest> _requestValidator;
 
-    protected AbstractReadRequestFluentValidatedHandler(IValidator<TRequest> requestValidator, IReadableRepository<TResponse, TRequest> repository) : base(repository)
+    protected RequestFluentValidatedReadHandler(IValidator<TRequest> requestValidator, IReadableRepository<TResponse, TRequest> repository) : base(repository)
     {
         _requestValidator = requestValidator;
     }
@@ -52,11 +52,11 @@ public abstract class AbstractReadRequestFluentValidatedHandler<TRequest, TRespo
     }
 }
 
-public abstract class AbstractBasicReadRequestFluentValidatedHandler<TRequest, TResponse> : AbstractBasicReadRequestValidatedHandler<TRequest, TResponse>
+public abstract class RequestFluentValidatedBasicReadHandler<TRequest, TResponse> : RequestValidatedBasicReadHandler<TRequest, TResponse>
 {
     private readonly IValidator<TRequest> _requestValidator;
 
-    protected AbstractBasicReadRequestFluentValidatedHandler(IValidator<TRequest> requestValidator, IReadableRepository<TResponse> repository) : base(repository)
+    protected RequestFluentValidatedBasicReadHandler(IValidator<TRequest> requestValidator, IReadableRepository<TResponse> repository) : base(repository)
     {
         _requestValidator = requestValidator;
     }

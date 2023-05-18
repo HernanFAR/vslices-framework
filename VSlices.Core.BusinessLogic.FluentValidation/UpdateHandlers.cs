@@ -6,11 +6,11 @@ using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.Core.BusinessLogic.FluentValidation;
 
-public abstract class AbstractUpdateRequestFluentValidatedHandler<TRequest, TResponse, TDomain> : AbstractUpdateRequestValidatedHandler<TRequest, TResponse, TDomain>
+public abstract class RequestFluentValidatedUpdateHandler<TRequest, TResponse, TDomain> : RequestValidatedUpdateHandler<TRequest, TResponse, TDomain>
 {
     private readonly IValidator<TRequest> _requestValidator;
 
-    protected AbstractUpdateRequestFluentValidatedHandler(IValidator<TRequest> requestValidator, IUpdateableRepository<TDomain> repository) : base(repository)
+    protected RequestFluentValidatedUpdateHandler(IValidator<TRequest> requestValidator, IUpdateableRepository<TDomain> repository) : base(repository)
     {
         _requestValidator = requestValidator;
     }
@@ -29,11 +29,11 @@ public abstract class AbstractUpdateRequestFluentValidatedHandler<TRequest, TRes
     }
 }
 
-public abstract class AbstractUpdateDomainFluentValidatedHandler<TRequest, TResponse, TDomain> : AbstractUpdateDomainValidatedHandler<TRequest, TResponse, TDomain>
+public abstract class DomainFluentValidatedUpdateHandler<TRequest, TResponse, TDomain> : DomainValidatedUpdateHandler<TRequest, TResponse, TDomain>
 {
     private readonly IValidator<TDomain> _domainValidator;
 
-    protected AbstractUpdateDomainFluentValidatedHandler(IValidator<TDomain> domainValidator, IUpdateableRepository<TDomain> repository) : base(repository)
+    protected DomainFluentValidatedUpdateHandler(IValidator<TDomain> domainValidator, IUpdateableRepository<TDomain> repository) : base(repository)
     {
         _domainValidator = domainValidator;
     }
@@ -52,12 +52,12 @@ public abstract class AbstractUpdateDomainFluentValidatedHandler<TRequest, TResp
     }
 }
 
-public abstract class AbstractUpdateFullyFluentValidatedHandler<TRequest, TResponse, TDomain> : AbstractUpdateFullyValidatedHandler<TRequest, TResponse, TDomain>
+public abstract class FullyFluentValidatedUpdateHandler<TRequest, TResponse, TDomain> : FullyValidatedUpdateHandler<TRequest, TResponse, TDomain>
 {
     private readonly IValidator<TRequest> _requestValidator;
     private readonly IValidator<TDomain> _domainValidator;
 
-    protected AbstractUpdateFullyFluentValidatedHandler(IValidator<TRequest> requestValidator,
+    protected FullyFluentValidatedUpdateHandler(IValidator<TRequest> requestValidator,
         IValidator<TDomain> domainValidator, IUpdateableRepository<TDomain> repository) : base(repository)
     {
         _requestValidator = requestValidator;
@@ -91,11 +91,11 @@ public abstract class AbstractUpdateFullyFluentValidatedHandler<TRequest, TRespo
     }
 }
 
-public abstract class AbstractUpdateRequestFluentValidatedHandler<TRequest, TDomain> : AbstractUpdateRequestValidatedHandler<TRequest, TDomain>
+public abstract class RequestFluentValidatedUpdateHandler<TRequest, TDomain> : RequestValidatedUpdateHandler<TRequest, TDomain>
 {
     private readonly IValidator<TRequest> _requestValidator;
 
-    protected AbstractUpdateRequestFluentValidatedHandler(IValidator<TRequest> requestValidator, IUpdateableRepository<TDomain> repository) : base(repository)
+    protected RequestFluentValidatedUpdateHandler(IValidator<TRequest> requestValidator, IUpdateableRepository<TDomain> repository) : base(repository)
     {
         _requestValidator = requestValidator;
     }
@@ -114,11 +114,11 @@ public abstract class AbstractUpdateRequestFluentValidatedHandler<TRequest, TDom
     }
 }
 
-public abstract class AbstractUpdateDomainFluentValidatedHandler<TRequest, TDomain> : AbstractUpdateDomainValidatedHandler<TRequest, TDomain>
+public abstract class DomainFluentValidatedUpdateHandler<TRequest, TDomain> : DomainValidatedUpdateHandler<TRequest, TDomain>
 {
     private readonly IValidator<TDomain> _domainValidator;
 
-    protected AbstractUpdateDomainFluentValidatedHandler(IValidator<TDomain> domainValidator, IUpdateableRepository<TDomain> repository) : base(repository)
+    protected DomainFluentValidatedUpdateHandler(IValidator<TDomain> domainValidator, IUpdateableRepository<TDomain> repository) : base(repository)
     {
         _domainValidator = domainValidator;
     }
@@ -137,12 +137,12 @@ public abstract class AbstractUpdateDomainFluentValidatedHandler<TRequest, TDoma
     }
 }
 
-public abstract class AbstractUpdateFullyFluentValidatedHandler<TRequest, TDomain> : AbstractUpdateFullyValidatedHandler<TRequest, TDomain>
+public abstract class FullyFluentValidatedUpdateHandler<TRequest, TDomain> : FullyValidatedUpdateHandler<TRequest, TDomain>
 {
     private readonly IValidator<TRequest> _requestValidator;
     private readonly IValidator<TDomain> _domainValidator;
 
-    protected AbstractUpdateFullyFluentValidatedHandler(IValidator<TRequest> requestValidator,
+    protected FullyFluentValidatedUpdateHandler(IValidator<TRequest> requestValidator,
         IValidator<TDomain> domainValidator, IUpdateableRepository<TDomain> repository) : base(repository)
     {
         _requestValidator = requestValidator;

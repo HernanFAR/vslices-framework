@@ -6,11 +6,11 @@ using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.Core.BusinessLogic.FluentValidation;
 
-public abstract class AbstractCreateRequestFluentValidatedHandler<TRequest, TResponse, TDomain> : AbstractCreateRequestValidatedHandler<TRequest, TResponse, TDomain>
+public abstract class RequestFluentValidatedCreateHandler<TRequest, TResponse, TDomain> : RequestValidatedCreateHandler<TRequest, TResponse, TDomain>
 {
     private readonly IValidator<TRequest> _requestValidator;
 
-    protected AbstractCreateRequestFluentValidatedHandler(IValidator<TRequest> requestValidator, ICreatableRepository<TDomain> repository) : base(repository)
+    protected RequestFluentValidatedCreateHandler(IValidator<TRequest> requestValidator, ICreatableRepository<TDomain> repository) : base(repository)
     {
         _requestValidator = requestValidator;
     }
@@ -29,11 +29,11 @@ public abstract class AbstractCreateRequestFluentValidatedHandler<TRequest, TRes
     }
 }
 
-public abstract class AbstractCreateDomainFluentValidatedHandler<TRequest, TResponse, TDomain> : AbstractCreateDomainValidatedHandler<TRequest, TResponse, TDomain>
+public abstract class DomainFluentValidatedCreateHandler<TRequest, TResponse, TDomain> : DomainValidatedCreateHandler<TRequest, TResponse, TDomain>
 {
     private readonly IValidator<TDomain> _domainValidator;
 
-    protected AbstractCreateDomainFluentValidatedHandler(IValidator<TDomain> domainValidator, ICreatableRepository<TDomain> repository) : base(repository)
+    protected DomainFluentValidatedCreateHandler(IValidator<TDomain> domainValidator, ICreatableRepository<TDomain> repository) : base(repository)
     {
         _domainValidator = domainValidator;
     }
@@ -52,12 +52,12 @@ public abstract class AbstractCreateDomainFluentValidatedHandler<TRequest, TResp
     }
 }
 
-public abstract class AbstractCreateFullyFluentValidatedHandler<TRequest, TResponse, TDomain> : AbstractCreateFullyValidatedHandler<TRequest, TResponse, TDomain>
+public abstract class FullyFluentValidatedCreateHandler<TRequest, TResponse, TDomain> : FullyValidatedCreateHandler<TRequest, TResponse, TDomain>
 {
     private readonly IValidator<TRequest> _requestValidator;
     private readonly IValidator<TDomain> _domainValidator;
 
-    protected AbstractCreateFullyFluentValidatedHandler(IValidator<TRequest> requestValidator,
+    protected FullyFluentValidatedCreateHandler(IValidator<TRequest> requestValidator,
         IValidator<TDomain> domainValidator, ICreatableRepository<TDomain> repository) : base(repository)
     {
         _requestValidator = requestValidator;
@@ -91,11 +91,11 @@ public abstract class AbstractCreateFullyFluentValidatedHandler<TRequest, TRespo
     }
 }
 
-public abstract class AbstractCreateRequestFluentValidatedHandler<TRequest, TDomain> : AbstractCreateRequestValidatedHandler<TRequest, TDomain>
+public abstract class RequestFluentValidatedCreateHandler<TRequest, TDomain> : RequestValidatedCreateHandler<TRequest, TDomain>
 {
     private readonly IValidator<TRequest> _requestValidator;
 
-    protected AbstractCreateRequestFluentValidatedHandler(IValidator<TRequest> requestValidator, ICreatableRepository<TDomain> repository) : base(repository)
+    protected RequestFluentValidatedCreateHandler(IValidator<TRequest> requestValidator, ICreatableRepository<TDomain> repository) : base(repository)
     {
         _requestValidator = requestValidator;
     }
@@ -114,11 +114,11 @@ public abstract class AbstractCreateRequestFluentValidatedHandler<TRequest, TDom
     }
 }
 
-public abstract class AbstractCreateDomainFluentValidatedHandler<TRequest, TDomain> : AbstractCreateDomainValidatedHandler<TRequest, TDomain>
+public abstract class DomainFluentValidatedCreateHandler<TRequest, TDomain> : DomainValidatedCreateHandler<TRequest, TDomain>
 {
     private readonly IValidator<TDomain> _domainValidator;
 
-    protected AbstractCreateDomainFluentValidatedHandler(IValidator<TDomain> domainValidator, ICreatableRepository<TDomain> repository) : base(repository)
+    protected DomainFluentValidatedCreateHandler(IValidator<TDomain> domainValidator, ICreatableRepository<TDomain> repository) : base(repository)
     {
         _domainValidator = domainValidator;
     }
@@ -137,12 +137,12 @@ public abstract class AbstractCreateDomainFluentValidatedHandler<TRequest, TDoma
     }
 }
 
-public abstract class AbstractCreateFullyFluentValidatedHandler<TRequest, TDomain> : AbstractCreateFullyValidatedHandler<TRequest, TDomain>
+public abstract class FullyFluentValidatedCreateHandler<TRequest, TDomain> : FullyValidatedCreateHandler<TRequest, TDomain>
 {
     private readonly IValidator<TRequest> _requestValidator;
     private readonly IValidator<TDomain> _domainValidator;
 
-    protected AbstractCreateFullyFluentValidatedHandler(IValidator<TRequest> requestValidator,
+    protected FullyFluentValidatedCreateHandler(IValidator<TRequest> requestValidator,
         IValidator<TDomain> domainValidator, ICreatableRepository<TDomain> repository) : base(repository)
     {
         _requestValidator = requestValidator;

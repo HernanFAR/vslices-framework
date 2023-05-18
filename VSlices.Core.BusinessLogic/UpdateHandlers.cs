@@ -6,11 +6,11 @@ using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.Core.BusinessLogic;
 
-public abstract class AbstractUpdateHandler<TRequest, TResponse, TDomain> : IHandler<TRequest, TResponse>
+public abstract class UpdateHandler<TRequest, TResponse, TDomain> : IHandler<TRequest, TResponse>
 {
     private readonly IUpdateableRepository<TDomain> _repository;
 
-    protected AbstractUpdateHandler(IUpdateableRepository<TDomain> repository)
+    protected UpdateHandler(IUpdateableRepository<TDomain> repository)
     {
         _repository = repository;
     }
@@ -46,11 +46,11 @@ public abstract class AbstractUpdateHandler<TRequest, TResponse, TDomain> : IHan
         CancellationToken cancellationToken);
 }
 
-public abstract class AbstractUpdateRequestValidatedHandler<TRequest, TResponse, TDomain> : IHandler<TRequest, TResponse>
+public abstract class RequestValidatedUpdateHandler<TRequest, TResponse, TDomain> : IHandler<TRequest, TResponse>
 {
     private readonly IUpdateableRepository<TDomain> _repository;
 
-    protected AbstractUpdateRequestValidatedHandler(IUpdateableRepository<TDomain> repository)
+    protected RequestValidatedUpdateHandler(IUpdateableRepository<TDomain> repository)
     {
         _repository = repository;
     }
@@ -96,11 +96,11 @@ public abstract class AbstractUpdateRequestValidatedHandler<TRequest, TResponse,
         CancellationToken cancellationToken);
 }
 
-public abstract class AbstractUpdateDomainValidatedHandler<TRequest, TResponse, TDomain> : IHandler<TRequest, TResponse>
+public abstract class DomainValidatedUpdateHandler<TRequest, TResponse, TDomain> : IHandler<TRequest, TResponse>
 {
     private readonly IUpdateableRepository<TDomain> _repository;
 
-    protected AbstractUpdateDomainValidatedHandler(IUpdateableRepository<TDomain> repository)
+    protected DomainValidatedUpdateHandler(IUpdateableRepository<TDomain> repository)
     {
         _repository = repository;
     }
@@ -146,11 +146,11 @@ public abstract class AbstractUpdateDomainValidatedHandler<TRequest, TResponse, 
         CancellationToken cancellationToken);
 }
 
-public abstract class AbstractUpdateFullyValidatedHandler<TRequest, TResponse, TDomain> : IHandler<TRequest, TResponse>
+public abstract class FullyValidatedUpdateHandler<TRequest, TResponse, TDomain> : IHandler<TRequest, TResponse>
 {
     private readonly IUpdateableRepository<TDomain> _repository;
 
-    protected AbstractUpdateFullyValidatedHandler(IUpdateableRepository<TDomain> repository)
+    protected FullyValidatedUpdateHandler(IUpdateableRepository<TDomain> repository)
     {
         _repository = repository;
     }
@@ -206,11 +206,11 @@ public abstract class AbstractUpdateFullyValidatedHandler<TRequest, TResponse, T
         CancellationToken cancellationToken);
 }
 
-public abstract class AbstractUpdateHandler<TRequest, TDomain> : IHandler<TRequest, Success>
+public abstract class UpdateHandler<TRequest, TDomain> : IHandler<TRequest, Success>
 {
     private readonly IUpdateableRepository<TDomain> _repository;
 
-    protected AbstractUpdateHandler(IUpdateableRepository<TDomain> repository)
+    protected UpdateHandler(IUpdateableRepository<TDomain> repository)
     {
         _repository = repository;
     }
@@ -247,11 +247,11 @@ public abstract class AbstractUpdateHandler<TRequest, TDomain> : IHandler<TReque
         => ValueTask.FromResult(new Success());
 }
 
-public abstract class AbstractUpdateRequestValidatedHandler<TRequest, TDomain> : IHandler<TRequest, Success>
+public abstract class RequestValidatedUpdateHandler<TRequest, TDomain> : IHandler<TRequest, Success>
 {
     private readonly IUpdateableRepository<TDomain> _repository;
 
-    protected AbstractUpdateRequestValidatedHandler(IUpdateableRepository<TDomain> repository)
+    protected RequestValidatedUpdateHandler(IUpdateableRepository<TDomain> repository)
     {
         _repository = repository;
     }
@@ -298,11 +298,11 @@ public abstract class AbstractUpdateRequestValidatedHandler<TRequest, TDomain> :
         => ValueTask.FromResult(new Success());
 }
 
-public abstract class AbstractUpdateDomainValidatedHandler<TRequest, TDomain> : IHandler<TRequest, Success>
+public abstract class DomainValidatedUpdateHandler<TRequest, TDomain> : IHandler<TRequest, Success>
 {
     private readonly IUpdateableRepository<TDomain> _repository;
 
-    protected AbstractUpdateDomainValidatedHandler(IUpdateableRepository<TDomain> repository)
+    protected DomainValidatedUpdateHandler(IUpdateableRepository<TDomain> repository)
     {
         _repository = repository;
     }
@@ -349,11 +349,11 @@ public abstract class AbstractUpdateDomainValidatedHandler<TRequest, TDomain> : 
         => ValueTask.FromResult(new Success());
 }
 
-public abstract class AbstractUpdateFullyValidatedHandler<TRequest, TDomain> : IHandler<TRequest, Success>
+public abstract class FullyValidatedUpdateHandler<TRequest, TDomain> : IHandler<TRequest, Success>
 {
     private readonly IUpdateableRepository<TDomain> _repository;
 
-    protected AbstractUpdateFullyValidatedHandler(IUpdateableRepository<TDomain> repository)
+    protected FullyValidatedUpdateHandler(IUpdateableRepository<TDomain> repository)
     {
         _repository = repository;
     }

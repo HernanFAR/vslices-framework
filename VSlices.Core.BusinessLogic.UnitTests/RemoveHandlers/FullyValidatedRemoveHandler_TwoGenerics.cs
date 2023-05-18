@@ -4,20 +4,20 @@ using OneOf.Types;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Responses;
 
-namespace VSlices.Core.BusinessLogic.UnitTests.UpdateHandlers;
+namespace VSlices.Core.BusinessLogic.UnitTests.RemoveHandlers;
 
-public class AbstractUpdateFullyValidatedHandler_TwoGenerics
+public class FullyValidatedRemoveHandler_TwoGenerics
 {
     public record Domain;
     public record Request;
 
-    private readonly Mock<IUpdateableRepository<Domain>> _mockedRepository;
-    private readonly Mock<AbstractUpdateFullyValidatedHandler<Request, Domain>> _mockedHandler;
+    private readonly Mock<IRemovableRepository<Domain>> _mockedRepository;
+    private readonly Mock<FullyValidatedRemoveHandler<Request, Domain>> _mockedHandler;
 
-    public AbstractUpdateFullyValidatedHandler_TwoGenerics()
+    public FullyValidatedRemoveHandler_TwoGenerics()
     {
-        _mockedRepository = new Mock<IUpdateableRepository<Domain>>();
-        _mockedHandler = new Mock<AbstractUpdateFullyValidatedHandler<Request, Domain>>(_mockedRepository.Object);
+        _mockedRepository = new Mock<IRemovableRepository<Domain>>();
+        _mockedHandler = new Mock<FullyValidatedRemoveHandler<Request, Domain>>(_mockedRepository.Object);
     }
 
     [Fact]
@@ -103,7 +103,7 @@ public class AbstractUpdateFullyValidatedHandler_TwoGenerics
     }
 
     [Fact]
-    public async Task HandleAsync_ShouldReturnBusinessFailure_DetailCallValidateUseCaseRulesAsyncAndValidateRequestAsyncAndGetDomainEntityAsyncAndUpdateAsync()
+    public async Task HandleAsync_ShouldReturnBusinessFailure_DetailCallValidateUseCaseRulesAsyncAndValidateRequestAsyncAndGetDomainEntityAsyncAndRemoveAsync()
     {
         var request = new Request();
         var domain = new Domain();
@@ -122,7 +122,7 @@ public class AbstractUpdateFullyValidatedHandler_TwoGenerics
         _mockedHandler.Setup(e => e.ValidateDomainAsync(domain, default))
             .ReturnsAsync(success);
 
-        _mockedRepository.Setup(e => e.UpdateAsync(domain, default))
+        _mockedRepository.Setup(e => e.RemoveAsync(domain, default))
             .ReturnsAsync(businessFailure);
 
         var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
@@ -136,7 +136,7 @@ public class AbstractUpdateFullyValidatedHandler_TwoGenerics
         _mockedHandler.Verify(e => e.ValidateDomainAsync(domain, default), Times.Once);
         _mockedHandler.VerifyNoOtherCalls();
 
-        _mockedRepository.Verify(e => e.UpdateAsync(domain, default), Times.Once);
+        _mockedRepository.Verify(e => e.RemoveAsync(domain, default), Times.Once);
         _mockedRepository.VerifyNoOtherCalls();
     }
 
@@ -159,7 +159,7 @@ public class AbstractUpdateFullyValidatedHandler_TwoGenerics
         _mockedHandler.Setup(e => e.ValidateDomainAsync(domain, default))
             .ReturnsAsync(success);
 
-        _mockedRepository.Setup(e => e.UpdateAsync(domain, default))
+        _mockedRepository.Setup(e => e.RemoveAsync(domain, default))
             .ReturnsAsync(success);
 
         var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
@@ -173,7 +173,7 @@ public class AbstractUpdateFullyValidatedHandler_TwoGenerics
         _mockedHandler.Verify(e => e.ValidateDomainAsync(domain, default), Times.Once);
         _mockedHandler.VerifyNoOtherCalls();
 
-        _mockedRepository.Verify(e => e.UpdateAsync(domain, default), Times.Once);
+        _mockedRepository.Verify(e => e.RemoveAsync(domain, default), Times.Once);
         _mockedRepository.VerifyNoOtherCalls();
     }
 }

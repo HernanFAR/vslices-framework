@@ -6,18 +6,19 @@ using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.Core.BusinessLogic.UnitTests.CreateHandlers;
 
-public class AbstractCreateHandler_TwoGenerics
+public class CreateHandler_ThreeGenerics
 {
     public record Domain;
+    public record Response;
     public record Request;
 
     private readonly Mock<ICreatableRepository<Domain>> _mockedRepository;
-    private readonly Mock<AbstractCreateHandler<Request, Domain>> _mockedHandler;
+    private readonly Mock<CreateHandler<Request, Response, Domain>> _mockedHandler;
 
-    public AbstractCreateHandler_TwoGenerics()
+    public CreateHandler_ThreeGenerics()
     {
         _mockedRepository = new Mock<ICreatableRepository<Domain>>();
-        _mockedHandler = new Mock<AbstractCreateHandler<Request, Domain>>(_mockedRepository.Object);
+        _mockedHandler = new Mock<CreateHandler<Request, Response, Domain>>(_mockedRepository.Object);
     }
 
     [Fact]
@@ -79,7 +80,8 @@ public class AbstractCreateHandler_TwoGenerics
     {
         var request = new Request();
         var domain = new Domain();
-        
+        var response = new Response();
+
         var success = new Success();
 
         _mockedHandler.Setup(e => e.HandleAsync(request, default))
@@ -88,17 +90,20 @@ public class AbstractCreateHandler_TwoGenerics
             .ReturnsAsync(success);
         _mockedHandler.Setup(e => e.GetDomainEntityAsync(request, default))
             .ReturnsAsync(domain);
+        _mockedHandler.Setup(e => e.GetResponseAsync(domain, request, default))
+            .ReturnsAsync(response);
 
         _mockedRepository.Setup(e => e.CreateAsync(domain, default))
             .ReturnsAsync(success);
 
         var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
 
-        handlerResponse.Value.Should().Be(success);
+        handlerResponse.Value.Should().Be(response);
 
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.GetDomainEntityAsync(request, default), Times.Once);
+        _mockedHandler.Verify(e => e.GetResponseAsync(domain, request, default), Times.Once);
         _mockedHandler.VerifyNoOtherCalls();
 
         _mockedRepository.Verify(e => e.CreateAsync(domain, default), Times.Once);

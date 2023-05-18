@@ -48,7 +48,7 @@ public class RemoveQuestionEndpoint : IEndpointDefinition
 // Lógica
 public record RemoveQuestionCommand(Guid Id, Guid RemovedById);
 
-public class RemoveQuestionHandler : AbstractRemoveFullyFluentValidatedHandler<RemoveQuestionCommand, Question>
+public class RemoveQuestionHandler : FullyFluentValidatedRemoveHandler<RemoveQuestionCommand, Question>
 {
     private readonly IRemoveQuestionRepository _repository;
 

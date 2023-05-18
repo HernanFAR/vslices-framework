@@ -4,57 +4,30 @@ using OneOf.Types;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Responses;
 
-namespace VSlices.Core.BusinessLogic.UnitTests.UpdateHandlers;
+namespace VSlices.Core.BusinessLogic.UnitTests.CreateHandlers;
 
-public class AbstractUpdateRequestValidatedHandler_ThreeGenerics
+public class CreateHandler_TwoGenerics
 {
     public record Domain;
-    public record Response;
     public record Request;
 
-    private readonly Mock<IUpdateableRepository<Domain>> _mockedRepository;
-    private readonly Mock<AbstractUpdateRequestValidatedHandler<Request, Response, Domain>> _mockedHandler;
+    private readonly Mock<ICreatableRepository<Domain>> _mockedRepository;
+    private readonly Mock<CreateHandler<Request, Domain>> _mockedHandler;
 
-    public AbstractUpdateRequestValidatedHandler_ThreeGenerics()
+    public CreateHandler_TwoGenerics()
     {
-        _mockedRepository = new Mock<IUpdateableRepository<Domain>>();
-        _mockedHandler = new Mock<AbstractUpdateRequestValidatedHandler<Request, Response, Domain>>(_mockedRepository.Object);
+        _mockedRepository = new Mock<ICreatableRepository<Domain>>();
+        _mockedHandler = new Mock<CreateHandler<Request, Domain>>(_mockedRepository.Object);
     }
 
     [Fact]
-    public async Task HandleAsync_ShouldReturnBusinessFailure_DetailCallValidateRequestAsync()
+    public async Task HandleAsync_ShouldReturnBusinessFailure_DetailCallValidateUseCaseRulesAsync()
     {
         var request = new Request();
         var businessFailure = BusinessFailure.Of.NotFoundResource();
 
         _mockedHandler.Setup(e => e.HandleAsync(request, default))
             .CallBase();
-        _mockedHandler.Setup(e => e.ValidateRequestAsync(request, default))
-            .ReturnsAsync(businessFailure);
-
-        var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
-
-        handlerResponse.Value.Should().Be(businessFailure);
-
-        _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
-        _mockedHandler.Verify(e => e.ValidateRequestAsync(request, default), Times.Once);
-        _mockedHandler.VerifyNoOtherCalls();
-
-        _mockedRepository.VerifyNoOtherCalls();
-    }
-
-    [Fact]
-    public async Task HandleAsync_ShouldReturnBusinessFailure_DetailCallValidateRequestAsyncAndValidateUseCaseRulesAsync()
-    {
-        var request = new Request();
-
-        var businessFailure = BusinessFailure.Of.NotFoundResource();
-        var success = new Success();
-
-        _mockedHandler.Setup(e => e.HandleAsync(request, default))
-            .CallBase();
-        _mockedHandler.Setup(e => e.ValidateRequestAsync(request, default))
-            .ReturnsAsync(success);
         _mockedHandler.Setup(e => e.ValidateUseCaseRulesAsync(request, default))
             .ReturnsAsync(businessFailure);
 
@@ -63,7 +36,6 @@ public class AbstractUpdateRequestValidatedHandler_ThreeGenerics
         handlerResponse.Value.Should().Be(businessFailure);
 
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
-        _mockedHandler.Verify(e => e.ValidateRequestAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
         _mockedHandler.VerifyNoOtherCalls();
 
@@ -71,7 +43,7 @@ public class AbstractUpdateRequestValidatedHandler_ThreeGenerics
     }
 
     [Fact]
-    public async Task HandleAsync_ShouldReturnBusinessFailure_DetailCallValidateRequestAsyncAndValidateUseCaseRulesAsyncAndGetDomainEntityAsyncAndUpdateAsync()
+    public async Task HandleAsync_ShouldReturnBusinessFailure_DetailCallValidateUseCaseRulesAsyncAndGetDomainEntityAsyncAndCreateAsync()
     {
         var request = new Request();
         var domain = new Domain();
@@ -81,14 +53,12 @@ public class AbstractUpdateRequestValidatedHandler_ThreeGenerics
 
         _mockedHandler.Setup(e => e.HandleAsync(request, default))
             .CallBase();
-        _mockedHandler.Setup(e => e.ValidateRequestAsync(request, default))
-            .ReturnsAsync(success);
         _mockedHandler.Setup(e => e.ValidateUseCaseRulesAsync(request, default))
             .ReturnsAsync(success);
         _mockedHandler.Setup(e => e.GetDomainEntityAsync(request, default))
             .ReturnsAsync(domain);
 
-        _mockedRepository.Setup(e => e.UpdateAsync(domain, default))
+        _mockedRepository.Setup(e => e.CreateAsync(domain, default))
             .ReturnsAsync(businessFailure);
 
         var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
@@ -96,12 +66,11 @@ public class AbstractUpdateRequestValidatedHandler_ThreeGenerics
         handlerResponse.Value.Should().Be(businessFailure);
 
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
-        _mockedHandler.Verify(e => e.ValidateRequestAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.GetDomainEntityAsync(request, default), Times.Once);
         _mockedHandler.VerifyNoOtherCalls();
 
-        _mockedRepository.Verify(e => e.UpdateAsync(domain, default), Times.Once);
+        _mockedRepository.Verify(e => e.CreateAsync(domain, default), Times.Once);
         _mockedRepository.VerifyNoOtherCalls();
     }
 
@@ -110,36 +79,29 @@ public class AbstractUpdateRequestValidatedHandler_ThreeGenerics
     {
         var request = new Request();
         var domain = new Domain();
-        var response = new Response();
-
+        
         var success = new Success();
 
         _mockedHandler.Setup(e => e.HandleAsync(request, default))
             .CallBase();
-        _mockedHandler.Setup(e => e.ValidateRequestAsync(request, default))
-            .ReturnsAsync(success);
         _mockedHandler.Setup(e => e.ValidateUseCaseRulesAsync(request, default))
             .ReturnsAsync(success);
         _mockedHandler.Setup(e => e.GetDomainEntityAsync(request, default))
             .ReturnsAsync(domain);
-        _mockedHandler.Setup(e => e.GetResponseAsync(domain, request, default))
-            .ReturnsAsync(response);
 
-        _mockedRepository.Setup(e => e.UpdateAsync(domain, default))
+        _mockedRepository.Setup(e => e.CreateAsync(domain, default))
             .ReturnsAsync(success);
 
         var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
 
-        handlerResponse.Value.Should().Be(response);
+        handlerResponse.Value.Should().Be(success);
 
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
-        _mockedHandler.Verify(e => e.ValidateRequestAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.GetDomainEntityAsync(request, default), Times.Once);
-        _mockedHandler.Verify(e => e.GetResponseAsync(domain, request, default), Times.Once);
         _mockedHandler.VerifyNoOtherCalls();
 
-        _mockedRepository.Verify(e => e.UpdateAsync(domain, default), Times.Once);
+        _mockedRepository.Verify(e => e.CreateAsync(domain, default), Times.Once);
         _mockedRepository.VerifyNoOtherCalls();
     }
 }

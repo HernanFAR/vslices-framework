@@ -42,7 +42,7 @@ public record GetQuestionDto(Guid Id, string Name, Guid CreatedById, Guid? Updat
 
 public record GetQuestionQuery(Guid Id);
 
-public class GetQuestionHandler : AbstractReadRequestValidatedHandler<GetQuestionQuery, Guid, GetQuestionDto>
+public class GetQuestionHandler : RequestValidatedReadHandler<GetQuestionQuery, Guid, GetQuestionDto>
 {
     public GetQuestionHandler(IGetQuestionRepository repository)
         : base(repository) { }

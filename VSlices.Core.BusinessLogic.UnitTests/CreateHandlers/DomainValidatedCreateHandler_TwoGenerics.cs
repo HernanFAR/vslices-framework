@@ -6,18 +6,18 @@ using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.Core.BusinessLogic.UnitTests.CreateHandlers;
 
-public class AbstractCreateDomainValidatedHandler_TwoGenerics
+public class DomainValidatedCreateHandler_TwoGenerics
 {
     public record Domain;
     public record Request;
 
     private readonly Mock<ICreatableRepository<Domain>> _mockedRepository;
-    private readonly Mock<AbstractCreateDomainValidatedHandler<Request, Domain>> _mockedHandler;
+    private readonly Mock<DomainValidatedCreateHandler<Request, Domain>> _mockedHandler;
 
-    public AbstractCreateDomainValidatedHandler_TwoGenerics()
+    public DomainValidatedCreateHandler_TwoGenerics()
     {
         _mockedRepository = new Mock<ICreatableRepository<Domain>>();
-        _mockedHandler = new Mock<AbstractCreateDomainValidatedHandler<Request, Domain>>(_mockedRepository.Object);
+        _mockedHandler = new Mock<DomainValidatedCreateHandler<Request, Domain>>(_mockedRepository.Object);
     }
 
     [Fact]

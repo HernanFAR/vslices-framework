@@ -52,7 +52,7 @@ public class UpdateQuestionEndpoint : IEndpointDefinition
 // Lógica
 public record UpdateQuestionCommand(Guid Id, string Name, Guid UpdatedById);
 
-public class UpdateQuestionHandler : AbstractUpdateFullyFluentValidatedHandler<UpdateQuestionCommand, Question>
+public class UpdateQuestionHandler : FullyFluentValidatedUpdateHandler<UpdateQuestionCommand, Question>
 {
     private readonly IUpdateQuestionRepository _repository;
 

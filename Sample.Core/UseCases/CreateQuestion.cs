@@ -48,7 +48,7 @@ public class CreateQuestionEndpoint : IEndpointDefinition
 // Lógica
 public record CreateQuestionCommand(string Name, Guid CreatedBy);
 
-public class CreateQuestionHandler : AbstractCreateFullyFluentValidatedHandler<CreateQuestionCommand, Guid, Question>
+public class CreateQuestionHandler : FullyFluentValidatedCreateHandler<CreateQuestionCommand, Guid, Question>
 {
     public CreateQuestionHandler(
         IValidator<CreateQuestionCommand> requestValidator,

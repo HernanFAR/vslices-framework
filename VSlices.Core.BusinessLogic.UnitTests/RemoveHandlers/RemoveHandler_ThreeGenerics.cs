@@ -6,19 +6,19 @@ using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.Core.BusinessLogic.UnitTests.RemoveHandlers;
 
-public class AbstractRemoveHandler_ThreeGenerics
+public class RemoveHandler_ThreeGenerics
 {
     public record Domain;
     public record Response;
     public record Request;
 
     private readonly Mock<IRemovableRepository<Domain>> _mockedRepository;
-    private readonly Mock<AbstractRemoveHandler<Request, Response, Domain>> _mockedHandler;
+    private readonly Mock<RemoveHandler<Request, Response, Domain>> _mockedHandler;
 
-    public AbstractRemoveHandler_ThreeGenerics()
+    public RemoveHandler_ThreeGenerics()
     {
         _mockedRepository = new Mock<IRemovableRepository<Domain>>();
-        _mockedHandler = new Mock<AbstractRemoveHandler<Request, Response, Domain>>(_mockedRepository.Object);
+        _mockedHandler = new Mock<RemoveHandler<Request, Response, Domain>>(_mockedRepository.Object);
     }
 
     [Fact]

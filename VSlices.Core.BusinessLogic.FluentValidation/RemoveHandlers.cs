@@ -6,11 +6,11 @@ using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.Core.BusinessLogic.FluentValidation;
 
-public abstract class AbstractRemoveRequestFluentValidatedHandler<TRequest, TResponse, TDomain> : AbstractRemoveRequestValidatedHandler<TRequest, TResponse, TDomain>
+public abstract class RequestFluentValidatedRemoveHandler<TRequest, TResponse, TDomain> : RequestValidatedRemoveHandler<TRequest, TResponse, TDomain>
 {
     private readonly IValidator<TRequest> _requestValidator;
 
-    protected AbstractRemoveRequestFluentValidatedHandler(IValidator<TRequest> requestValidator, IRemovableRepository<TDomain> repository) : base(repository)
+    protected RequestFluentValidatedRemoveHandler(IValidator<TRequest> requestValidator, IRemovableRepository<TDomain> repository) : base(repository)
     {
         _requestValidator = requestValidator;
     }
@@ -29,11 +29,11 @@ public abstract class AbstractRemoveRequestFluentValidatedHandler<TRequest, TRes
     }
 }
 
-public abstract class AbstractRemoveDomainFluentValidatedHandler<TRequest, TResponse, TDomain> : AbstractRemoveDomainValidatedHandler<TRequest, TResponse, TDomain>
+public abstract class DomainFluentValidatedRemoveHandler<TRequest, TResponse, TDomain> : DomainValidatedRemoveHandler<TRequest, TResponse, TDomain>
 {
     private readonly IValidator<TDomain> _domainValidator;
 
-    protected AbstractRemoveDomainFluentValidatedHandler(IValidator<TDomain> domainValidator, IRemovableRepository<TDomain> repository) : base(repository)
+    protected DomainFluentValidatedRemoveHandler(IValidator<TDomain> domainValidator, IRemovableRepository<TDomain> repository) : base(repository)
     {
         _domainValidator = domainValidator;
     }
@@ -52,12 +52,12 @@ public abstract class AbstractRemoveDomainFluentValidatedHandler<TRequest, TResp
     }
 }
 
-public abstract class AbstractRemoveFullyFluentValidatedHandler<TRequest, TResponse, TDomain> : AbstractRemoveFullyValidatedHandler<TRequest, TResponse, TDomain>
+public abstract class FullyFluentValidatedRemoveHandler<TRequest, TResponse, TDomain> : FullyValidatedRemoveHandler<TRequest, TResponse, TDomain>
 {
     private readonly IValidator<TRequest> _requestValidator;
     private readonly IValidator<TDomain> _domainValidator;
 
-    protected AbstractRemoveFullyFluentValidatedHandler(IValidator<TRequest> requestValidator,
+    protected FullyFluentValidatedRemoveHandler(IValidator<TRequest> requestValidator,
         IValidator<TDomain> domainValidator, IRemovableRepository<TDomain> repository) : base(repository)
     {
         _requestValidator = requestValidator;
@@ -91,11 +91,11 @@ public abstract class AbstractRemoveFullyFluentValidatedHandler<TRequest, TRespo
     }
 }
 
-public abstract class AbstractRemoveRequestFluentValidatedHandler<TRequest, TDomain> : AbstractRemoveRequestValidatedHandler<TRequest, TDomain>
+public abstract class RequestFluentValidatedRemoveHandler<TRequest, TDomain> : RequestValidatedRemoveHandler<TRequest, TDomain>
 {
     private readonly IValidator<TRequest> _requestValidator;
 
-    protected AbstractRemoveRequestFluentValidatedHandler(IValidator<TRequest> requestValidator, IRemovableRepository<TDomain> repository) : base(repository)
+    protected RequestFluentValidatedRemoveHandler(IValidator<TRequest> requestValidator, IRemovableRepository<TDomain> repository) : base(repository)
     {
         _requestValidator = requestValidator;
     }
@@ -114,11 +114,11 @@ public abstract class AbstractRemoveRequestFluentValidatedHandler<TRequest, TDom
     }
 }
 
-public abstract class AbstractRemoveDomainFluentValidatedHandler<TRequest, TDomain> : AbstractRemoveDomainValidatedHandler<TRequest, TDomain>
+public abstract class DomainFluentValidatedRemoveHandler<TRequest, TDomain> : DomainValidatedRemoveHandler<TRequest, TDomain>
 {
     private readonly IValidator<TDomain> _domainValidator;
 
-    protected AbstractRemoveDomainFluentValidatedHandler(IValidator<TDomain> domainValidator, IRemovableRepository<TDomain> repository) : base(repository)
+    protected DomainFluentValidatedRemoveHandler(IValidator<TDomain> domainValidator, IRemovableRepository<TDomain> repository) : base(repository)
     {
         _domainValidator = domainValidator;
     }
@@ -137,12 +137,12 @@ public abstract class AbstractRemoveDomainFluentValidatedHandler<TRequest, TDoma
     }
 }
 
-public abstract class AbstractRemoveFullyFluentValidatedHandler<TRequest, TDomain> : AbstractRemoveFullyValidatedHandler<TRequest, TDomain>
+public abstract class FullyFluentValidatedRemoveHandler<TRequest, TDomain> : FullyValidatedRemoveHandler<TRequest, TDomain>
 {
     private readonly IValidator<TRequest> _requestValidator;
     private readonly IValidator<TDomain> _domainValidator;
 
-    protected AbstractRemoveFullyFluentValidatedHandler(IValidator<TRequest> requestValidator,
+    protected FullyFluentValidatedRemoveHandler(IValidator<TRequest> requestValidator,
         IValidator<TDomain> domainValidator, IRemovableRepository<TDomain> repository) : base(repository)
     {
         _requestValidator = requestValidator;

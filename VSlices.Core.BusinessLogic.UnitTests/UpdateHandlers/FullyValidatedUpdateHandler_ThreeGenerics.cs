@@ -6,19 +6,19 @@ using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.Core.BusinessLogic.UnitTests.UpdateHandlers;
 
-public class AbstractUpdateFullyValidatedHandler_ThreeGenerics
+public class FullyValidatedUpdateHandler_ThreeGenerics
 {
     public record Domain;
     public record Response;
     public record Request;
 
     private readonly Mock<IUpdateableRepository<Domain>> _mockedRepository;
-    private readonly Mock<AbstractUpdateFullyValidatedHandler<Request, Response, Domain>> _mockedHandler;
+    private readonly Mock<FullyValidatedUpdateHandler<Request, Response, Domain>> _mockedHandler;
 
-    public AbstractUpdateFullyValidatedHandler_ThreeGenerics()
+    public FullyValidatedUpdateHandler_ThreeGenerics()
     {
         _mockedRepository = new Mock<IUpdateableRepository<Domain>>();
-        _mockedHandler = new Mock<AbstractUpdateFullyValidatedHandler<Request, Response, Domain>>(_mockedRepository.Object);
+        _mockedHandler = new Mock<FullyValidatedUpdateHandler<Request, Response, Domain>>(_mockedRepository.Object);
     }
 
     [Fact]

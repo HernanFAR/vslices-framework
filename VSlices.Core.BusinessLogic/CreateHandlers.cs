@@ -6,11 +6,11 @@ using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.Core.BusinessLogic;
 
-public abstract class AbstractCreateHandler<TRequest, TResponse, TDomain> : IHandler<TRequest, TResponse>
+public abstract class CreateHandler<TRequest, TResponse, TDomain> : IHandler<TRequest, TResponse>
 {
     private readonly ICreatableRepository<TDomain> _repository;
 
-    protected AbstractCreateHandler(ICreatableRepository<TDomain> repository)
+    protected CreateHandler(ICreatableRepository<TDomain> repository)
     {
         _repository = repository;
     }
@@ -46,11 +46,11 @@ public abstract class AbstractCreateHandler<TRequest, TResponse, TDomain> : IHan
         CancellationToken cancellationToken = default);
 }
 
-public abstract class AbstractCreateRequestValidatedHandler<TRequest, TResponse, TDomain> : IHandler<TRequest, TResponse>
+public abstract class RequestValidatedCreateHandler<TRequest, TResponse, TDomain> : IHandler<TRequest, TResponse>
 {
     private readonly ICreatableRepository<TDomain> _repository;
 
-    protected AbstractCreateRequestValidatedHandler(ICreatableRepository<TDomain> repository)
+    protected RequestValidatedCreateHandler(ICreatableRepository<TDomain> repository)
     {
         _repository = repository;
     }
@@ -96,11 +96,11 @@ public abstract class AbstractCreateRequestValidatedHandler<TRequest, TResponse,
         CancellationToken cancellationToken = default);
 }
 
-public abstract class AbstractCreateDomainValidatedHandler<TRequest, TResponse, TDomain> : IHandler<TRequest, TResponse>
+public abstract class DomainValidatedCreateHandler<TRequest, TResponse, TDomain> : IHandler<TRequest, TResponse>
 {
     private readonly ICreatableRepository<TDomain> _repository;
 
-    protected AbstractCreateDomainValidatedHandler(ICreatableRepository<TDomain> repository)
+    protected DomainValidatedCreateHandler(ICreatableRepository<TDomain> repository)
     {
         _repository = repository;
     }
@@ -146,11 +146,11 @@ public abstract class AbstractCreateDomainValidatedHandler<TRequest, TResponse, 
         CancellationToken cancellationToken = default);
 }
 
-public abstract class AbstractCreateFullyValidatedHandler<TRequest, TResponse, TDomain> : IHandler<TRequest, TResponse>
+public abstract class FullyValidatedCreateHandler<TRequest, TResponse, TDomain> : IHandler<TRequest, TResponse>
 {
     private readonly ICreatableRepository<TDomain> _repository;
 
-    protected AbstractCreateFullyValidatedHandler(ICreatableRepository<TDomain> repository)
+    protected FullyValidatedCreateHandler(ICreatableRepository<TDomain> repository)
     {
         _repository = repository;
     }
@@ -206,11 +206,11 @@ public abstract class AbstractCreateFullyValidatedHandler<TRequest, TResponse, T
         CancellationToken cancellationToken = default);
 }
 
-public abstract class AbstractCreateHandler<TRequest, TDomain> : IHandler<TRequest, Success>
+public abstract class CreateHandler<TRequest, TDomain> : IHandler<TRequest, Success>
 {
     private readonly ICreatableRepository<TDomain> _repository;
 
-    protected AbstractCreateHandler(ICreatableRepository<TDomain> repository)
+    protected CreateHandler(ICreatableRepository<TDomain> repository)
     {
         _repository = repository;
     }
@@ -246,11 +246,11 @@ public abstract class AbstractCreateHandler<TRequest, TDomain> : IHandler<TReque
         => ValueTask.FromResult(new Success());
 }
 
-public abstract class AbstractCreateRequestValidatedHandler<TRequest, TDomain> : IHandler<TRequest, Success>
+public abstract class RequestValidatedCreateHandler<TRequest, TDomain> : IHandler<TRequest, Success>
 {
     private readonly ICreatableRepository<TDomain> _repository;
 
-    protected AbstractCreateRequestValidatedHandler(ICreatableRepository<TDomain> repository)
+    protected RequestValidatedCreateHandler(ICreatableRepository<TDomain> repository)
     {
         _repository = repository;
     }
@@ -296,11 +296,11 @@ public abstract class AbstractCreateRequestValidatedHandler<TRequest, TDomain> :
         => ValueTask.FromResult(new Success());
 }
 
-public abstract class AbstractCreateDomainValidatedHandler<TRequest, TDomain> : IHandler<TRequest, Success>
+public abstract class DomainValidatedCreateHandler<TRequest, TDomain> : IHandler<TRequest, Success>
 {
     private readonly ICreatableRepository<TDomain> _repository;
 
-    protected AbstractCreateDomainValidatedHandler(ICreatableRepository<TDomain> repository)
+    protected DomainValidatedCreateHandler(ICreatableRepository<TDomain> repository)
     {
         _repository = repository;
     }
@@ -346,11 +346,11 @@ public abstract class AbstractCreateDomainValidatedHandler<TRequest, TDomain> : 
         => ValueTask.FromResult(new Success());
 }
 
-public abstract class AbstractCreateFullyValidatedHandler<TRequest, TDomain> : IHandler<TRequest, Success>
+public abstract class FullyValidatedCreateHandler<TRequest, TDomain> : IHandler<TRequest, Success>
 {
     private readonly ICreatableRepository<TDomain> _repository;
 
-    protected AbstractCreateFullyValidatedHandler(ICreatableRepository<TDomain> repository)
+    protected FullyValidatedCreateHandler(ICreatableRepository<TDomain> repository)
     {
         _repository = repository;
     }

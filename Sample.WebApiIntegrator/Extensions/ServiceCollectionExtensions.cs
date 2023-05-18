@@ -9,7 +9,6 @@ public static class ServiceCollectionExtensions
         where TEndpointDefinition : class, IEndpointDefinition
     {
         services.AddSingleton(typeof(ISimpleEndpointDefinition), typeof(TEndpointDefinition));
-        services.AddSingleton(typeof(IEndpointDefinition), typeof(TEndpointDefinition));
 
         TEndpointDefinition.DefineDependencies(services);
 
