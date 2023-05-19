@@ -19,15 +19,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.Abstracts", "V
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.BusinessLogic", "VSlices.Core.BusinessLogic\VSlices.Core.BusinessLogic.csproj", "{34A5731E-BA8A-453D-991B-743EA7AF233B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSlices.Core.BusinessLogic.FluentValidation", "VSlices.Core.BusinessLogic.FluentValidation\VSlices.Core.BusinessLogic.FluentValidation.csproj", "{7E3C3A6D-E865-48F6-BEF9-8D8695952245}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.BusinessLogic.FluentValidation", "VSlices.Core.BusinessLogic.FluentValidation\VSlices.Core.BusinessLogic.FluentValidation.csproj", "{7E3C3A6D-E865-48F6-BEF9-8D8695952245}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.DataAccess.EntityFramework", "VSlices.Core.DataAccess.EntityFramework\VSlices.Core.DataAccess.EntityFramework.csproj", "{B5BB0444-673D-4D62-93BA-5B66242C8AAD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{6F484706-EDFC-49EF-A419-D3F6943C2E36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSlices.Core.Abstracts.UnitTests", "VSlices.Core.Abstracts.UnitTests\VSlices.Core.Abstracts.UnitTests.csproj", "{89F57C6A-A1C1-4907-9982-AE4E731198DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.Abstracts.UnitTests", "VSlices.Core.Abstracts.UnitTests\VSlices.Core.Abstracts.UnitTests.csproj", "{89F57C6A-A1C1-4907-9982-AE4E731198DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSlices.Core.BusinessLogic.UnitTests", "VSlices.Core.BusinessLogic.UnitTests\VSlices.Core.BusinessLogic.UnitTests.csproj", "{DFDFAD02-CBFE-4EE1-9B26-8D5823E9EB41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.BusinessLogic.UnitTests", "VSlices.Core.BusinessLogic.UnitTests\VSlices.Core.BusinessLogic.UnitTests.csproj", "{DFDFAD02-CBFE-4EE1-9B26-8D5823E9EB41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSlices.Core.BusinessLogic.FluentValidation.UnitTests", "VSlices.Core.BusinessLogic.FluentValidation.UnitTests\VSlices.Core.BusinessLogic.FluentValidation.UnitTests.csproj", "{1E88D830-F603-402A-9152-DA9DE54D0576}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,10 @@ Global
 		{DFDFAD02-CBFE-4EE1-9B26-8D5823E9EB41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFDFAD02-CBFE-4EE1-9B26-8D5823E9EB41}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DFDFAD02-CBFE-4EE1-9B26-8D5823E9EB41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E88D830-F603-402A-9152-DA9DE54D0576}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E88D830-F603-402A-9152-DA9DE54D0576}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E88D830-F603-402A-9152-DA9DE54D0576}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E88D830-F603-402A-9152-DA9DE54D0576}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -90,6 +96,7 @@ Global
 		{B5BB0444-673D-4D62-93BA-5B66242C8AAD} = {E846D8C9-E927-43E8-8B46-CEA3ADB50F6F}
 		{89F57C6A-A1C1-4907-9982-AE4E731198DA} = {6F484706-EDFC-49EF-A419-D3F6943C2E36}
 		{DFDFAD02-CBFE-4EE1-9B26-8D5823E9EB41} = {6F484706-EDFC-49EF-A419-D3F6943C2E36}
+		{1E88D830-F603-402A-9152-DA9DE54D0576} = {6F484706-EDFC-49EF-A419-D3F6943C2E36}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {653AE7A1-A4C4-42F2-9804-FE7E032C3E8C}
