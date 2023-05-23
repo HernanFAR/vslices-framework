@@ -19,27 +19,26 @@ public class RequestFluentValidatedUpdateHandler_ThreeGenerics
 
     public class RequestFluentValidatedCreateHandler : RequestFluentValidatedCreateHandler<Request, Response, Domain>
     {
-        public RequestFluentValidatedCreateHandler(IValidator<Request> requestValidator, ICreatableRepository<Domain> repository) : base(requestValidator, repository) { }
+        public RequestFluentValidatedCreateHandler(IValidator<Request> requestValidator, ICreateRepository<Domain> repository) : base(requestValidator, repository) { }
 
-        protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(Request request, CancellationToken cancellationToken = default) 
-            => new Success();
+        protected override ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(Request request, CancellationToken cancellationToken = default) 
+            => ValueTask.FromResult<OneOf<Success, BusinessFailure>>(new Success());
 
-        protected override async ValueTask<Domain> GetDomainEntityAsync(Request request, CancellationToken cancellationToken = default)
-            => new Domain();
+        protected override ValueTask<Domain> CreateEntityAsync(Request request, CancellationToken cancellationToken = default)
+            => ValueTask.FromResult(new Domain());
 
-        protected override async ValueTask<Response> GetResponseAsync(Domain domainEntity, Request request, CancellationToken cancellationToken = default)
-            => new Response();
+        protected override Response GetResponse(Domain entity, Request request) => new();
 
     }
 
     private readonly Mock<IValidator<Request>> _mockedValidator;
-    private readonly Mock<ICreatableRepository<Domain>> _mockedRepository;
+    private readonly Mock<ICreateRepository<Domain>> _mockedRepository;
     private readonly RequestFluentValidatedCreateHandler _handler;
 
     public RequestFluentValidatedUpdateHandler_ThreeGenerics()
     {
         _mockedValidator = new Mock<IValidator<Request>>();
-        _mockedRepository = new Mock<ICreatableRepository<Domain>>();
+        _mockedRepository = new Mock<ICreateRepository<Domain>>();
         _handler = new RequestFluentValidatedCreateHandler(_mockedValidator.Object, _mockedRepository.Object);
     }
 
@@ -77,13 +76,14 @@ public class RequestFluentValidatedUpdateHandler_ThreeGenerics
     public async Task ValidateAsync_ReturnResponse()
     {
         var request = new Request();
+        var domain = new Domain();
 
         _mockedValidator.Setup(e => e.ValidateAsync(request, default))
             .ReturnsAsync(new ValidationResult())
             .Verifiable();
 
-        _mockedRepository.Setup(e => e.CreateAsync(It.IsAny<Domain>(), default))
-            .ReturnsAsync(new Success())
+        _mockedRepository.Setup(e => e.CreateAsync(domain, default))
+            .ReturnsAsync(domain)
             .Verifiable();
 
         var handlerResponse = await _handler.HandleAsync(request);

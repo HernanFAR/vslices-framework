@@ -18,6 +18,7 @@ public readonly record struct BusinessFailure(FailureKind Kind, string[] Errors)
         public static BusinessFailure ConcurrencyError(string[] errors) => new(FailureKind.ConcurrencyError, errors);
         public static BusinessFailure ConcurrencyError() => new(FailureKind.ConcurrencyError, Array.Empty<string>());
         public static BusinessFailure Validation(string[] errors) => new(FailureKind.Validation, errors);
+        public static BusinessFailure Validation(string error) => new(FailureKind.Validation, new []{ error });
     }
 }
 

@@ -53,7 +53,7 @@ public class GetAllQuestionsHandler : RequestValidatedBasicReadHandler<GetAllQue
         => ValueTask.FromResult<OneOf<Success, BusinessFailure>>(new Success());
 }
 
-public interface IGetAllQuestionsRepository : IReadableRepository<GetAllQuestionsDto[]>
+public interface IGetAllQuestionsRepository : IReadRepository<GetAllQuestionsDto[]>
 {
 }
 

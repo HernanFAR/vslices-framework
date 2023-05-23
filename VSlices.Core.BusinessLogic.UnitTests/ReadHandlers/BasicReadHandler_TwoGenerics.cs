@@ -13,12 +13,12 @@ public class BasicReadHandler_TwoGenerics
     public record Request;
     public record Response;
 
-    private readonly Mock<IReadableRepository<Response>> _mockedRepository;
+    private readonly Mock<IReadRepository<Response>> _mockedRepository;
     private readonly Mock<BasicReadHandler<Request, Response>> _mockedHandler;
 
     public BasicReadHandler_TwoGenerics()
     {
-        _mockedRepository = new Mock<IReadableRepository<Response>>();
+        _mockedRepository = new Mock<IReadRepository<Response>>();
         _mockedHandler = new Mock<BasicReadHandler<Request, Response>>(_mockedRepository.Object);
     }
 

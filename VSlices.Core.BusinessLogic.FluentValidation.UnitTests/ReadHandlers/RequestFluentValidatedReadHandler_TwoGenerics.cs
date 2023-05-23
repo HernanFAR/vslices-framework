@@ -21,21 +21,21 @@ public class RequestFluentValidatedReadHandler_TwoGenerics
 
     public class RequestFluentValidatedReadHandler : RequestFluentValidatedReadHandler<Request, Response>
     {
-        public RequestFluentValidatedReadHandler(IValidator<Request> requestValidator, IReadableRepository<Response, Request> repository) : base(requestValidator, repository) { }
+        public RequestFluentValidatedReadHandler(IValidator<Request> requestValidator, IReadRepository<Response, Request> repository) : base(requestValidator, repository) { }
         
-        protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(Request request, CancellationToken cancellationToken = default)
-            => new Success();
+        protected override ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(Request request, CancellationToken cancellationToken = default) 
+            => ValueTask.FromResult<OneOf<Success, BusinessFailure>>(new Success());
 
     }
 
     private readonly Mock<IValidator<Request>> _mockedValidator;
-    private readonly Mock<IReadableRepository<Response, Request>> _mockedRepository;
+    private readonly Mock<IReadRepository<Response, Request>> _mockedRepository;
     private readonly RequestFluentValidatedReadHandler _handler;
 
     public RequestFluentValidatedReadHandler_TwoGenerics()
     {
         _mockedValidator = new Mock<IValidator<Request>>();
-        _mockedRepository = new Mock<IReadableRepository<Response, Request>>();
+        _mockedRepository = new Mock<IReadRepository<Response, Request>>();
         _handler = new RequestFluentValidatedReadHandler(_mockedValidator.Object, _mockedRepository.Object);
     }
 

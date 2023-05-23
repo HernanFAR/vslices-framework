@@ -6,11 +6,11 @@ using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.Core.BusinessLogic.FluentValidation;
 
-public abstract class RequestFluentValidatedUpdateHandler<TRequest, TResponse, TDomain> : RequestValidatedUpdateHandler<TRequest, TResponse, TDomain>
+public abstract class RequestFluentValidatedUpdateHandler<TRequest, TResponse, TEntity> : RequestValidatedUpdateHandler<TRequest, TResponse, TEntity>
 {
     private readonly IValidator<TRequest> _requestValidator;
 
-    protected RequestFluentValidatedUpdateHandler(IValidator<TRequest> requestValidator, IUpdateableRepository<TDomain> repository) : base(repository)
+    protected RequestFluentValidatedUpdateHandler(IValidator<TRequest> requestValidator, IUpdateRepository<TEntity> repository) : base(repository)
     {
         _requestValidator = requestValidator;
     }
@@ -29,18 +29,18 @@ public abstract class RequestFluentValidatedUpdateHandler<TRequest, TResponse, T
     }
 }
 
-public abstract class DomainFluentValidatedUpdateHandler<TRequest, TResponse, TDomain> : DomainValidatedUpdateHandler<TRequest, TResponse, TDomain>
+public abstract class EntityFluentValidatedUpdateHandler<TRequest, TResponse, TEntity> : EntityValidatedUpdateHandler<TRequest, TResponse, TEntity>
 {
-    private readonly IValidator<TDomain> _domainValidator;
+    private readonly IValidator<TEntity> _entityValidator;
 
-    protected DomainFluentValidatedUpdateHandler(IValidator<TDomain> domainValidator, IUpdateableRepository<TDomain> repository) : base(repository)
+    protected EntityFluentValidatedUpdateHandler(IValidator<TEntity> entityValidator, IUpdateRepository<TEntity> repository) : base(repository)
     {
-        _domainValidator = domainValidator;
+        _entityValidator = entityValidator;
     }
 
-    protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateDomainAsync(TDomain domain, CancellationToken cancellationToken = default)
+    protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateEntityAsync(TEntity domain, CancellationToken cancellationToken = default)
     {
-        var domainValidationResult = await _domainValidator.ValidateAsync(domain, cancellationToken);
+        var domainValidationResult = await _entityValidator.ValidateAsync(domain, cancellationToken);
 
         if (domainValidationResult.IsValid) return new Success();
 
@@ -52,13 +52,13 @@ public abstract class DomainFluentValidatedUpdateHandler<TRequest, TResponse, TD
     }
 }
 
-public abstract class FullyFluentValidatedUpdateHandler<TRequest, TResponse, TDomain> : FullyValidatedUpdateHandler<TRequest, TResponse, TDomain>
+public abstract class FullyFluentValidatedUpdateHandler<TRequest, TResponse, TEntity> : FullyValidatedUpdateHandler<TRequest, TResponse, TEntity>
 {
     private readonly IValidator<TRequest> _requestValidator;
-    private readonly IValidator<TDomain> _domainValidator;
+    private readonly IValidator<TEntity> _domainValidator;
 
     protected FullyFluentValidatedUpdateHandler(IValidator<TRequest> requestValidator,
-        IValidator<TDomain> domainValidator, IUpdateableRepository<TDomain> repository) : base(repository)
+        IValidator<TEntity> domainValidator, IUpdateRepository<TEntity> repository) : base(repository)
     {
         _requestValidator = requestValidator;
         _domainValidator = domainValidator;
@@ -77,7 +77,7 @@ public abstract class FullyFluentValidatedUpdateHandler<TRequest, TResponse, TDo
         return BusinessFailure.Of.Validation(errors);
     }
 
-    protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateDomainAsync(TDomain domain, CancellationToken cancellationToken = default)
+    protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateEntityAsync(TEntity domain, CancellationToken cancellationToken = default)
     {
         var domainValidationResult = await _domainValidator.ValidateAsync(domain, cancellationToken);
 
@@ -91,11 +91,11 @@ public abstract class FullyFluentValidatedUpdateHandler<TRequest, TResponse, TDo
     }
 }
 
-public abstract class RequestFluentValidatedUpdateHandler<TRequest, TDomain> : RequestValidatedUpdateHandler<TRequest, TDomain>
+public abstract class RequestFluentValidatedUpdateHandler<TRequest, TEntity> : RequestValidatedUpdateHandler<TRequest, TEntity>
 {
     private readonly IValidator<TRequest> _requestValidator;
 
-    protected RequestFluentValidatedUpdateHandler(IValidator<TRequest> requestValidator, IUpdateableRepository<TDomain> repository) : base(repository)
+    protected RequestFluentValidatedUpdateHandler(IValidator<TRequest> requestValidator, IUpdateRepository<TEntity> repository) : base(repository)
     {
         _requestValidator = requestValidator;
     }
@@ -114,18 +114,18 @@ public abstract class RequestFluentValidatedUpdateHandler<TRequest, TDomain> : R
     }
 }
 
-public abstract class DomainFluentValidatedUpdateHandler<TRequest, TDomain> : DomainValidatedUpdateHandler<TRequest, TDomain>
+public abstract class DomainFluentValidatedUpdateHandler<TRequest, TEntity> : DomainValidatedUpdateHandler<TRequest, TEntity>
 {
-    private readonly IValidator<TDomain> _domainValidator;
+    private readonly IValidator<TEntity> _entityValidator;
 
-    protected DomainFluentValidatedUpdateHandler(IValidator<TDomain> domainValidator, IUpdateableRepository<TDomain> repository) : base(repository)
+    protected DomainFluentValidatedUpdateHandler(IValidator<TEntity> entityValidator, IUpdateRepository<TEntity> repository) : base(repository)
     {
-        _domainValidator = domainValidator;
+        _entityValidator = entityValidator;
     }
 
-    protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateDomainAsync(TDomain domain, CancellationToken cancellationToken = default)
+    protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateEntityAsync(TEntity domain, CancellationToken cancellationToken = default)
     {
-        var domainValidationResult = await _domainValidator.ValidateAsync(domain, cancellationToken);
+        var domainValidationResult = await _entityValidator.ValidateAsync(domain, cancellationToken);
 
         if (domainValidationResult.IsValid) return new Success();
 
@@ -137,16 +137,16 @@ public abstract class DomainFluentValidatedUpdateHandler<TRequest, TDomain> : Do
     }
 }
 
-public abstract class FullyFluentValidatedUpdateHandler<TRequest, TDomain> : FullyValidatedUpdateHandler<TRequest, TDomain>
+public abstract class FullyFluentValidatedUpdateHandler<TRequest, TEntity> : FullyValidatedUpdateHandler<TRequest, TEntity>
 {
     private readonly IValidator<TRequest> _requestValidator;
-    private readonly IValidator<TDomain> _domainValidator;
+    private readonly IValidator<TEntity> _entityValidator;
 
     protected FullyFluentValidatedUpdateHandler(IValidator<TRequest> requestValidator,
-        IValidator<TDomain> domainValidator, IUpdateableRepository<TDomain> repository) : base(repository)
+        IValidator<TEntity> entityValidator, IUpdateRepository<TEntity> repository) : base(repository)
     {
         _requestValidator = requestValidator;
-        _domainValidator = domainValidator;
+        _entityValidator = entityValidator;
     }
 
     protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateRequestAsync(TRequest request, CancellationToken cancellationToken = default)
@@ -162,13 +162,13 @@ public abstract class FullyFluentValidatedUpdateHandler<TRequest, TDomain> : Ful
         return BusinessFailure.Of.Validation(errors);
     }
 
-    protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateDomainAsync(TDomain domain, CancellationToken cancellationToken = default)
+    protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateEntityAsync(TEntity domain, CancellationToken cancellationToken = default)
     {
-        var domainValidationResult = await _domainValidator.ValidateAsync(domain, cancellationToken);
+        var entityValidationResult = await _entityValidator.ValidateAsync(domain, cancellationToken);
 
-        if (domainValidationResult.IsValid) return new Success();
+        if (entityValidationResult.IsValid) return new Success();
 
-        var errors = domainValidationResult
+        var errors = entityValidationResult
             .Errors.Select(e => e.ErrorMessage)
             .ToArray();
 

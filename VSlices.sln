@@ -29,7 +29,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.Abstracts.Unit
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.BusinessLogic.UnitTests", "VSlices.Core.BusinessLogic.UnitTests\VSlices.Core.BusinessLogic.UnitTests.csproj", "{DFDFAD02-CBFE-4EE1-9B26-8D5823E9EB41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSlices.Core.BusinessLogic.FluentValidation.UnitTests", "VSlices.Core.BusinessLogic.FluentValidation.UnitTests\VSlices.Core.BusinessLogic.FluentValidation.UnitTests.csproj", "{1E88D830-F603-402A-9152-DA9DE54D0576}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.BusinessLogic.FluentValidation.UnitTests", "VSlices.Core.BusinessLogic.FluentValidation.UnitTests\VSlices.Core.BusinessLogic.FluentValidation.UnitTests.csproj", "{1E88D830-F603-402A-9152-DA9DE54D0576}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSlices.Core.DataAccess.EntityFramework.UnitTests", "VSlices.Core.DataAccess.EntityFramework.UnitTests\VSlices.Core.DataAccess.EntityFramework.UnitTests.csproj", "{F344E240-D8F8-4528-B034-98ABCD406DCA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +83,10 @@ Global
 		{1E88D830-F603-402A-9152-DA9DE54D0576}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E88D830-F603-402A-9152-DA9DE54D0576}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E88D830-F603-402A-9152-DA9DE54D0576}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F344E240-D8F8-4528-B034-98ABCD406DCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F344E240-D8F8-4528-B034-98ABCD406DCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F344E240-D8F8-4528-B034-98ABCD406DCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F344E240-D8F8-4528-B034-98ABCD406DCA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -97,6 +103,7 @@ Global
 		{89F57C6A-A1C1-4907-9982-AE4E731198DA} = {6F484706-EDFC-49EF-A419-D3F6943C2E36}
 		{DFDFAD02-CBFE-4EE1-9B26-8D5823E9EB41} = {6F484706-EDFC-49EF-A419-D3F6943C2E36}
 		{1E88D830-F603-402A-9152-DA9DE54D0576} = {6F484706-EDFC-49EF-A419-D3F6943C2E36}
+		{F344E240-D8F8-4528-B034-98ABCD406DCA} = {6F484706-EDFC-49EF-A419-D3F6943C2E36}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {653AE7A1-A4C4-42F2-9804-FE7E032C3E8C}

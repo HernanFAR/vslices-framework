@@ -18,24 +18,24 @@ public class DomainFluentValidatedRemoveHandler_TwoGenerics
 
     public class DomainFluentValidatedUpdateHandler : DomainFluentValidatedUpdateHandler<Request, Domain>
     {
-        public DomainFluentValidatedUpdateHandler(IValidator<Domain> requestValidator, IUpdateableRepository<Domain> repository) : base(requestValidator, repository) { }
+        public DomainFluentValidatedUpdateHandler(IValidator<Domain> requestValidator, IUpdateRepository<Domain> repository) : base(requestValidator, repository) { }
 
-        protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(Request request, CancellationToken cancellationToken = default) 
-            => new Success();
+        protected override ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(Request request, CancellationToken cancellationToken = default) 
+            => ValueTask.FromResult<OneOf<Success, BusinessFailure>>(new Success());
 
-        protected override async ValueTask<Domain> GetDomainEntityAsync(Request request, CancellationToken cancellationToken = default)
-            => new Domain();
+        protected override ValueTask<Domain> GetAndProcessEntityAsync(Request request, CancellationToken cancellationToken = default)
+            => ValueTask.FromResult(new Domain());
 
     }
 
     private readonly Mock<IValidator<Domain>> _mockedValidator;
-    private readonly Mock<IUpdateableRepository<Domain>> _mockedRepository;
+    private readonly Mock<IUpdateRepository<Domain>> _mockedRepository;
     private readonly DomainFluentValidatedUpdateHandler _handler;
 
     public DomainFluentValidatedRemoveHandler_TwoGenerics()
     {
         _mockedValidator = new Mock<IValidator<Domain>>();
-        _mockedRepository = new Mock<IUpdateableRepository<Domain>>();
+        _mockedRepository = new Mock<IUpdateRepository<Domain>>();
         _handler = new DomainFluentValidatedUpdateHandler(_mockedValidator.Object, _mockedRepository.Object);
     }
 
@@ -73,13 +73,14 @@ public class DomainFluentValidatedRemoveHandler_TwoGenerics
     public async Task ValidateAsync_ReturnResponse()
     {
         var request = new Request();
+        var domain = new Domain();
 
         _mockedValidator.Setup(e => e.ValidateAsync(It.IsAny<Domain>(), default))
             .ReturnsAsync(new ValidationResult())
             .Verifiable();
 
         _mockedRepository.Setup(e => e.UpdateAsync(It.IsAny<Domain>(), default))
-            .ReturnsAsync(new Success())
+            .ReturnsAsync(domain)
             .Verifiable();
 
         var handlerResponse = await _handler.HandleAsync(request);

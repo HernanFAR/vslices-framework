@@ -1,31 +1,33 @@
-﻿using System.Text.Json;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OneOf;
-using OneOf.Types;
+using System.Text.Json;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.Core.DataAccess.EntityFramework;
 
-public abstract class EFCreatableRepository<TDbContext, TEntity> : ICreatableRepository<TEntity>
+public abstract class EFCreateRepository<TDbContext, TEntity> : ICreateRepository<TEntity>
     where TDbContext : DbContext
     where TEntity : class
 {
     private readonly TDbContext _context;
     private readonly ILogger _logger;
 
-    protected EFCreatableRepository(TDbContext context, ILogger logger)
+    protected EFCreateRepository(TDbContext context, ILogger logger)
     {
         _context = context;
         _logger = logger;
     }
 
-    protected virtual string ConcurrencyMessageTemplate
-        => "There was a concurrency error when creating entity of type {EntityType}, with data {Entity}";
+    protected internal virtual string ConcurrencyMessageTemplate
+        => "There was a concurrency error when creating entity of type {EntityType}, with data {EntityJson}";
+
+    protected internal virtual ValueTask<BusinessFailure> ProcessConcurrencyExceptionAsync(DbUpdateConcurrencyException ex, CancellationToken cancellationToken = default)
+        => ValueTask.FromResult(BusinessFailure.Of.ConcurrencyError(Array.Empty<string>()));
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "CA2254", Justification = "Logging template can be translated to other languages in this way")]
-    public virtual async ValueTask<OneOf<Success, BusinessFailure>> CreateAsync(TEntity entity, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<OneOf<TEntity, BusinessFailure>> CreateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         _context.Set<TEntity>().Add(entity);
 
@@ -33,53 +35,59 @@ public abstract class EFCreatableRepository<TDbContext, TEntity> : ICreatableRep
         {
             await _context.SaveChangesAsync(cancellationToken);
 
-            return new Success();
+            return entity;
         }
         catch (DbUpdateConcurrencyException ex)
         {
             _logger.LogWarning(ex, ConcurrencyMessageTemplate, typeof(TEntity).Namespace, JsonSerializer.Serialize(entity));
 
-            return BusinessFailure.Of.ConcurrencyError(Array.Empty<string>());
+            return await ProcessConcurrencyExceptionAsync(ex, cancellationToken);
         }
     }
 }
 
-public abstract class EFCreatableRepository<TDbContext, TDomain, TEntity> : ICreatableRepository<TDomain>
+public abstract class EFCreateRepository<TDbContext, TEntity, TDbEntity> : ICreateRepository<TEntity>
     where TDbContext : DbContext
-    where TEntity : class
+    where TDbEntity : class
 {
     private readonly TDbContext _context;
     private readonly ILogger _logger;
 
-    protected EFCreatableRepository(TDbContext context, ILogger logger)
+    protected EFCreateRepository(TDbContext context, ILogger logger)
     {
         _context = context;
         _logger = logger;
     }
 
-    protected virtual string ConcurrencyMessageTemplate
-        => "There was a concurrency error when creating entity of type {EntityType}, with data {Entity}";
+    protected internal virtual string ConcurrencyMessageTemplate
+        => "There was a concurrency error when creating entity of type {EntityType}, with data {EntityJson}";
+
+    protected internal abstract TDbEntity ToDatabaseEntity(TEntity entity);
+
+    protected internal abstract TEntity ToEntity(TDbEntity entity);
+
+    protected internal virtual ValueTask<BusinessFailure> ProcessConcurrencyExceptionAsync(DbUpdateConcurrencyException ex, CancellationToken cancellationToken = default)
+        => ValueTask.FromResult(BusinessFailure.Of.ConcurrencyError(Array.Empty<string>()));
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "CA2254", Justification = "Logging template can be translated to other languages in this way")]
-    public virtual async ValueTask<OneOf<Success, BusinessFailure>> CreateAsync(TDomain domain, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<OneOf<TEntity, BusinessFailure>> CreateAsync(TEntity domain, CancellationToken cancellationToken = default)
     {
-        var databaseEntity = await DomainToDatabaseEntityAsync(domain, cancellationToken);
+        var entity = ToDatabaseEntity(domain);
 
-        _context.Set<TEntity>().Add(databaseEntity);
+        _context.Set<TDbEntity>().Add(entity);
 
         try
         {
             await _context.SaveChangesAsync(cancellationToken);
 
-            return new Success();
+            return ToEntity(entity);
         }
         catch (DbUpdateConcurrencyException ex)
         {
-            _logger.LogWarning(ex, ConcurrencyMessageTemplate, typeof(TEntity).Namespace, JsonSerializer.Serialize(databaseEntity));
+            _logger.LogWarning(ex, ConcurrencyMessageTemplate, typeof(TDbEntity).Namespace, JsonSerializer.Serialize(entity));
 
-            return BusinessFailure.Of.ConcurrencyError(Array.Empty<string>());
+            return await ProcessConcurrencyExceptionAsync(ex, cancellationToken);
         }
     }
-
-    protected abstract ValueTask<TEntity> DomainToDatabaseEntityAsync(TDomain domain, CancellationToken cancellationToken = default);
 }
+

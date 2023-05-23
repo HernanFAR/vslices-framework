@@ -4,28 +4,27 @@ using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.Core.Abstracts.DataAccess;
 
-public interface ICreatableRepository<TEntity>
+public interface ICreateRepository<TEntity>
 {
-    ValueTask<OneOf<Success, BusinessFailure>> CreateAsync(TEntity entity, CancellationToken cancellationToken = default);
+    ValueTask<OneOf<TEntity, BusinessFailure>> CreateAsync(TEntity entity, CancellationToken cancellationToken = default);
 }
 
-public interface IUpdateableRepository<TEntity>
+public interface IUpdateRepository<TEntity>
 {
-    ValueTask<OneOf<Success, BusinessFailure>> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
+    ValueTask<OneOf<TEntity, BusinessFailure>> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
 }
 
-
-public interface IRemovableRepository<TEntity>
+public interface IRemoveRepository<TEntity>
 {
-    ValueTask<OneOf<Success, BusinessFailure>> RemoveAsync(TEntity entity, CancellationToken cancellationToken = default);
+    ValueTask<OneOf<TEntity, BusinessFailure>> RemoveAsync(TEntity entity, CancellationToken cancellationToken = default);
 }
 
-public interface IReadableRepository<TDto>
+public interface IReadRepository<TDto>
 {
     ValueTask<OneOf<TDto, BusinessFailure>> ReadAsync(CancellationToken cancellationToken = default);
 }
 
-public interface IReadableRepository<TDto, TSearchOptions>
+public interface IReadRepository<TDto, TSearchOptions>
 {
     ValueTask<OneOf<TDto, BusinessFailure>> ReadAsync(TSearchOptions options, CancellationToken cancellationToken = default);
 }

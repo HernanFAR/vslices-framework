@@ -10,7 +10,7 @@ public abstract class RequestFluentValidatedReadHandler<TRequest, TSearchOptions
 {
     private readonly IValidator<TRequest> _requestValidator;
 
-    protected RequestFluentValidatedReadHandler(IValidator<TRequest> requestValidator, IReadableRepository<TResponse, TSearchOptions> repository) : base(repository)
+    protected RequestFluentValidatedReadHandler(IValidator<TRequest> requestValidator, IReadRepository<TResponse, TSearchOptions> repository) : base(repository)
     {
         _requestValidator = requestValidator;
     }
@@ -33,7 +33,7 @@ public abstract class RequestFluentValidatedReadHandler<TRequest, TResponse> : R
 {
     private readonly IValidator<TRequest> _requestValidator;
 
-    protected RequestFluentValidatedReadHandler(IValidator<TRequest> requestValidator, IReadableRepository<TResponse, TRequest> repository) : base(repository)
+    protected RequestFluentValidatedReadHandler(IValidator<TRequest> requestValidator, IReadRepository<TResponse, TRequest> repository) : base(repository)
     {
         _requestValidator = requestValidator;
     }
@@ -56,7 +56,7 @@ public abstract class RequestFluentValidatedBasicReadHandler<TRequest, TResponse
 {
     private readonly IValidator<TRequest> _requestValidator;
 
-    protected RequestFluentValidatedBasicReadHandler(IValidator<TRequest> requestValidator, IReadableRepository<TResponse> repository) : base(repository)
+    protected RequestFluentValidatedBasicReadHandler(IValidator<TRequest> requestValidator, IReadRepository<TResponse> repository) : base(repository)
     {
         _requestValidator = requestValidator;
     }

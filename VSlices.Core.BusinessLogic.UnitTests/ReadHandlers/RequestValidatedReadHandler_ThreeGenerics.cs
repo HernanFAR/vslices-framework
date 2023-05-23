@@ -14,12 +14,12 @@ public class RequestValidatedReadHandler_ThreeGenerics
     public record SearchOptions;
     public record Response;
 
-    private readonly Mock<IReadableRepository<Response, SearchOptions>> _mockedRepository;
+    private readonly Mock<IReadRepository<Response, SearchOptions>> _mockedRepository;
     private readonly Mock<RequestValidatedReadHandler<Request, SearchOptions, Response>> _mockedHandler;
 
     public RequestValidatedReadHandler_ThreeGenerics()
     {
-        _mockedRepository = new Mock<IReadableRepository<Response, SearchOptions>>();
+        _mockedRepository = new Mock<IReadRepository<Response, SearchOptions>>();
         _mockedHandler = new Mock<RequestValidatedReadHandler<Request, SearchOptions, Response>>(_mockedRepository.Object);
     }
 

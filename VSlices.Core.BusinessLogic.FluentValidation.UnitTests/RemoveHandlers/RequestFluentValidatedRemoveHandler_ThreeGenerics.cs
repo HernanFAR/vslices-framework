@@ -19,27 +19,26 @@ public class RequestFluentValidatedRemoveHandler_ThreeGenerics
 
     public class RequestFluentValidatedRemoveHandler : RequestFluentValidatedRemoveHandler<Request, Response, Domain>
     {
-        public RequestFluentValidatedRemoveHandler(IValidator<Request> requestValidator, IRemovableRepository<Domain> repository) : base(requestValidator, repository) { }
+        public RequestFluentValidatedRemoveHandler(IValidator<Request> requestValidator, IRemoveRepository<Domain> repository) : base(requestValidator, repository) { }
 
-        protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(Request request, CancellationToken cancellationToken = default) 
-            => new Success();
+        protected override ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(Request request, CancellationToken cancellationToken = default) 
+            => ValueTask.FromResult<OneOf<Success, BusinessFailure>>(new Success());
 
-        protected override async ValueTask<Domain> GetDomainEntityAsync(Request request, CancellationToken cancellationToken = default)
-            => new Domain();
+        protected override ValueTask<Domain> GetAndProcessEntityAsync(Request request, CancellationToken cancellationToken = default)
+            => ValueTask.FromResult(new Domain());
 
-        protected override async ValueTask<Response> GetResponseAsync(Domain domainEntity, Request request, CancellationToken cancellationToken = default)
-            => new Response();
+        protected override Response GetResponse(Domain domainEntity, Request request) => new();
 
     }
 
     private readonly Mock<IValidator<Request>> _mockedValidator;
-    private readonly Mock<IRemovableRepository<Domain>> _mockedRepository;
+    private readonly Mock<IRemoveRepository<Domain>> _mockedRepository;
     private readonly RequestFluentValidatedRemoveHandler _handler;
 
     public RequestFluentValidatedRemoveHandler_ThreeGenerics()
     {
         _mockedValidator = new Mock<IValidator<Request>>();
-        _mockedRepository = new Mock<IRemovableRepository<Domain>>();
+        _mockedRepository = new Mock<IRemoveRepository<Domain>>();
         _handler = new RequestFluentValidatedRemoveHandler(_mockedValidator.Object, _mockedRepository.Object);
     }
 
@@ -77,13 +76,14 @@ public class RequestFluentValidatedRemoveHandler_ThreeGenerics
     public async Task ValidateAsync_ReturnResponse()
     {
         var request = new Request();
+        var domain = new Domain();
 
         _mockedValidator.Setup(e => e.ValidateAsync(request, default))
             .ReturnsAsync(new ValidationResult())
             .Verifiable();
 
-        _mockedRepository.Setup(e => e.RemoveAsync(It.IsAny<Domain>(), default))
-            .ReturnsAsync(new Success())
+        _mockedRepository.Setup(e => e.RemoveAsync(domain, default))
+            .ReturnsAsync(domain)
             .Verifiable();
 
         var handlerResponse = await _handler.HandleAsync(request);

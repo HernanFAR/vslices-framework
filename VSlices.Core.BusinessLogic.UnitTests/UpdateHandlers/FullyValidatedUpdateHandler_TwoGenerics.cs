@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Moq;
+using Moq.Protected;
 using OneOf.Types;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Responses;
@@ -11,12 +12,12 @@ public class FullyValidatedUpdateHandler_TwoGenerics
     public record Domain;
     public record Request;
 
-    private readonly Mock<IUpdateableRepository<Domain>> _mockedRepository;
+    private readonly Mock<IUpdateRepository<Domain>> _mockedRepository;
     private readonly Mock<FullyValidatedUpdateHandler<Request, Domain>> _mockedHandler;
 
     public FullyValidatedUpdateHandler_TwoGenerics()
     {
-        _mockedRepository = new Mock<IUpdateableRepository<Domain>>();
+        _mockedRepository = new Mock<IUpdateRepository<Domain>>();
         _mockedHandler = new Mock<FullyValidatedUpdateHandler<Request, Domain>>(_mockedRepository.Object);
     }
 
@@ -69,7 +70,7 @@ public class FullyValidatedUpdateHandler_TwoGenerics
     }
 
     [Fact]
-    public async Task HandleAsync_ShouldReturnBusinessFailure_DetailCallValidateUseCaseRulesAsyncAndValidateDomainAsync()
+    public async Task HandleAsync_ShouldReturnBusinessFailure_DetailCallValidateUseCaseRulesAsyncAndValidateEntityAsync()
     {
         var request = new Request();
         var domain = new Domain();
@@ -83,9 +84,9 @@ public class FullyValidatedUpdateHandler_TwoGenerics
             .ReturnsAsync(success);
         _mockedHandler.Setup(e => e.ValidateUseCaseRulesAsync(request, default))
             .ReturnsAsync(success);
-        _mockedHandler.Setup(e => e.GetDomainEntityAsync(request, default))
+        _mockedHandler.Setup(e => e.GetAndProcessEntityAsync(request, default))
             .ReturnsAsync(domain);
-        _mockedHandler.Setup(e => e.ValidateDomainAsync(domain, default))
+        _mockedHandler.Setup(e => e.ValidateEntityAsync(domain, default))
             .ReturnsAsync(businessFailure);
 
         var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
@@ -95,8 +96,8 @@ public class FullyValidatedUpdateHandler_TwoGenerics
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateRequestAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
-        _mockedHandler.Verify(e => e.GetDomainEntityAsync(request, default), Times.Once);
-        _mockedHandler.Verify(e => e.ValidateDomainAsync(domain, default), Times.Once);
+        _mockedHandler.Verify(e => e.GetAndProcessEntityAsync(request, default), Times.Once);
+        _mockedHandler.Verify(e => e.ValidateEntityAsync(domain, default), Times.Once);
         _mockedHandler.VerifyNoOtherCalls();
 
         _mockedRepository.VerifyNoOtherCalls();
@@ -117,9 +118,9 @@ public class FullyValidatedUpdateHandler_TwoGenerics
             .ReturnsAsync(success);
         _mockedHandler.Setup(e => e.ValidateUseCaseRulesAsync(request, default))
             .ReturnsAsync(success);
-        _mockedHandler.Setup(e => e.GetDomainEntityAsync(request, default))
+        _mockedHandler.Setup(e => e.GetAndProcessEntityAsync(request, default))
             .ReturnsAsync(domain);
-        _mockedHandler.Setup(e => e.ValidateDomainAsync(domain, default))
+        _mockedHandler.Setup(e => e.ValidateEntityAsync(domain, default))
             .ReturnsAsync(success);
 
         _mockedRepository.Setup(e => e.UpdateAsync(domain, default))
@@ -132,8 +133,8 @@ public class FullyValidatedUpdateHandler_TwoGenerics
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateRequestAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
-        _mockedHandler.Verify(e => e.GetDomainEntityAsync(request, default), Times.Once);
-        _mockedHandler.Verify(e => e.ValidateDomainAsync(domain, default), Times.Once);
+        _mockedHandler.Verify(e => e.GetAndProcessEntityAsync(request, default), Times.Once);
+        _mockedHandler.Verify(e => e.ValidateEntityAsync(domain, default), Times.Once);
         _mockedHandler.VerifyNoOtherCalls();
 
         _mockedRepository.Verify(e => e.UpdateAsync(domain, default), Times.Once);
@@ -154,13 +155,13 @@ public class FullyValidatedUpdateHandler_TwoGenerics
             .ReturnsAsync(success);
         _mockedHandler.Setup(e => e.ValidateUseCaseRulesAsync(request, default))
             .ReturnsAsync(success);
-        _mockedHandler.Setup(e => e.GetDomainEntityAsync(request, default))
+        _mockedHandler.Setup(e => e.GetAndProcessEntityAsync(request, default))
             .ReturnsAsync(domain);
-        _mockedHandler.Setup(e => e.ValidateDomainAsync(domain, default))
+        _mockedHandler.Setup(e => e.ValidateEntityAsync(domain, default))
             .ReturnsAsync(success);
 
         _mockedRepository.Setup(e => e.UpdateAsync(domain, default))
-            .ReturnsAsync(success);
+            .ReturnsAsync(domain);
 
         var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
 
@@ -169,8 +170,9 @@ public class FullyValidatedUpdateHandler_TwoGenerics
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateRequestAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
-        _mockedHandler.Verify(e => e.GetDomainEntityAsync(request, default), Times.Once);
-        _mockedHandler.Verify(e => e.ValidateDomainAsync(domain, default), Times.Once);
+        _mockedHandler.Verify(e => e.GetAndProcessEntityAsync(request, default), Times.Once);
+        _mockedHandler.Verify(e => e.ValidateEntityAsync(domain, default), Times.Once);
+        _mockedHandler.Protected().Verify("GetResponse", Times.Once(), domain, request);
         _mockedHandler.VerifyNoOtherCalls();
 
         _mockedRepository.Verify(e => e.UpdateAsync(domain, default), Times.Once);

@@ -58,8 +58,8 @@ public class UpdateQuestionHandler : FullyFluentValidatedUpdateHandler<UpdateQue
 
     public UpdateQuestionHandler(
         IValidator<UpdateQuestionCommand> requestValidator,
-        IValidator<Question> domainValidator,
-        IUpdateQuestionRepository repository) : base(requestValidator, domainValidator, repository)
+        IValidator<Question> entityValidator,
+        IUpdateQuestionRepository repository) : base(requestValidator, entityValidator, repository)
     {
         _repository = repository;
     }
@@ -76,7 +76,7 @@ public class UpdateQuestionHandler : FullyFluentValidatedUpdateHandler<UpdateQue
         return new Success();
     }
 
-    protected override async ValueTask<Question> GetDomainEntityAsync(UpdateQuestionCommand request, CancellationToken cancellationToken)
+    protected override async ValueTask<Question> GetAndProcessEntityAsync(UpdateQuestionCommand request, CancellationToken cancellationToken)
     {
         var question = await _repository.GetAsync(request.Id, cancellationToken);
 
@@ -99,7 +99,7 @@ public class UpdateQuestionValidator : AbstractValidator<UpdateQuestionCommand>
     }
 }
 
-public interface IUpdateQuestionRepository : IUpdateableRepository<Question>
+public interface IUpdateQuestionRepository : IUpdateRepository<Question>
 {
     ValueTask<bool> AnyAsync(Guid id, CancellationToken cancellationToken = default);
 
@@ -108,7 +108,7 @@ public interface IUpdateQuestionRepository : IUpdateableRepository<Question>
 
 }
 
-public class UpdateQuestionRepository : EFUpdateableRepository<ApplicationDbContext, Question>, IUpdateQuestionRepository
+public class UpdateQuestionRepository : EFUpdateRepository<ApplicationDbContext, Question>, IUpdateQuestionRepository
 {
     private readonly ApplicationDbContext _context;
 

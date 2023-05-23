@@ -12,12 +12,12 @@ public class FullyValidatedRemoveHandler_ThreeGenerics
     public record Response;
     public record Request;
 
-    private readonly Mock<IRemovableRepository<Domain>> _mockedRepository;
+    private readonly Mock<IRemoveRepository<Domain>> _mockedRepository;
     private readonly Mock<FullyValidatedRemoveHandler<Request, Response, Domain>> _mockedHandler;
 
     public FullyValidatedRemoveHandler_ThreeGenerics()
     {
-        _mockedRepository = new Mock<IRemovableRepository<Domain>>();
+        _mockedRepository = new Mock<IRemoveRepository<Domain>>();
         _mockedHandler = new Mock<FullyValidatedRemoveHandler<Request, Response, Domain>>(_mockedRepository.Object);
     }
 
@@ -84,9 +84,9 @@ public class FullyValidatedRemoveHandler_ThreeGenerics
             .ReturnsAsync(success);
         _mockedHandler.Setup(e => e.ValidateUseCaseRulesAsync(request, default))
             .ReturnsAsync(success);
-        _mockedHandler.Setup(e => e.GetDomainEntityAsync(request, default))
+        _mockedHandler.Setup(e => e.GetAndProcessEntityAsync(request, default))
             .ReturnsAsync(domain);
-        _mockedHandler.Setup(e => e.ValidateDomainAsync(domain, default))
+        _mockedHandler.Setup(e => e.ValidateEntityAsync(domain, default))
             .ReturnsAsync(businessFailure);
 
         var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
@@ -96,8 +96,8 @@ public class FullyValidatedRemoveHandler_ThreeGenerics
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateRequestAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
-        _mockedHandler.Verify(e => e.GetDomainEntityAsync(request, default), Times.Once);
-        _mockedHandler.Verify(e => e.ValidateDomainAsync(domain, default), Times.Once);
+        _mockedHandler.Verify(e => e.GetAndProcessEntityAsync(request, default), Times.Once);
+        _mockedHandler.Verify(e => e.ValidateEntityAsync(domain, default), Times.Once);
         _mockedHandler.VerifyNoOtherCalls();
 
         _mockedRepository.VerifyNoOtherCalls();
@@ -118,9 +118,9 @@ public class FullyValidatedRemoveHandler_ThreeGenerics
             .ReturnsAsync(success);
         _mockedHandler.Setup(e => e.ValidateUseCaseRulesAsync(request, default))
             .ReturnsAsync(success);
-        _mockedHandler.Setup(e => e.GetDomainEntityAsync(request, default))
+        _mockedHandler.Setup(e => e.GetAndProcessEntityAsync(request, default))
             .ReturnsAsync(domain);
-        _mockedHandler.Setup(e => e.ValidateDomainAsync(domain, default))
+        _mockedHandler.Setup(e => e.ValidateEntityAsync(domain, default))
             .ReturnsAsync(success);
 
         _mockedRepository.Setup(e => e.RemoveAsync(domain, default))
@@ -133,8 +133,8 @@ public class FullyValidatedRemoveHandler_ThreeGenerics
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateRequestAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
-        _mockedHandler.Verify(e => e.GetDomainEntityAsync(request, default), Times.Once);
-        _mockedHandler.Verify(e => e.ValidateDomainAsync(domain, default), Times.Once);
+        _mockedHandler.Verify(e => e.GetAndProcessEntityAsync(request, default), Times.Once);
+        _mockedHandler.Verify(e => e.ValidateEntityAsync(domain, default), Times.Once);
         _mockedHandler.VerifyNoOtherCalls();
 
         _mockedRepository.Verify(e => e.RemoveAsync(domain, default), Times.Once);
@@ -156,15 +156,15 @@ public class FullyValidatedRemoveHandler_ThreeGenerics
             .ReturnsAsync(success);
         _mockedHandler.Setup(e => e.ValidateUseCaseRulesAsync(request, default))
             .ReturnsAsync(success);
-        _mockedHandler.Setup(e => e.GetDomainEntityAsync(request, default))
+        _mockedHandler.Setup(e => e.GetAndProcessEntityAsync(request, default))
             .ReturnsAsync(domain);
-        _mockedHandler.Setup(e => e.ValidateDomainAsync(domain, default))
+        _mockedHandler.Setup(e => e.ValidateEntityAsync(domain, default))
             .ReturnsAsync(success);
-        _mockedHandler.Setup(e => e.GetResponseAsync(domain, request, default))
-            .ReturnsAsync(response);
+        _mockedHandler.Setup(e => e.GetResponse(domain, request))
+            .Returns(response);
 
         _mockedRepository.Setup(e => e.RemoveAsync(domain, default))
-            .ReturnsAsync(success);
+            .ReturnsAsync(domain);
 
         var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
 
@@ -173,9 +173,9 @@ public class FullyValidatedRemoveHandler_ThreeGenerics
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateRequestAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
-        _mockedHandler.Verify(e => e.GetDomainEntityAsync(request, default), Times.Once);
-        _mockedHandler.Verify(e => e.ValidateDomainAsync(domain, default), Times.Once);
-        _mockedHandler.Verify(e => e.GetResponseAsync(domain, request, default), Times.Once);
+        _mockedHandler.Verify(e => e.GetAndProcessEntityAsync(request, default), Times.Once);
+        _mockedHandler.Verify(e => e.ValidateEntityAsync(domain, default), Times.Once);
+        _mockedHandler.Verify(e => e.GetResponse(domain, request), Times.Once);
         _mockedHandler.VerifyNoOtherCalls();
 
         _mockedRepository.Verify(e => e.RemoveAsync(domain, default), Times.Once);

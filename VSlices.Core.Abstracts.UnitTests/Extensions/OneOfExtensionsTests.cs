@@ -84,6 +84,17 @@ public class OneOfExtensionsTests
     }
 
     [Fact]
+    public void MatchEndpointResult_ShouldCallReturnUnprocessableEntity_DetailWithError()
+    {
+        OneOf<Success, BusinessFailure> oneOf = BusinessFailure.Of.Validation("XD");
+
+        var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
+
+        result.Should().BeOfType<UnprocessableEntity<string[]>>();
+
+    }
+
+    [Fact]
     public void MatchEndpointResult_ShouldThrowArgumentOutOfRange()
     {
         OneOf<Success, BusinessFailure> oneOf = new BusinessFailure((FailureKind)10, Array.Empty<string>());

@@ -10,37 +10,35 @@ using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.Core.BusinessLogic.FluentValidation.UnitTests.CreateHandlers;
 
-
 public class DomainFluentValidatedUpdateHandler_ThreeGenerics
 {
     public record Domain;
     public record Request;
     public record Response;
 
-    public class DomainFluentValidatedCreateHandler : DomainFluentValidatedCreateHandler<Request, Response, Domain>
+    public class EntityFluentValidatedCreateHandler : EntityFluentValidatedCreateHandler<Request, Response, Domain>
     {
-        public DomainFluentValidatedCreateHandler(IValidator<Domain> requestValidator, ICreatableRepository<Domain> repository) : base(requestValidator, repository) { }
+        public EntityFluentValidatedCreateHandler(IValidator<Domain> requestValidator, ICreateRepository<Domain> repository) : base(requestValidator, repository) { }
 
-        protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(Request request, CancellationToken cancellationToken = default) 
-            => new Success();
+        protected override ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(Request request, CancellationToken cancellationToken = default) 
+            => ValueTask.FromResult<OneOf<Success, BusinessFailure>>(new Success());
 
-        protected override async ValueTask<Domain> GetDomainEntityAsync(Request request, CancellationToken cancellationToken = default)
-            => new Domain();
+        protected override ValueTask<Domain> CreateEntityAsync(Request request, CancellationToken cancellationToken = default)
+            => ValueTask.FromResult(new Domain());
 
-        protected override async ValueTask<Response> GetResponseAsync(Domain domainEntity, Request request, CancellationToken cancellationToken = default)
-            => new Response();
+        protected override Response GetResponse(Domain domainEntity, Request request) => new();
 
     }
 
     private readonly Mock<IValidator<Domain>> _mockedValidator;
-    private readonly Mock<ICreatableRepository<Domain>> _mockedRepository;
-    private readonly DomainFluentValidatedCreateHandler _handler;
+    private readonly Mock<ICreateRepository<Domain>> _mockedRepository;
+    private readonly EntityFluentValidatedCreateHandler _handler;
 
     public DomainFluentValidatedUpdateHandler_ThreeGenerics()
     {
         _mockedValidator = new Mock<IValidator<Domain>>();
-        _mockedRepository = new Mock<ICreatableRepository<Domain>>();
-        _handler = new DomainFluentValidatedCreateHandler(_mockedValidator.Object, _mockedRepository.Object);
+        _mockedRepository = new Mock<ICreateRepository<Domain>>();
+        _handler = new EntityFluentValidatedCreateHandler(_mockedValidator.Object, _mockedRepository.Object);
     }
 
     [Fact]
@@ -77,13 +75,14 @@ public class DomainFluentValidatedUpdateHandler_ThreeGenerics
     public async Task ValidateAsync_ReturnResponse()
     {
         var request = new Request();
+        var domain = new Domain();
 
         _mockedValidator.Setup(e => e.ValidateAsync(It.IsAny<Domain>(), default))
             .ReturnsAsync(new ValidationResult())
             .Verifiable();
 
         _mockedRepository.Setup(e => e.CreateAsync(It.IsAny<Domain>(), default))
-            .ReturnsAsync(new Success())
+            .ReturnsAsync(domain)
             .Verifiable();
 
         var handlerResponse = await _handler.HandleAsync(request);

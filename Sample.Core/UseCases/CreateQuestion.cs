@@ -25,7 +25,7 @@ public class CreateQuestionEndpoint : IEndpointDefinition
     public static void DefineDependencies(IServiceCollection services)
     {
         services.AddScoped<CreateQuestionHandler>();
-        services.AddScoped<ICreateQuestionRepository, CreateQuestionRepository>();
+        services.AddScoped<ICreateQuestionRepository, SimpleCreateQuestionRepository>();
     }
 
     public static async ValueTask<IResult> CreateQuestionAsync(
@@ -52,18 +52,18 @@ public class CreateQuestionHandler : FullyFluentValidatedCreateHandler<CreateQue
 {
     public CreateQuestionHandler(
         IValidator<CreateQuestionCommand> requestValidator,
-        IValidator<Question> domainValidator,
-        ICreateQuestionRepository repository) : base(requestValidator, domainValidator, repository)
+        IValidator<Question> entityValidator,
+        ICreateQuestionRepository repository) : base(requestValidator, entityValidator, repository)
     { }
 
     protected override ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(CreateQuestionCommand request, CancellationToken cancellationToken = default)
         => ValueTask.FromResult<OneOf<Success, BusinessFailure>>(new Success());
 
-    protected override ValueTask<Question> GetDomainEntityAsync(CreateQuestionCommand request, CancellationToken cancellationToken = default)
+    protected override ValueTask<Question> CreateEntityAsync(CreateQuestionCommand request, CancellationToken cancellationToken = default)
         => ValueTask.FromResult(new Question(request.Name, request.CreatedBy));
 
-    protected override ValueTask<Guid> GetResponseAsync(Question domainEntity, CreateQuestionCommand request, CancellationToken cancellationToken = default)
-        => ValueTask.FromResult(domainEntity.Id);
+    protected override Guid GetResponse(Question domainEntity, CreateQuestionCommand request) => domainEntity.Id;
+
 }
 
 public class CreateQuestionValidator : AbstractValidator<CreateQuestionCommand>
@@ -79,12 +79,12 @@ public class CreateQuestionValidator : AbstractValidator<CreateQuestionCommand>
     }
 }
 
-public interface ICreateQuestionRepository : ICreatableRepository<Question>
+public interface ICreateQuestionRepository : ICreateRepository<Question>
 {
 }
 
-public class CreateQuestionRepository : EFCreatableRepository<ApplicationDbContext, Question>, ICreateQuestionRepository
+public class SimpleCreateQuestionRepository : EFCreateRepository<ApplicationDbContext, Question>, ICreateQuestionRepository
 {
-    public CreateQuestionRepository(ApplicationDbContext context, ILogger<CreateQuestionRepository> logger)
+    public SimpleCreateQuestionRepository(ApplicationDbContext context, ILogger<SimpleCreateQuestionRepository> logger)
         : base(context, logger) { }
 }

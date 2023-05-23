@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Moq;
+using Moq.Protected;
 using OneOf.Types;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Responses;
@@ -11,12 +12,12 @@ public class RemoveHandler_TwoGenerics
     public record Domain;
     public record Request;
 
-    private readonly Mock<IRemovableRepository<Domain>> _mockedRepository;
+    private readonly Mock<IRemoveRepository<Domain>> _mockedRepository;
     private readonly Mock<RemoveHandler<Request, Domain>> _mockedHandler;
 
     public RemoveHandler_TwoGenerics()
     {
-        _mockedRepository = new Mock<IRemovableRepository<Domain>>();
+        _mockedRepository = new Mock<IRemoveRepository<Domain>>();
         _mockedHandler = new Mock<RemoveHandler<Request, Domain>>(_mockedRepository.Object);
     }
 
@@ -55,7 +56,7 @@ public class RemoveHandler_TwoGenerics
             .CallBase();
         _mockedHandler.Setup(e => e.ValidateUseCaseRulesAsync(request, default))
             .ReturnsAsync(success);
-        _mockedHandler.Setup(e => e.GetDomainEntityAsync(request, default))
+        _mockedHandler.Setup(e => e.GetAndProcessEntityAsync(request, default))
             .ReturnsAsync(domain);
 
         _mockedRepository.Setup(e => e.RemoveAsync(domain, default))
@@ -67,7 +68,7 @@ public class RemoveHandler_TwoGenerics
 
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
-        _mockedHandler.Verify(e => e.GetDomainEntityAsync(request, default), Times.Once);
+        _mockedHandler.Verify(e => e.GetAndProcessEntityAsync(request, default), Times.Once);
         _mockedHandler.VerifyNoOtherCalls();
 
         _mockedRepository.Verify(e => e.RemoveAsync(domain, default), Times.Once);
@@ -86,11 +87,11 @@ public class RemoveHandler_TwoGenerics
             .CallBase();
         _mockedHandler.Setup(e => e.ValidateUseCaseRulesAsync(request, default))
             .ReturnsAsync(success);
-        _mockedHandler.Setup(e => e.GetDomainEntityAsync(request, default))
+        _mockedHandler.Setup(e => e.GetAndProcessEntityAsync(request, default))
             .ReturnsAsync(domain);
 
         _mockedRepository.Setup(e => e.RemoveAsync(domain, default))
-            .ReturnsAsync(success);
+            .ReturnsAsync(domain);
 
         var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
 
@@ -98,7 +99,8 @@ public class RemoveHandler_TwoGenerics
 
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
-        _mockedHandler.Verify(e => e.GetDomainEntityAsync(request, default), Times.Once);
+        _mockedHandler.Verify(e => e.GetAndProcessEntityAsync(request, default), Times.Once);
+        _mockedHandler.Protected().Verify("GetResponse", Times.Once(), domain, request);
         _mockedHandler.VerifyNoOtherCalls();
 
         _mockedRepository.Verify(e => e.RemoveAsync(domain, default), Times.Once);

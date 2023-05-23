@@ -54,8 +54,8 @@ public class RemoveQuestionHandler : FullyFluentValidatedRemoveHandler<RemoveQue
 
     public RemoveQuestionHandler(
         IValidator<RemoveQuestionCommand> contractValidator,
-        IValidator<Question> domainValidator,
-        IRemoveQuestionRepository repository) : base(contractValidator, domainValidator, repository)
+        IValidator<Question> entityValidator,
+        IRemoveQuestionRepository repository) : base(contractValidator, entityValidator, repository)
     {
         _repository = repository;
     }
@@ -72,7 +72,7 @@ public class RemoveQuestionHandler : FullyFluentValidatedRemoveHandler<RemoveQue
         return new Success();
     }
 
-    protected override async ValueTask<Question> GetDomainEntityAsync(RemoveQuestionCommand request, CancellationToken cancellationToken)
+    protected override async ValueTask<Question> GetAndProcessEntityAsync(RemoveQuestionCommand request, CancellationToken cancellationToken)
         => await _repository.GetAsync(request.Id, cancellationToken);
 
 }
@@ -87,7 +87,7 @@ public class RemoveQuestionValidator : AbstractValidator<RemoveQuestionCommand>
     }
 }
 
-public interface IRemoveQuestionRepository : IRemovableRepository<Question>
+public interface IRemoveQuestionRepository : IRemoveRepository<Question>
 {
     ValueTask<bool> AnyAsync(Guid id, CancellationToken cancellationToken = default);
 
@@ -95,7 +95,7 @@ public interface IRemoveQuestionRepository : IRemovableRepository<Question>
 
 }
 
-public class RemoveQuestionRepository : EFRemovableRepository<ApplicationDbContext, Question>, IRemoveQuestionRepository
+public class RemoveQuestionRepository : EFRemoveRepository<ApplicationDbContext, Question>, IRemoveQuestionRepository
 {
     private readonly ApplicationDbContext _context;
 

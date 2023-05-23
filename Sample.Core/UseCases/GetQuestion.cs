@@ -57,7 +57,7 @@ public class GetQuestionHandler : RequestValidatedReadHandler<GetQuestionQuery, 
         => ValueTask.FromResult(request.Id);
 }
 
-public interface IGetQuestionRepository : IReadableRepository<GetQuestionDto, Guid>
+public interface IGetQuestionRepository : IReadRepository<GetQuestionDto, Guid>
 {
 
 }

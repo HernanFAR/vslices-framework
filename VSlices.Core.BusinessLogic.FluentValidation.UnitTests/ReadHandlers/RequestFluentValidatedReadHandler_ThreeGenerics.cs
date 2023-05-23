@@ -22,25 +22,25 @@ public class RequestFluentValidatedReadHandler_ThreeGenerics
 
     public class RequestFluentValidatedReadHandler : RequestFluentValidatedReadHandler<Request, SearchOptions, Response>
     {
-        public RequestFluentValidatedReadHandler(IValidator<Request> requestValidator, IReadableRepository<Response, SearchOptions> repository) : base(requestValidator, repository) { }
+        public RequestFluentValidatedReadHandler(IValidator<Request> requestValidator, IReadRepository<Response, SearchOptions> repository) : base(requestValidator, repository) { }
         
-        protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(Request request, CancellationToken cancellationToken = default)
-            => new Success();
+        protected override ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(Request request, CancellationToken cancellationToken = default)
+            => ValueTask.FromResult<OneOf<Success, BusinessFailure>>(new Success());
 
-        protected override async ValueTask<SearchOptions> RequestToSearchOptionsAsync(Request request,
+        protected override ValueTask<SearchOptions> RequestToSearchOptionsAsync(Request request,
             CancellationToken cancellationToken = default)
-            => new SearchOptions();
+            => ValueTask.FromResult(new SearchOptions());
 
     }
 
     private readonly Mock<IValidator<Request>> _mockedValidator;
-    private readonly Mock<IReadableRepository<Response, SearchOptions>> _mockedRepository;
+    private readonly Mock<IReadRepository<Response, SearchOptions>> _mockedRepository;
     private readonly RequestFluentValidatedReadHandler _handler;
 
     public RequestFluentValidatedReadHandler_ThreeGenerics()
     {
         _mockedValidator = new Mock<IValidator<Request>>();
-        _mockedRepository = new Mock<IReadableRepository<Response, SearchOptions>>();
+        _mockedRepository = new Mock<IReadRepository<Response, SearchOptions>>();
         _handler = new RequestFluentValidatedReadHandler(_mockedValidator.Object, _mockedRepository.Object);
     }
 

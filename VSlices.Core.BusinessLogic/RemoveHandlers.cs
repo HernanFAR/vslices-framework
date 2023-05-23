@@ -6,11 +6,11 @@ using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.Core.BusinessLogic;
 
-public abstract class RemoveHandler<TRequest, TResponse, TDomain> : IHandler<TRequest, TResponse>
+public abstract class RemoveHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
 {
-    private readonly IRemovableRepository<TDomain> _repository;
+    private readonly IRemoveRepository<TEntity> _repository;
 
-    protected RemoveHandler(IRemovableRepository<TDomain> repository)
+    protected RemoveHandler(IRemoveRepository<TEntity> repository)
     {
         _repository = repository;
     }
@@ -24,133 +24,32 @@ public abstract class RemoveHandler<TRequest, TResponse, TDomain> : IHandler<TRe
             return useCaseValidationResult.AsT1;
         }
 
-        var domainEntity = await GetDomainEntityAsync(request, cancellationToken);
+        var entity = await GetAndProcessEntityAsync(request, cancellationToken);
 
-        var dataAccessResult = await _repository.RemoveAsync(domainEntity, cancellationToken);
-
-        if (dataAccessResult.IsT1)
-        {
-            return dataAccessResult.AsT1;
-        }
-
-        return await GetResponseAsync(domainEntity, request, cancellationToken);
-    }
-
-    protected internal abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
-        CancellationToken cancellationToken);
-
-    protected internal abstract ValueTask<TDomain> GetDomainEntityAsync(TRequest request,
-        CancellationToken cancellationToken);
-
-    protected internal abstract ValueTask<TResponse> GetResponseAsync(TDomain domainEntity, TRequest request,
-        CancellationToken cancellationToken);
-}
-
-public abstract class RequestValidatedRemoveHandler<TRequest, TResponse, TDomain> : IHandler<TRequest, TResponse>
-{
-    private readonly IRemovableRepository<TDomain> _repository;
-
-    protected RequestValidatedRemoveHandler(IRemovableRepository<TDomain> repository)
-    {
-        _repository = repository;
-    }
-
-    public virtual async ValueTask<OneOf<TResponse, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
-    {
-        var requestValidationResult = await ValidateRequestAsync(request, cancellationToken);
-
-        if (requestValidationResult.IsT1)
-        {
-            return requestValidationResult.AsT1;
-        }
-
-        var useCaseValidationResult = await ValidateUseCaseRulesAsync(request, cancellationToken);
-
-        if (useCaseValidationResult.IsT1)
-        {
-            return useCaseValidationResult.AsT1;
-        }
-
-        var domainEntity = await GetDomainEntityAsync(request, cancellationToken);
-
-        var dataAccessResult = await _repository.RemoveAsync(domainEntity, cancellationToken);
+        var dataAccessResult = await _repository.RemoveAsync(entity, cancellationToken);
 
         if (dataAccessResult.IsT1)
         {
             return dataAccessResult.AsT1;
         }
 
-        return await GetResponseAsync(domainEntity, request, cancellationToken);
-    }
-
-    protected internal abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateRequestAsync(TRequest request,
-        CancellationToken cancellationToken = default);
-
-    protected internal abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
-        CancellationToken cancellationToken);
-
-    protected internal abstract ValueTask<TDomain> GetDomainEntityAsync(TRequest request,
-        CancellationToken cancellationToken);
-
-    protected internal abstract ValueTask<TResponse> GetResponseAsync(TDomain domainEntity, TRequest request,
-        CancellationToken cancellationToken);
-}
-
-public abstract class DomainValidatedRemoveHandler<TRequest, TResponse, TDomain> : IHandler<TRequest, TResponse>
-{
-    private readonly IRemovableRepository<TDomain> _repository;
-
-    protected DomainValidatedRemoveHandler(IRemovableRepository<TDomain> repository)
-    {
-        _repository = repository;
-    }
-
-    public virtual async ValueTask<OneOf<TResponse, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
-    {
-        var useCaseValidationResult = await ValidateUseCaseRulesAsync(request, cancellationToken);
-
-        if (useCaseValidationResult.IsT1)
-        {
-            return useCaseValidationResult.AsT1;
-        }
-
-        var domainEntity = await GetDomainEntityAsync(request, cancellationToken);
-
-        var domainValidationResult = await ValidateDomainAsync(domainEntity, cancellationToken);
-
-        if (domainValidationResult.IsT1)
-        {
-            return domainValidationResult.AsT1;
-        }
-
-        var dataAccessResult = await _repository.RemoveAsync(domainEntity, cancellationToken);
-
-        if (dataAccessResult.IsT1)
-        {
-            return dataAccessResult.AsT1;
-        }
-
-        return await GetResponseAsync(domainEntity, request, cancellationToken);
+        return GetResponse(entity, request);
     }
 
     protected internal abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
         CancellationToken cancellationToken);
 
-    protected internal abstract ValueTask<TDomain> GetDomainEntityAsync(TRequest request,
+    protected internal abstract ValueTask<TEntity> GetAndProcessEntityAsync(TRequest request,
         CancellationToken cancellationToken);
 
-    protected internal abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateDomainAsync(TDomain request,
-        CancellationToken cancellationToken = default);
-
-    protected internal abstract ValueTask<TResponse> GetResponseAsync(TDomain domainEntity, TRequest request,
-        CancellationToken cancellationToken);
+    protected internal abstract TResponse GetResponse(TEntity entity, TRequest request);
 }
 
-public abstract class FullyValidatedRemoveHandler<TRequest, TResponse, TDomain> : IHandler<TRequest, TResponse>
+public abstract class RequestValidatedRemoveHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
 {
-    private readonly IRemovableRepository<TDomain> _repository;
+    private readonly IRemoveRepository<TEntity> _repository;
 
-    protected FullyValidatedRemoveHandler(IRemovableRepository<TDomain> repository)
+    protected RequestValidatedRemoveHandler(IRemoveRepository<TEntity> repository)
     {
         _repository = repository;
     }
@@ -171,23 +70,16 @@ public abstract class FullyValidatedRemoveHandler<TRequest, TResponse, TDomain> 
             return useCaseValidationResult.AsT1;
         }
 
-        var domainEntity = await GetDomainEntityAsync(request, cancellationToken);
+        var entity = await GetAndProcessEntityAsync(request, cancellationToken);
 
-        var domainValidationResult = await ValidateDomainAsync(domainEntity, cancellationToken);
-
-        if (domainValidationResult.IsT1)
-        {
-            return domainValidationResult.AsT1;
-        }
-
-        var dataAccessResult = await _repository.RemoveAsync(domainEntity, cancellationToken);
+        var dataAccessResult = await _repository.RemoveAsync(entity, cancellationToken);
 
         if (dataAccessResult.IsT1)
         {
             return dataAccessResult.AsT1;
         }
 
-        return await GetResponseAsync(domainEntity, request, cancellationToken);
+        return GetResponse(entity, request);
     }
 
     protected internal abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateRequestAsync(TRequest request,
@@ -196,26 +88,22 @@ public abstract class FullyValidatedRemoveHandler<TRequest, TResponse, TDomain> 
     protected internal abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
         CancellationToken cancellationToken);
 
-    protected internal abstract ValueTask<TDomain> GetDomainEntityAsync(TRequest request,
+    protected internal abstract ValueTask<TEntity> GetAndProcessEntityAsync(TRequest request,
         CancellationToken cancellationToken);
 
-    protected internal abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateDomainAsync(TDomain request,
-        CancellationToken cancellationToken = default);
-
-    protected internal abstract ValueTask<TResponse> GetResponseAsync(TDomain domainEntity, TRequest request,
-        CancellationToken cancellationToken);
+    protected internal abstract TResponse GetResponse(TEntity entity, TRequest request);
 }
 
-public abstract class RemoveHandler<TRequest, TDomain> : IHandler<TRequest, Success>
+public abstract class EntityValidatedRemoveHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
 {
-    private readonly IRemovableRepository<TDomain> _repository;
+    private readonly IRemoveRepository<TEntity> _repository;
 
-    protected RemoveHandler(IRemovableRepository<TDomain> repository)
+    protected EntityValidatedRemoveHandler(IRemoveRepository<TEntity> repository)
     {
         _repository = repository;
     }
 
-    public virtual async ValueTask<OneOf<Success, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<OneOf<TResponse, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
     {
         var useCaseValidationResult = await ValidateUseCaseRulesAsync(request, cancellationToken);
 
@@ -224,39 +112,47 @@ public abstract class RemoveHandler<TRequest, TDomain> : IHandler<TRequest, Succ
             return useCaseValidationResult.AsT1;
         }
 
-        var domainEntity = await GetDomainEntityAsync(request, cancellationToken);
+        var entity = await GetAndProcessEntityAsync(request, cancellationToken);
 
-        var dataAccessResult = await _repository.RemoveAsync(domainEntity, cancellationToken);
+        var entityValidationResult = await ValidateEntityAsync(entity, cancellationToken);
+
+        if (entityValidationResult.IsT1)
+        {
+            return entityValidationResult.AsT1;
+        }
+
+        var dataAccessResult = await _repository.RemoveAsync(entity, cancellationToken);
 
         if (dataAccessResult.IsT1)
         {
             return dataAccessResult.AsT1;
         }
 
-        return await GetResponseAsync(domainEntity, request, cancellationToken);
+        return GetResponse(entity, request);
     }
 
     protected internal abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
         CancellationToken cancellationToken);
 
-    protected internal abstract ValueTask<TDomain> GetDomainEntityAsync(TRequest request,
+    protected internal abstract ValueTask<TEntity> GetAndProcessEntityAsync(TRequest request,
         CancellationToken cancellationToken);
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060", Justification = "Can not use two or more _")]
-    protected internal ValueTask<Success> GetResponseAsync(TDomain _, TRequest r, CancellationToken c = default)
-        => ValueTask.FromResult(new Success());
+    protected internal abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateEntityAsync(TEntity request,
+        CancellationToken cancellationToken = default);
+
+    protected internal abstract TResponse GetResponse(TEntity entity, TRequest request);
 }
 
-public abstract class RequestValidatedRemoveHandler<TRequest, TDomain> : IHandler<TRequest, Success>
+public abstract class FullyValidatedRemoveHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
 {
-    private readonly IRemovableRepository<TDomain> _repository;
+    private readonly IRemoveRepository<TEntity> _repository;
 
-    protected RequestValidatedRemoveHandler(IRemovableRepository<TDomain> repository)
+    protected FullyValidatedRemoveHandler(IRemoveRepository<TEntity> repository)
     {
         _repository = repository;
     }
 
-    public virtual async ValueTask<OneOf<Success, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<OneOf<TResponse, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
     {
         var requestValidationResult = await ValidateRequestAsync(request, cancellationToken);
 
@@ -272,16 +168,23 @@ public abstract class RequestValidatedRemoveHandler<TRequest, TDomain> : IHandle
             return useCaseValidationResult.AsT1;
         }
 
-        var domainEntity = await GetDomainEntityAsync(request, cancellationToken);
+        var entity = await GetAndProcessEntityAsync(request, cancellationToken);
 
-        var dataAccessResult = await _repository.RemoveAsync(domainEntity, cancellationToken);
+        var entityValidationResult = await ValidateEntityAsync(entity, cancellationToken);
+
+        if (entityValidationResult.IsT1)
+        {
+            return entityValidationResult.AsT1;
+        }
+
+        var dataAccessResult = await _repository.RemoveAsync(entity, cancellationToken);
 
         if (dataAccessResult.IsT1)
         {
             return dataAccessResult.AsT1;
         }
 
-        return await GetResponseAsync(domainEntity, request, cancellationToken);
+        return GetResponse(entity, request);
     }
 
     protected internal abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateRequestAsync(TRequest request,
@@ -290,122 +193,43 @@ public abstract class RequestValidatedRemoveHandler<TRequest, TDomain> : IHandle
     protected internal abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
         CancellationToken cancellationToken);
 
-    protected internal abstract ValueTask<TDomain> GetDomainEntityAsync(TRequest request,
+    protected internal abstract ValueTask<TEntity> GetAndProcessEntityAsync(TRequest request,
         CancellationToken cancellationToken);
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060", Justification = "Can not use two or more _")]
-    protected internal ValueTask<Success> GetResponseAsync(TDomain _, TRequest r, CancellationToken c = default)
-        => ValueTask.FromResult(new Success());
+    protected internal abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateEntityAsync(TEntity request,
+        CancellationToken cancellationToken = default);
+
+    protected internal abstract TResponse GetResponse(TEntity entity, TRequest request);
 }
 
-public abstract class DomainValidatedRemoveHandler<TRequest, TDomain> : IHandler<TRequest, Success>
+public abstract class RemoveHandler<TRequest, TEntity> : RemoveHandler<TRequest, Success, TEntity>
 {
-    private readonly IRemovableRepository<TDomain> _repository;
+    protected RemoveHandler(IRemoveRepository<TEntity> repository) : base(repository)
+    { }
 
-    protected DomainValidatedRemoveHandler(IRemovableRepository<TDomain> repository)
-    {
-        _repository = repository;
-    }
-
-    public virtual async ValueTask<OneOf<Success, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
-    {
-        var useCaseValidationResult = await ValidateUseCaseRulesAsync(request, cancellationToken);
-
-        if (useCaseValidationResult.IsT1)
-        {
-            return useCaseValidationResult.AsT1;
-        }
-
-        var domainEntity = await GetDomainEntityAsync(request, cancellationToken);
-
-        var domainValidationResult = await ValidateDomainAsync(domainEntity, cancellationToken);
-
-        if (domainValidationResult.IsT1)
-        {
-            return domainValidationResult.AsT1;
-        }
-
-        var dataAccessResult = await _repository.RemoveAsync(domainEntity, cancellationToken);
-
-        if (dataAccessResult.IsT1)
-        {
-            return dataAccessResult.AsT1;
-        }
-
-        return await GetResponseAsync(domainEntity, request, cancellationToken);
-    }
-
-    protected internal abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
-        CancellationToken cancellationToken);
-
-    protected internal abstract ValueTask<TDomain> GetDomainEntityAsync(TRequest request,
-        CancellationToken cancellationToken);
-
-    protected internal abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateDomainAsync(TDomain request,
-        CancellationToken cancellationToken = default);
-
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060", Justification = "Can not use two or more _")]
-    protected internal ValueTask<Success> GetResponseAsync(TDomain _, TRequest r, CancellationToken c = default)
-        => ValueTask.FromResult(new Success());
+    protected internal override Success GetResponse(TEntity _, TRequest r) => new();
 }
 
-public abstract class FullyValidatedRemoveHandler<TRequest, TDomain> : IHandler<TRequest, Success>
+public abstract class RequestValidatedRemoveHandler<TRequest, TEntity> : RequestValidatedRemoveHandler<TRequest, Success, TEntity>
 {
-    private readonly IRemovableRepository<TDomain> _repository;
+    protected RequestValidatedRemoveHandler(IRemoveRepository<TEntity> repository) : base(repository) { }
+    
+    protected internal override Success GetResponse(TEntity _, TRequest r) => new();
+}
 
-    protected FullyValidatedRemoveHandler(IRemovableRepository<TDomain> repository)
-    {
-        _repository = repository;
-    }
+public abstract class EntityValidatedRemoveHandler<TRequest, TEntity> : EntityValidatedRemoveHandler<TRequest, Success, TEntity>
+{
+    protected EntityValidatedRemoveHandler(IRemoveRepository<TEntity> repository) : base(repository)
+    { }
+    
+    protected internal override Success GetResponse(TEntity _, TRequest r) => new();
 
-    public virtual async ValueTask<OneOf<Success, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
-    {
-        var requestValidationResult = await ValidateRequestAsync(request, cancellationToken);
+}
 
-        if (requestValidationResult.IsT1)
-        {
-            return requestValidationResult.AsT1;
-        }
-
-        var useCaseValidationResult = await ValidateUseCaseRulesAsync(request, cancellationToken);
-
-        if (useCaseValidationResult.IsT1)
-        {
-            return useCaseValidationResult.AsT1;
-        }
-
-        var domainEntity = await GetDomainEntityAsync(request, cancellationToken);
-
-        var domainValidationResult = await ValidateDomainAsync(domainEntity, cancellationToken);
-
-        if (domainValidationResult.IsT1)
-        {
-            return domainValidationResult.AsT1;
-        }
-
-        var dataAccessResult = await _repository.RemoveAsync(domainEntity, cancellationToken);
-
-        if (dataAccessResult.IsT1)
-        {
-            return dataAccessResult.AsT1;
-        }
-
-        return await GetResponseAsync(domainEntity, request, cancellationToken);
-    }
-
-    protected internal abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateRequestAsync(TRequest request,
-        CancellationToken cancellationToken = default);
-
-    protected internal abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
-        CancellationToken cancellationToken);
-
-    protected internal abstract ValueTask<TDomain> GetDomainEntityAsync(TRequest request,
-        CancellationToken cancellationToken);
-
-    protected internal abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateDomainAsync(TDomain request,
-        CancellationToken cancellationToken = default);
-
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060", Justification = "Can not use two or more _")]
-    protected internal ValueTask<Success> GetResponseAsync(TDomain _, TRequest r, CancellationToken c = default)
-        => ValueTask.FromResult(new Success());
+public abstract class FullyValidatedRemoveHandler<TRequest, TEntity> : FullyValidatedRemoveHandler<TRequest, Success, TEntity>
+{
+    protected FullyValidatedRemoveHandler(IRemoveRepository<TEntity> repository) : base(repository)
+    { }
+    
+    protected internal override Success GetResponse(TEntity _, TRequest r) => new();
 }

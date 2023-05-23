@@ -8,9 +8,9 @@ namespace VSlices.Core.BusinessLogic;
 
 public abstract class ReadHandler<TRequest, TSearchOptions, TResponse> : IHandler<TRequest, TResponse>
 {
-    private readonly IReadableRepository<TResponse, TSearchOptions> _repository;
+    private readonly IReadRepository<TResponse, TSearchOptions> _repository;
 
-    protected ReadHandler(IReadableRepository<TResponse, TSearchOptions> repository)
+    protected ReadHandler(IReadRepository<TResponse, TSearchOptions> repository)
     {
         _repository = repository;
     }
@@ -36,9 +36,9 @@ public abstract class ReadHandler<TRequest, TSearchOptions, TResponse> : IHandle
 
 public abstract class ReadHandler<TRequest, TResponse> : IHandler<TRequest, TResponse>
 {
-    private readonly IReadableRepository<TResponse, TRequest> _repository;
+    private readonly IReadRepository<TResponse, TRequest> _repository;
 
-    protected ReadHandler(IReadableRepository<TResponse, TRequest> repository)
+    protected ReadHandler(IReadRepository<TResponse, TRequest> repository)
     {
         _repository = repository;
     }
@@ -60,9 +60,9 @@ public abstract class ReadHandler<TRequest, TResponse> : IHandler<TRequest, TRes
 
 public abstract class BasicReadHandler<TRequest, TResponse> : IHandler<TRequest, TResponse>
 {
-    private readonly IReadableRepository<TResponse> _repository;
+    private readonly IReadRepository<TResponse> _repository;
 
-    protected BasicReadHandler(IReadableRepository<TResponse> repository)
+    protected BasicReadHandler(IReadRepository<TResponse> repository)
     {
         _repository = repository;
     }
@@ -84,9 +84,9 @@ public abstract class BasicReadHandler<TRequest, TResponse> : IHandler<TRequest,
 
 public abstract class RequestValidatedReadHandler<TRequest, TSearchOptions, TResponse> : IHandler<TRequest, TResponse>
 {
-    private readonly IReadableRepository<TResponse, TSearchOptions> _repository;
+    private readonly IReadRepository<TResponse, TSearchOptions> _repository;
 
-    protected RequestValidatedReadHandler(IReadableRepository<TResponse, TSearchOptions> repository)
+    protected RequestValidatedReadHandler(IReadRepository<TResponse, TSearchOptions> repository)
     {
         _repository = repository;
     }
@@ -121,9 +121,9 @@ public abstract class RequestValidatedReadHandler<TRequest, TSearchOptions, TRes
 
 public abstract class RequestValidatedReadHandler<TRequest, TResponse> : IHandler<TRequest, TResponse>
 {
-    private readonly IReadableRepository<TResponse, TRequest> _repository;
+    private readonly IReadRepository<TResponse, TRequest> _repository;
 
-    protected RequestValidatedReadHandler(IReadableRepository<TResponse, TRequest> repository)
+    protected RequestValidatedReadHandler(IReadRepository<TResponse, TRequest> repository)
     {
         _repository = repository;
     }
@@ -154,9 +154,9 @@ public abstract class RequestValidatedReadHandler<TRequest, TResponse> : IHandle
 
 public abstract class RequestValidatedBasicReadHandler<TRequest, TResponse> : IHandler<TRequest, TResponse>
 {
-    private readonly IReadableRepository<TResponse> _repository;
+    private readonly IReadRepository<TResponse> _repository;
 
-    protected RequestValidatedBasicReadHandler(IReadableRepository<TResponse> repository)
+    protected RequestValidatedBasicReadHandler(IReadRepository<TResponse> repository)
     {
         _repository = repository;
     }
