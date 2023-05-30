@@ -1,12 +1,14 @@
 ﻿using FluentValidation;
 using OneOf;
 using OneOf.Types;
+using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.Core.BusinessLogic.FluentValidation;
 
 public abstract class RequestFluentValidatedUpdateHandler<TRequest, TResponse, TEntity> : RequestValidatedUpdateHandler<TRequest, TResponse, TEntity>
+    where TRequest : ICommand
 {
     private readonly IValidator<TRequest> _requestValidator;
 
@@ -30,6 +32,7 @@ public abstract class RequestFluentValidatedUpdateHandler<TRequest, TResponse, T
 }
 
 public abstract class EntityFluentValidatedUpdateHandler<TRequest, TResponse, TEntity> : EntityValidatedUpdateHandler<TRequest, TResponse, TEntity>
+    where TRequest : ICommand
 {
     private readonly IValidator<TEntity> _entityValidator;
 
@@ -53,6 +56,7 @@ public abstract class EntityFluentValidatedUpdateHandler<TRequest, TResponse, TE
 }
 
 public abstract class FullyFluentValidatedUpdateHandler<TRequest, TResponse, TEntity> : FullyValidatedUpdateHandler<TRequest, TResponse, TEntity>
+    where TRequest : ICommand
 {
     private readonly IValidator<TRequest> _requestValidator;
     private readonly IValidator<TEntity> _domainValidator;
@@ -92,6 +96,7 @@ public abstract class FullyFluentValidatedUpdateHandler<TRequest, TResponse, TEn
 }
 
 public abstract class RequestFluentValidatedUpdateHandler<TRequest, TEntity> : RequestValidatedUpdateHandler<TRequest, TEntity>
+    where TRequest : ICommand
 {
     private readonly IValidator<TRequest> _requestValidator;
 
@@ -115,6 +120,7 @@ public abstract class RequestFluentValidatedUpdateHandler<TRequest, TEntity> : R
 }
 
 public abstract class DomainFluentValidatedUpdateHandler<TRequest, TEntity> : DomainValidatedUpdateHandler<TRequest, TEntity>
+    where TRequest : ICommand
 {
     private readonly IValidator<TEntity> _entityValidator;
 
@@ -138,6 +144,7 @@ public abstract class DomainFluentValidatedUpdateHandler<TRequest, TEntity> : Do
 }
 
 public abstract class FullyFluentValidatedUpdateHandler<TRequest, TEntity> : FullyValidatedUpdateHandler<TRequest, TEntity>
+    where TRequest : ICommand
 {
     private readonly IValidator<TRequest> _requestValidator;
     private readonly IValidator<TEntity> _entityValidator;

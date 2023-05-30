@@ -7,6 +7,7 @@ using VSlices.Core.Abstracts.Responses;
 namespace VSlices.Core.BusinessLogic;
 
 public abstract class UpdateHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
+    where TRequest : ICommand
 {
     private readonly IUpdateRepository<TEntity> _repository;
 
@@ -46,6 +47,7 @@ public abstract class UpdateHandler<TRequest, TResponse, TEntity> : IHandler<TRe
 }
 
 public abstract class RequestValidatedUpdateHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
+    where TRequest : ICommand
 {
     private readonly IUpdateRepository<TEntity> _repository;
 
@@ -95,6 +97,7 @@ public abstract class RequestValidatedUpdateHandler<TRequest, TResponse, TEntity
 }
 
 public abstract class EntityValidatedUpdateHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
+    where TRequest : ICommand
 {
     private readonly IUpdateRepository<TEntity> _repository;
 
@@ -144,6 +147,7 @@ public abstract class EntityValidatedUpdateHandler<TRequest, TResponse, TEntity>
 }
 
 public abstract class FullyValidatedUpdateHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
+    where TRequest : ICommand
 {
     private readonly IUpdateRepository<TEntity> _repository;
 
@@ -203,6 +207,7 @@ public abstract class FullyValidatedUpdateHandler<TRequest, TResponse, TEntity> 
 }
 
 public abstract class UpdateHandler<TRequest, TEntity> : UpdateHandler<TRequest, Success, TEntity>
+    where TRequest : ICommand
 {
     protected UpdateHandler(IUpdateRepository<TEntity> repository) : base(repository)
     { }
@@ -211,6 +216,7 @@ public abstract class UpdateHandler<TRequest, TEntity> : UpdateHandler<TRequest,
 }
 
 public abstract class RequestValidatedUpdateHandler<TRequest, TEntity> : RequestValidatedUpdateHandler<TRequest, Success, TEntity>
+    where TRequest : ICommand
 {
     protected RequestValidatedUpdateHandler(IUpdateRepository<TEntity> repository) : base(repository) 
     { }
@@ -219,6 +225,7 @@ public abstract class RequestValidatedUpdateHandler<TRequest, TEntity> : Request
 }
 
 public abstract class DomainValidatedUpdateHandler<TRequest, TEntity> : EntityValidatedUpdateHandler<TRequest, Success, TEntity>
+    where TRequest : ICommand
 {
     protected DomainValidatedUpdateHandler(IUpdateRepository<TEntity> repository) : base(repository)
     { }
@@ -227,6 +234,7 @@ public abstract class DomainValidatedUpdateHandler<TRequest, TEntity> : EntityVa
 }
 
 public abstract class FullyValidatedUpdateHandler<TRequest, TEntity> : FullyValidatedUpdateHandler<TRequest, Success, TEntity>
+    where TRequest : ICommand
 {
     protected FullyValidatedUpdateHandler(IUpdateRepository<TEntity> repository) : base(repository)
     { }

@@ -3,6 +3,7 @@ using FluentAssertions;
 using Microsoft.Win32.SafeHandles;
 using Moq;
 using OneOf.Types;
+using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Responses;
 
@@ -10,7 +11,7 @@ namespace VSlices.Core.BusinessLogic.UnitTests.ReadHandlers;
 
 public class ReadHandler_ThreeGenerics
 {
-    public record Request;
+    public record Request : IQuery;
     public record SearchOptions;
     public record Response;
 

@@ -9,6 +9,7 @@ using FluentValidation.Results;
 using Moq;
 using OneOf;
 using OneOf.Types;
+using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Responses;
 
@@ -16,7 +17,7 @@ namespace VSlices.Core.BusinessLogic.FluentValidation.UnitTests.ReadHandlers;
 
 public class RequestFluentValidatedBasicReadHandler
 {
-    public record Request;
+    public record Request : IQuery;
     public record Response;
 
     public class Handler : RequestFluentValidatedBasicReadHandler<Request, Response>

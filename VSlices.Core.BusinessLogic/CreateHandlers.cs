@@ -7,6 +7,7 @@ using VSlices.Core.Abstracts.Responses;
 namespace VSlices.Core.BusinessLogic;
 
 public abstract class CreateHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
+    where TRequest : ICommand 
 {
     private readonly ICreateRepository<TEntity> _repository;
 
@@ -46,6 +47,7 @@ public abstract class CreateHandler<TRequest, TResponse, TEntity> : IHandler<TRe
 }
 
 public abstract class RequestValidatedCreateHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
+    where TRequest : ICommand
 {
     private readonly ICreateRepository<TEntity> _repository;
 
@@ -95,6 +97,7 @@ public abstract class RequestValidatedCreateHandler<TRequest, TResponse, TEntity
 }
 
 public abstract class EntityValidatedCreateHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
+    where TRequest : ICommand
 {
     private readonly ICreateRepository<TEntity> _repository;
 
@@ -144,6 +147,7 @@ public abstract class EntityValidatedCreateHandler<TRequest, TResponse, TEntity>
 }
 
 public abstract class FullyValidatedCreateHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
+    where TRequest : ICommand
 {
     private readonly ICreateRepository<TEntity> _repository;
 
@@ -203,6 +207,7 @@ public abstract class FullyValidatedCreateHandler<TRequest, TResponse, TEntity> 
 }
 
 public abstract class CreateHandler<TRequest, TEntity> : CreateHandler<TRequest, Success, TEntity>
+    where TRequest : ICommand
 {
     protected CreateHandler(ICreateRepository<TEntity> repository) : base(repository)
     { }
@@ -211,24 +216,27 @@ public abstract class CreateHandler<TRequest, TEntity> : CreateHandler<TRequest,
 }
 
 public abstract class RequestValidatedCreateHandler<TRequest, TEntity> : RequestValidatedCreateHandler<TRequest, Success, TEntity>
+    where TRequest : ICommand
 {
     protected RequestValidatedCreateHandler(ICreateRepository<TEntity> repository) : base(repository)
     { }
-    
+
     protected internal override Success GetResponse(TEntity _, TRequest r) => new();
 }
 
 public abstract class EntityValidatedCreateHandler<TRequest, TEntity> : EntityValidatedCreateHandler<TRequest, Success, TEntity>
+    where TRequest : ICommand
 {
     protected EntityValidatedCreateHandler(ICreateRepository<TEntity> repository) : base(repository)
     { }
-    
+
     protected internal override Success GetResponse(TEntity _, TRequest r) => new();
 }
 
 public abstract class FullyValidatedCreateHandler<TRequest, TEntity> : FullyValidatedCreateHandler<TRequest, Success, TEntity>
+    where TRequest : ICommand
 {
     protected FullyValidatedCreateHandler(ICreateRepository<TEntity> repository) : base(repository) { }
-    
+
     protected internal override Success GetResponse(TEntity _, TRequest r) => new();
 }

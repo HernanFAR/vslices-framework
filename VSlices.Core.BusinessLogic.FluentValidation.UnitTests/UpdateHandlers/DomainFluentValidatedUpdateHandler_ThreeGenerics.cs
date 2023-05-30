@@ -5,6 +5,7 @@ using Moq;
 using Moq.Protected;
 using OneOf;
 using OneOf.Types;
+using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Responses;
 
@@ -14,7 +15,7 @@ namespace VSlices.Core.BusinessLogic.FluentValidation.UnitTests.UpdateHandlers;
 public class DomainFluentValidatedRemoveHandler_ThreeGenerics
 {
     public record Domain;
-    public record Request;
+    public record Request : ICommand;
     public record Response;
 
     public class EntityFluentValidatedUpdateHandler : EntityFluentValidatedUpdateHandler<Request, Response, Domain>

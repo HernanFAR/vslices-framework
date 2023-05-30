@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Moq;
 using OneOf.Types;
+using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Responses;
 
@@ -10,7 +11,7 @@ public class RemoveHandler_ThreeGenerics
 {
     public record Domain;
     public record Response;
-    public record Request;
+    public record Request: ICommand;
 
     private readonly Mock<IRemoveRepository<Domain>> _mockedRepository;
     private readonly Mock<RemoveHandler<Request, Response, Domain>> _mockedHandler;

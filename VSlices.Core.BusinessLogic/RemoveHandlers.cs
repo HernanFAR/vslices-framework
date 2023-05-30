@@ -7,6 +7,7 @@ using VSlices.Core.Abstracts.Responses;
 namespace VSlices.Core.BusinessLogic;
 
 public abstract class RemoveHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
+    where TRequest : ICommand
 {
     private readonly IRemoveRepository<TEntity> _repository;
 
@@ -46,6 +47,7 @@ public abstract class RemoveHandler<TRequest, TResponse, TEntity> : IHandler<TRe
 }
 
 public abstract class RequestValidatedRemoveHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
+    where TRequest : ICommand
 {
     private readonly IRemoveRepository<TEntity> _repository;
 
@@ -95,6 +97,7 @@ public abstract class RequestValidatedRemoveHandler<TRequest, TResponse, TEntity
 }
 
 public abstract class EntityValidatedRemoveHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
+    where TRequest : ICommand
 {
     private readonly IRemoveRepository<TEntity> _repository;
 
@@ -144,6 +147,7 @@ public abstract class EntityValidatedRemoveHandler<TRequest, TResponse, TEntity>
 }
 
 public abstract class FullyValidatedRemoveHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
+    where TRequest : ICommand
 {
     private readonly IRemoveRepository<TEntity> _repository;
 
@@ -203,6 +207,7 @@ public abstract class FullyValidatedRemoveHandler<TRequest, TResponse, TEntity> 
 }
 
 public abstract class RemoveHandler<TRequest, TEntity> : RemoveHandler<TRequest, Success, TEntity>
+    where TRequest : ICommand
 {
     protected RemoveHandler(IRemoveRepository<TEntity> repository) : base(repository)
     { }
@@ -211,6 +216,7 @@ public abstract class RemoveHandler<TRequest, TEntity> : RemoveHandler<TRequest,
 }
 
 public abstract class RequestValidatedRemoveHandler<TRequest, TEntity> : RequestValidatedRemoveHandler<TRequest, Success, TEntity>
+    where TRequest : ICommand
 {
     protected RequestValidatedRemoveHandler(IRemoveRepository<TEntity> repository) : base(repository) { }
     
@@ -218,6 +224,7 @@ public abstract class RequestValidatedRemoveHandler<TRequest, TEntity> : Request
 }
 
 public abstract class EntityValidatedRemoveHandler<TRequest, TEntity> : EntityValidatedRemoveHandler<TRequest, Success, TEntity>
+    where TRequest : ICommand
 {
     protected EntityValidatedRemoveHandler(IRemoveRepository<TEntity> repository) : base(repository)
     { }
@@ -227,6 +234,7 @@ public abstract class EntityValidatedRemoveHandler<TRequest, TEntity> : EntityVa
 }
 
 public abstract class FullyValidatedRemoveHandler<TRequest, TEntity> : FullyValidatedRemoveHandler<TRequest, Success, TEntity>
+    where TRequest : ICommand
 {
     protected FullyValidatedRemoveHandler(IRemoveRepository<TEntity> repository) : base(repository)
     { }
