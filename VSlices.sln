@@ -3,17 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{FCE3CB34-FAE4-49F7-80DC-25194BBCEB6C}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E846D8C9-E927-43E8-8B46-CEA3ADB50F6F}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Domain", "Sample.Domain\Sample.Domain.csproj", "{A37CE585-2327-42B4-9031-91D161B72E95}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Core", "Sample.Core\Sample.Core.csproj", "{F3646ADA-FB4E-4738-9332-ECABC204BB0E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.WebApiIntegrator", "Sample.WebApiIntegrator\Sample.WebApiIntegrator.csproj", "{45C1F914-E802-4AEF-A97C-3A7AE22EBBD8}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Shared", "Sample.Shared\Sample.Shared.csproj", "{D1716C07-43CB-4CC4-B135-AFF1D10C3DD1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.Abstracts", "VSlices.Core.Abstracts\VSlices.Core.Abstracts.csproj", "{1CFAE6A3-7928-439E-B090-78924A0FCA58}"
 EndProject
@@ -31,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.BusinessLogic.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.BusinessLogic.FluentValidation.UnitTests", "VSlices.Core.BusinessLogic.FluentValidation.UnitTests\VSlices.Core.BusinessLogic.FluentValidation.UnitTests.csproj", "{1E88D830-F603-402A-9152-DA9DE54D0576}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSlices.Core.DataAccess.EntityFramework.UnitTests", "VSlices.Core.DataAccess.EntityFramework.UnitTests\VSlices.Core.DataAccess.EntityFramework.UnitTests.csproj", "{F344E240-D8F8-4528-B034-98ABCD406DCA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.DataAccess.EntityFramework.UnitTests", "VSlices.Core.DataAccess.EntityFramework.UnitTests\VSlices.Core.DataAccess.EntityFramework.UnitTests.csproj", "{F344E240-D8F8-4528-B034-98ABCD406DCA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,22 +29,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A37CE585-2327-42B4-9031-91D161B72E95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A37CE585-2327-42B4-9031-91D161B72E95}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A37CE585-2327-42B4-9031-91D161B72E95}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A37CE585-2327-42B4-9031-91D161B72E95}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F3646ADA-FB4E-4738-9332-ECABC204BB0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F3646ADA-FB4E-4738-9332-ECABC204BB0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F3646ADA-FB4E-4738-9332-ECABC204BB0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F3646ADA-FB4E-4738-9332-ECABC204BB0E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{45C1F914-E802-4AEF-A97C-3A7AE22EBBD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{45C1F914-E802-4AEF-A97C-3A7AE22EBBD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{45C1F914-E802-4AEF-A97C-3A7AE22EBBD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{45C1F914-E802-4AEF-A97C-3A7AE22EBBD8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D1716C07-43CB-4CC4-B135-AFF1D10C3DD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D1716C07-43CB-4CC4-B135-AFF1D10C3DD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D1716C07-43CB-4CC4-B135-AFF1D10C3DD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D1716C07-43CB-4CC4-B135-AFF1D10C3DD1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1CFAE6A3-7928-439E-B090-78924A0FCA58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1CFAE6A3-7928-439E-B090-78924A0FCA58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CFAE6A3-7928-439E-B090-78924A0FCA58}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -92,10 +66,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{A37CE585-2327-42B4-9031-91D161B72E95} = {FCE3CB34-FAE4-49F7-80DC-25194BBCEB6C}
-		{F3646ADA-FB4E-4738-9332-ECABC204BB0E} = {FCE3CB34-FAE4-49F7-80DC-25194BBCEB6C}
-		{45C1F914-E802-4AEF-A97C-3A7AE22EBBD8} = {FCE3CB34-FAE4-49F7-80DC-25194BBCEB6C}
-		{D1716C07-43CB-4CC4-B135-AFF1D10C3DD1} = {FCE3CB34-FAE4-49F7-80DC-25194BBCEB6C}
 		{1CFAE6A3-7928-439E-B090-78924A0FCA58} = {E846D8C9-E927-43E8-8B46-CEA3ADB50F6F}
 		{34A5731E-BA8A-453D-991B-743EA7AF233B} = {E846D8C9-E927-43E8-8B46-CEA3ADB50F6F}
 		{7E3C3A6D-E865-48F6-BEF9-8D8695952245} = {E846D8C9-E927-43E8-8B46-CEA3ADB50F6F}
