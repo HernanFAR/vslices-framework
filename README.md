@@ -6,7 +6,7 @@ La documentación de uso del software esta en [link](https://vslice-framework.re
 
 Si encuentras algún problema en la documentación, tienes propuestas de mejora o clarificación, puedes generar un ticket acá [link]
 
-# Camino de desarrollo
+## Camino de desarrollo
 
 Desarrollos propuestos para VSlices
 - Para la versión: v1
@@ -24,9 +24,10 @@ Desarrollos propuestos para VSlices
   - Analyzer que verifique correcta integridad de los casos de uso.
   - En base al diagrama de caso de uso, hacer una herramienta que genere codigo automaticamente.
 
-# Apoyar el desarrollo de VSlices
+## Apoyar el desarrollo de VSlices
 
-Aún no hay, pero ya habrá :)
+Primero que todo, se agracede mucho :), puedes donarme un poco de dinero para mi adicción al café acá, 
+por [paypal](https://paypal.me/enyu20?country.x=CL&locale.x=es_XC)
 
 ## Agradecimientos
 
