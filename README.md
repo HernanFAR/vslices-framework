@@ -14,12 +14,15 @@ Desarrollos propuestos para VSlices
     - Implementación usando FluentValidation ✅ 
   - Repositorios
     - Implementación usando EntityFramework ✅ 
+  - Pipelines
+    - Implementación de equivalentes de "IPipelineBehaviors" de [jbogard/MediatR](https://github.com/jbogard/MediatR)
   - Documentación 
     - En español ❌
     - En ingles ❌
 - Para la versión: v1.1
-  - Implementación de equivalentes de "IPipelineBehaviors" de MediatR
+  - Implementación de un "Cross cutting" pipeline para la validación de contratos automatica
   - Implementación de un "Cross cutting" pipeline para el logging automatico
+  - Implementación de un "Cross cutting" pipeline para el manejo de excepciones automatico
 - Investigación
   - Analyzer que verifique correcta integridad de los casos de uso.
   - En base al diagrama de caso de uso, hacer una herramienta que genere codigo automaticamente.
@@ -32,3 +35,7 @@ por [paypal](https://paypal.me/enyu20?country.x=CL&locale.x=es_XC)
 ## Agradecimientos
 
 - A Alvaro Osorio, por ser una influencia buena en mis primeros años de carrera
+
+## Inspiraciones
+
+La inspiración más grande que tuve en esto, fue la libreria [jbogard/MediatR](https://github.com/jbogard/MediatR). Muchas gracias por hacer una libreria tan versatil.
