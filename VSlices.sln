@@ -25,11 +25,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.DataAccess.Ent
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.Sender.Reflection", "VSlices.Core.Sender.Reflection\VSlices.Core.Sender.Reflection.csproj", "{2C8CAAC8-AEC7-4317-B22F-ED9953E9465D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSlices.Core.Sender.Reflection.IntegTests", "VSlices.Core.Sender.Reflection.IntegTests\VSlices.Core.Sender.Reflection.IntegTests.csproj", "{09545265-C876-4F3A-8D4C-C951D099F074}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.Sender.Reflection.IntegTests", "VSlices.Core.Sender.Reflection.IntegTests\VSlices.Core.Sender.Reflection.IntegTests.csproj", "{09545265-C876-4F3A-8D4C-C951D099F074}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSlices.CrossCutting.Validation.FluentValidation", "VSlices.CrossCutting.Validation.FluentValidation\VSlices.CrossCutting.Validation.FluentValidation.csproj", "{3B6897C6-E911-4F67-9659-DA0EDB6CF390}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.CrossCutting.Validation.FluentValidation", "VSlices.CrossCutting.Validation.FluentValidation\VSlices.CrossCutting.Validation.FluentValidation.csproj", "{3B6897C6-E911-4F67-9659-DA0EDB6CF390}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.CrossCutting.Validation", "VSlices.CrossCutting.Validation\VSlices.CrossCutting.Validation.csproj", "{E69ED2A4-42CF-4AC1-A06C-A9F9B0CC8C5B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSlices.CrossCutting.Validation.UnitTests", "VSlices.CrossCutting.Validation.UnitTests\VSlices.CrossCutting.Validation.UnitTests.csproj", "{51A3651D-068B-413B-A8E7-99F0A5BE408E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSlices.CrossCutting.Validation.FluentValidation.UnitTests", "VSlices.CrossCutting.Validation.FluentValidation.UnitTests\VSlices.CrossCutting.Validation.FluentValidation.UnitTests.csproj", "{4A044F04-ACCB-463E-8033-009FE1E1BAFC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,6 +89,14 @@ Global
 		{E69ED2A4-42CF-4AC1-A06C-A9F9B0CC8C5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E69ED2A4-42CF-4AC1-A06C-A9F9B0CC8C5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E69ED2A4-42CF-4AC1-A06C-A9F9B0CC8C5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51A3651D-068B-413B-A8E7-99F0A5BE408E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51A3651D-068B-413B-A8E7-99F0A5BE408E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51A3651D-068B-413B-A8E7-99F0A5BE408E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51A3651D-068B-413B-A8E7-99F0A5BE408E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A044F04-ACCB-463E-8033-009FE1E1BAFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A044F04-ACCB-463E-8033-009FE1E1BAFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A044F04-ACCB-463E-8033-009FE1E1BAFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A044F04-ACCB-463E-8033-009FE1E1BAFC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -102,6 +114,8 @@ Global
 		{09545265-C876-4F3A-8D4C-C951D099F074} = {6F484706-EDFC-49EF-A419-D3F6943C2E36}
 		{3B6897C6-E911-4F67-9659-DA0EDB6CF390} = {E846D8C9-E927-43E8-8B46-CEA3ADB50F6F}
 		{E69ED2A4-42CF-4AC1-A06C-A9F9B0CC8C5B} = {E846D8C9-E927-43E8-8B46-CEA3ADB50F6F}
+		{51A3651D-068B-413B-A8E7-99F0A5BE408E} = {6F484706-EDFC-49EF-A419-D3F6943C2E36}
+		{4A044F04-ACCB-463E-8033-009FE1E1BAFC} = {6F484706-EDFC-49EF-A419-D3F6943C2E36}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {653AE7A1-A4C4-42F2-9804-FE7E032C3E8C}

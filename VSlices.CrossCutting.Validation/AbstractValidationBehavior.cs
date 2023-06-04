@@ -20,5 +20,5 @@ public abstract class AbstractValidationBehavior<TRequest, TResponse> : IPipelin
         return await next();
     }
 
-    protected abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateAsync(TRequest request, CancellationToken cancellationToken = default);
+    protected internal abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateAsync(TRequest request, CancellationToken cancellationToken = default);
 }
