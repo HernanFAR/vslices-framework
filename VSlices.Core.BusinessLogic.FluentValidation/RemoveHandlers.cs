@@ -8,7 +8,7 @@ using VSlices.Core.Abstracts.Responses;
 namespace VSlices.Core.BusinessLogic.FluentValidation;
 
 public abstract class RequestFluentValidatedRemoveHandler<TRequest, TResponse, TEntity> : RequestValidatedRemoveHandler<TRequest, TResponse, TEntity>
-    where TRequest : ICommand
+    where TRequest : ICommand<TResponse>
 {
     private readonly IValidator<TRequest> _requestValidator;
 
@@ -32,7 +32,7 @@ public abstract class RequestFluentValidatedRemoveHandler<TRequest, TResponse, T
 }
 
 public abstract class EntityFluentValidatedRemoveHandler<TRequest, TResponse, TEntity> : EntityValidatedRemoveHandler<TRequest, TResponse, TEntity>
-    where TRequest : ICommand
+    where TRequest : ICommand<TResponse>
 {
     private readonly IValidator<TEntity> _entityValidator;
 
@@ -56,7 +56,7 @@ public abstract class EntityFluentValidatedRemoveHandler<TRequest, TResponse, TE
 }
 
 public abstract class FullyFluentValidatedRemoveHandler<TRequest, TResponse, TEntity> : FullyValidatedRemoveHandler<TRequest, TResponse, TEntity>
-    where TRequest : ICommand
+    where TRequest : ICommand<TResponse>
 {
     private readonly IValidator<TRequest> _requestValidator;
     private readonly IValidator<TEntity> _entityValidator;

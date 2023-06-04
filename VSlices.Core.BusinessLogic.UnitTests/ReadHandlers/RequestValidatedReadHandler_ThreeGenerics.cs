@@ -11,7 +11,7 @@ namespace VSlices.Core.BusinessLogic.UnitTests.ReadHandlers;
 
 public class RequestValidatedReadHandler_ThreeGenerics
 {
-    public record Request : IQuery;
+    public record Request : IQuery<Response>;
     public record SearchOptions;
     public record Response;
 

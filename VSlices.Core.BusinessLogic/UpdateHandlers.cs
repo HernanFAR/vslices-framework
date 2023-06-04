@@ -7,7 +7,7 @@ using VSlices.Core.Abstracts.Responses;
 namespace VSlices.Core.BusinessLogic;
 
 public abstract class UpdateHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
-    where TRequest : ICommand
+    where TRequest : ICommand<TResponse>
 {
     private readonly IUpdateRepository<TEntity> _repository;
 
@@ -47,7 +47,7 @@ public abstract class UpdateHandler<TRequest, TResponse, TEntity> : IHandler<TRe
 }
 
 public abstract class RequestValidatedUpdateHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
-    where TRequest : ICommand
+    where TRequest : ICommand<TResponse>
 {
     private readonly IUpdateRepository<TEntity> _repository;
 
@@ -97,7 +97,7 @@ public abstract class RequestValidatedUpdateHandler<TRequest, TResponse, TEntity
 }
 
 public abstract class EntityValidatedUpdateHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
-    where TRequest : ICommand
+    where TRequest : ICommand<TResponse>
 {
     private readonly IUpdateRepository<TEntity> _repository;
 
@@ -147,7 +147,7 @@ public abstract class EntityValidatedUpdateHandler<TRequest, TResponse, TEntity>
 }
 
 public abstract class FullyValidatedUpdateHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
-    where TRequest : ICommand
+    where TRequest : ICommand<TResponse>
 {
     private readonly IUpdateRepository<TEntity> _repository;
 

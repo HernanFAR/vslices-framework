@@ -7,7 +7,7 @@ using VSlices.Core.Abstracts.Responses;
 namespace VSlices.Core.BusinessLogic;
 
 public abstract class CreateHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
-    where TRequest : ICommand 
+    where TRequest : ICommand<TResponse> 
 {
     private readonly ICreateRepository<TEntity> _repository;
 
@@ -47,7 +47,7 @@ public abstract class CreateHandler<TRequest, TResponse, TEntity> : IHandler<TRe
 }
 
 public abstract class RequestValidatedCreateHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
-    where TRequest : ICommand
+    where TRequest : ICommand<TResponse>
 {
     private readonly ICreateRepository<TEntity> _repository;
 
@@ -97,7 +97,7 @@ public abstract class RequestValidatedCreateHandler<TRequest, TResponse, TEntity
 }
 
 public abstract class EntityValidatedCreateHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
-    where TRequest : ICommand
+    where TRequest : ICommand<TResponse>
 {
     private readonly ICreateRepository<TEntity> _repository;
 
@@ -147,7 +147,7 @@ public abstract class EntityValidatedCreateHandler<TRequest, TResponse, TEntity>
 }
 
 public abstract class FullyValidatedCreateHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
-    where TRequest : ICommand
+    where TRequest : ICommand<TResponse>
 {
     private readonly ICreateRepository<TEntity> _repository;
 

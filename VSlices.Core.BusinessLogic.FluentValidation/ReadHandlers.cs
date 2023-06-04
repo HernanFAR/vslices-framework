@@ -8,7 +8,7 @@ using VSlices.Core.Abstracts.Responses;
 namespace VSlices.Core.BusinessLogic.FluentValidation;
 
 public abstract class RequestFluentValidatedReadHandler<TRequest, TSearchOptions, TResponse> : RequestValidatedReadHandler<TRequest, TSearchOptions, TResponse>
-    where TRequest : IQuery
+    where TRequest : IQuery<TResponse>
 {
     private readonly IValidator<TRequest> _requestValidator;
 
@@ -32,7 +32,7 @@ public abstract class RequestFluentValidatedReadHandler<TRequest, TSearchOptions
 }
 
 public abstract class RequestFluentValidatedReadHandler<TRequest, TResponse> : RequestValidatedReadHandler<TRequest, TResponse>
-    where TRequest : IQuery
+    where TRequest : IQuery<TResponse>
 {
     private readonly IValidator<TRequest> _requestValidator;
 
@@ -56,7 +56,7 @@ public abstract class RequestFluentValidatedReadHandler<TRequest, TResponse> : R
 }
 
 public abstract class RequestFluentValidatedBasicReadHandler<TRequest, TResponse> : RequestValidatedBasicReadHandler<TRequest, TResponse>
-    where TRequest : IQuery
+    where TRequest : IQuery<TResponse>
 {
     private readonly IValidator<TRequest> _requestValidator;
 

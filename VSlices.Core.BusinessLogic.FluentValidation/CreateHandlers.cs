@@ -8,7 +8,7 @@ using VSlices.Core.Abstracts.Responses;
 namespace VSlices.Core.BusinessLogic.FluentValidation;
 
 public abstract class RequestFluentValidatedCreateHandler<TRequest, TResponse, TEntity> : RequestValidatedCreateHandler<TRequest, TResponse, TEntity>
-    where TRequest : ICommand
+    where TRequest : ICommand<TResponse>
 {
     private readonly IValidator<TRequest> _requestValidator;
 
@@ -32,7 +32,7 @@ public abstract class RequestFluentValidatedCreateHandler<TRequest, TResponse, T
 }
 
 public abstract class EntityFluentValidatedCreateHandler<TRequest, TResponse, TEntity> : EntityValidatedCreateHandler<TRequest, TResponse, TEntity>
-    where TRequest : ICommand
+    where TRequest : ICommand<TResponse>
 {
     private readonly IValidator<TEntity> _entityValidator;
 
@@ -56,7 +56,7 @@ public abstract class EntityFluentValidatedCreateHandler<TRequest, TResponse, TE
 }
 
 public abstract class FullyFluentValidatedCreateHandler<TRequest, TResponse, TEntity> : FullyValidatedCreateHandler<TRequest, TResponse, TEntity>
-    where TRequest : ICommand
+    where TRequest : ICommand<TResponse>
 {
     private readonly IValidator<TRequest> _requestValidator;
     private readonly IValidator<TEntity> _entityValidator;
