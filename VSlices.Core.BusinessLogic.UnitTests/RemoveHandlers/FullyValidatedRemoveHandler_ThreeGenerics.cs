@@ -11,7 +11,7 @@ public class FullyValidatedRemoveHandler_ThreeGenerics
 {
     public record Domain;
     public record Response;
-    public record Request : ICommand;
+    public record Request : ICommand<Response>;
 
     private readonly Mock<IRemoveRepository<Domain>> _mockedRepository;
     private readonly Mock<FullyValidatedRemoveHandler<Request, Response, Domain>> _mockedHandler;

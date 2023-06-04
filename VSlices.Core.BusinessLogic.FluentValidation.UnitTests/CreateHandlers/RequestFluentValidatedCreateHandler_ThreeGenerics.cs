@@ -15,8 +15,8 @@ namespace VSlices.Core.BusinessLogic.FluentValidation.UnitTests.CreateHandlers;
 public class RequestFluentValidatedUpdateHandler_ThreeGenerics
 {
     public record Domain;
-    public record Request : ICommand;
     public record Response;
+    public record Request : ICommand<Response>;
 
     public class RequestFluentValidatedCreateHandler : RequestFluentValidatedCreateHandler<Request, Response, Domain>
     {

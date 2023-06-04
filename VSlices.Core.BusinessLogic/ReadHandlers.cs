@@ -7,7 +7,7 @@ using VSlices.Core.Abstracts.Responses;
 namespace VSlices.Core.BusinessLogic;
 
 public abstract class ReadHandler<TRequest, TSearchOptions, TResponse> : IHandler<TRequest, TResponse>
-    where TRequest : IQuery
+    where TRequest : IQuery<TResponse>
 {
     private readonly IReadRepository<TResponse, TSearchOptions> _repository;
 
@@ -36,7 +36,7 @@ public abstract class ReadHandler<TRequest, TSearchOptions, TResponse> : IHandle
 }
 
 public abstract class ReadHandler<TRequest, TResponse> : IHandler<TRequest, TResponse>
-    where TRequest : IQuery
+    where TRequest : IQuery<TResponse>
 {
     private readonly IReadRepository<TResponse, TRequest> _repository;
 
@@ -61,7 +61,7 @@ public abstract class ReadHandler<TRequest, TResponse> : IHandler<TRequest, TRes
 }
 
 public abstract class BasicReadHandler<TRequest, TResponse> : IHandler<TRequest, TResponse>
-    where TRequest : IQuery
+    where TRequest : IQuery<TResponse>
 {
     private readonly IReadRepository<TResponse> _repository;
 
@@ -86,7 +86,7 @@ public abstract class BasicReadHandler<TRequest, TResponse> : IHandler<TRequest,
 }
 
 public abstract class RequestValidatedReadHandler<TRequest, TSearchOptions, TResponse> : IHandler<TRequest, TResponse>
-    where TRequest : IQuery
+    where TRequest : IQuery<TResponse>
 {
     private readonly IReadRepository<TResponse, TSearchOptions> _repository;
 
@@ -124,7 +124,7 @@ public abstract class RequestValidatedReadHandler<TRequest, TSearchOptions, TRes
 }
 
 public abstract class RequestValidatedReadHandler<TRequest, TResponse> : IHandler<TRequest, TResponse>
-    where TRequest : IQuery
+    where TRequest : IQuery<TResponse>
 {
     private readonly IReadRepository<TResponse, TRequest> _repository;
 
@@ -158,7 +158,7 @@ public abstract class RequestValidatedReadHandler<TRequest, TResponse> : IHandle
 }
 
 public abstract class RequestValidatedBasicReadHandler<TRequest, TResponse> : IHandler<TRequest, TResponse>
-    where TRequest : IQuery
+    where TRequest : IQuery<TResponse>
 {
     private readonly IReadRepository<TResponse> _repository;
 

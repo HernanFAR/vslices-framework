@@ -17,7 +17,7 @@ namespace VSlices.Core.BusinessLogic.FluentValidation.UnitTests.ReadHandlers;
 
 public class RequestFluentValidatedBasicReadHandler
 {
-    public record Request : IQuery;
+    public record Request : IQuery<Response>;
     public record Response;
 
     public class Handler : RequestFluentValidatedBasicReadHandler<Request, Response>

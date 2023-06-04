@@ -7,7 +7,7 @@ using VSlices.Core.Abstracts.Responses;
 namespace VSlices.Core.BusinessLogic;
 
 public abstract class RemoveHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
-    where TRequest : ICommand
+    where TRequest : ICommand<TResponse>
 {
     private readonly IRemoveRepository<TEntity> _repository;
 
@@ -47,7 +47,7 @@ public abstract class RemoveHandler<TRequest, TResponse, TEntity> : IHandler<TRe
 }
 
 public abstract class RequestValidatedRemoveHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
-    where TRequest : ICommand
+    where TRequest : ICommand<TResponse>
 {
     private readonly IRemoveRepository<TEntity> _repository;
 
@@ -97,7 +97,7 @@ public abstract class RequestValidatedRemoveHandler<TRequest, TResponse, TEntity
 }
 
 public abstract class EntityValidatedRemoveHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
-    where TRequest : ICommand
+    where TRequest : ICommand<TResponse>
 {
     private readonly IRemoveRepository<TEntity> _repository;
 
@@ -147,7 +147,7 @@ public abstract class EntityValidatedRemoveHandler<TRequest, TResponse, TEntity>
 }
 
 public abstract class FullyValidatedRemoveHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
-    where TRequest : ICommand
+    where TRequest : ICommand<TResponse>
 {
     private readonly IRemoveRepository<TEntity> _repository;
 
@@ -195,10 +195,10 @@ public abstract class FullyValidatedRemoveHandler<TRequest, TResponse, TEntity> 
         CancellationToken cancellationToken = default);
 
     protected internal abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken = default);
 
     protected internal abstract ValueTask<TEntity> GetAndProcessEntityAsync(TRequest request,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken = default);
 
     protected internal abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateEntityAsync(TEntity request,
         CancellationToken cancellationToken = default);
