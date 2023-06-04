@@ -16,7 +16,7 @@ Desarrollos propuestos para VSlices
     - Implementación usando EntityFramework ✅ 
   - Pipelines
     - Implementación de equivalentes de "IPipelineBehaviors" de [jbogard/MediatR](https://github.com/jbogard/MediatR) ✅
-    - Implementación de un "IPipelineBehavior" de validación de request ❌
+    - Implementación de un "IPipelineBehavior" de validación de request ✅
   - Documentación 
     - En español ❌
     - En ingles ❌
