@@ -25,6 +25,7 @@ Desarrollos propuestos para VSlices
   - Implementación de un "cross cutting concerns" pipeline para el manejo de excepciones automatico
 - Investigación
   - Investigación sobre más "cross cutting concerns" a agregar.
+  - Agregar "Streams"
   - "Ahead Of Time" friendly
   - Analyzer que verifique correcta integridad de los casos de uso.
   - En base al diagrama de caso de uso, hacer una herramienta que genere codigo automaticamente.
