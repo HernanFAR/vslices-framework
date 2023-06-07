@@ -2,7 +2,7 @@ on:
   release:
     types: [published]
 env:    
-  PROJECT_PATH: 'Quicker.sln'
+  PROJECT_PATH: 'VSlices.sln'
   PACKAGE_OUTPUT: ${{ github.workspace }}/output
   NUGET_SOURCE_URL: 'https://api.nuget.org/v3/index.json'
 jobs:
