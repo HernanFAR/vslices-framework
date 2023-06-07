@@ -1,6 +1,7 @@
 on:
   release:
-    types: [published]
+    branches:
+      - master
 env:    
   PROJECT_PATH: 'VSlices.sln'
   PACKAGE_OUTPUT: ${{ github.workspace }}/output
