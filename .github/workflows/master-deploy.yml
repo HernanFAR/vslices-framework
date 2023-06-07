@@ -1,0 +1,24 @@
+on:
+  release:
+    types: [published]
+env:    
+  PROJECT_PATH: 'Quicker.sln'
+  PACKAGE_OUTPUT: ${{ github.workspace }}/output
+  NUGET_SOURCE_URL: 'https://api.nuget.org/v3/index.json'
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: 'Restore packages'
+      run: dotnet restore ${{ env.PROJECT_PATH }}
+    - name: 'Build solution'
+      run: dotnet build ${{ env.PROJECT_PATH }} --no-restore --configuration Release
+    - name: 'Test solution'
+      run: dotnet test ${{ env.PROJECT_PATH }} --configuration Release --no-build
+    - name: 'Pack solution'
+      run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration Release /p:Version=${{ github.event.release.tag_name }} --output ${{ env.PACKAGE_OUTPUT }}
+    - name: 'Push nuget packages'
+      run: dotnet nuget push ${{ env.PACKAGE_OUTPUT }}/**.nupkg -k ${{ secrets.NUGET_AUTH_TOKEN }} -s ${{ env.NUGET_SOURCE_URL }} --skip-duplicate 
