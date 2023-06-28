@@ -1,47 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using static VSlices.Core.Abstracts.UnitTests.Extensions.ServiceCollectionExtensionsTests;
 using VSlices.Core.Abstracts.Presentation;
-using Microsoft.AspNetCore.Routing.Patterns;
 
 namespace VSlices.Core.Abstracts.UnitTests.Extensions;
 
 public class WebApplicationExtensionsTests
 {
-    public class WebAppDummy : IHost, IEndpointRouteBuilder
+    public class WebAppDummy : IApplicationBuilder, IEndpointRouteBuilder
     {
         public WebAppDummy(IServiceProvider serviceProvider)
         {
             ServiceProvider = serviceProvider;
             DataSources = new List<EndpointDataSource>();
         }
-
-        public void Dispose()
-        {
-            GC.SuppressFinalize(this);
-        }
-
-        public Task StartAsync(CancellationToken cancellationToken = new CancellationToken())
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task StopAsync(CancellationToken cancellationToken = new CancellationToken())
-        {
-            throw new NotImplementedException();
-        }
-
-        public IServiceProvider Services => ServiceProvider;
 
         public IApplicationBuilder CreateApplicationBuilder()
         {
@@ -51,6 +27,25 @@ public class WebApplicationExtensionsTests
         public IServiceProvider ServiceProvider { get; }
 
         public ICollection<EndpointDataSource> DataSources { get; }
+
+        public IApplicationBuilder Use(Func<RequestDelegate, RequestDelegate> middleware)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IApplicationBuilder New()
+        {
+            throw new NotImplementedException();
+        }
+
+        public RequestDelegate Build()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IServiceProvider ApplicationServices { get; set; }
+        public IFeatureCollection ServerFeatures { get; }
+        public IDictionary<string, object?> Properties { get; }
     }
 
     public class Endpoint : IEndpointDefinition
