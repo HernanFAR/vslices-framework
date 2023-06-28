@@ -9,18 +9,10 @@ Si encuentras algún problema en la documentación, tienes propuestas de mejora 
 ## Camino de desarrollo
 
 Desarrollos propuestos para VSlices
-- Para la versión: v1
-  - Handlers
-    - Implementación usando FluentValidation ✅ 
-  - Repositorios
-    - Implementación usando EntityFramework ✅ 
-  - Pipelines
-    - Implementación de equivalentes de "IPipelineBehaviors" de [jbogard/MediatR](https://github.com/jbogard/MediatR) ✅
-    - Implementación de un "IPipelineBehavior" de validación de request ✅
+- Pendientes
   - Documentación 
     - En español ❌
     - En ingles ❌
-- Para la versión: v1.1
   - Implementación de un "cross cutting concerns" pipeline para el logging automatico
   - Implementación de un "cross cutting concerns" pipeline para el manejo de excepciones automatico
 - Investigación
