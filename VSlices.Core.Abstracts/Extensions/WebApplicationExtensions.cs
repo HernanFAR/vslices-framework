@@ -9,9 +9,9 @@ namespace Microsoft.AspNetCore.Builder;
 public static class WebApplicationExtensions
 {
     public static void UseEndpointDefinitions<T>(this T app)
-        where T : IHost, IEndpointRouteBuilder
+        where T : IApplicationBuilder, IEndpointRouteBuilder
     {
-        using var services = app.Services.CreateScope();
+        using var services = app.ServiceProvider.CreateScope();
 
         var endpoints = services.ServiceProvider.GetServices<ISimpleEndpointDefinition>();
 
