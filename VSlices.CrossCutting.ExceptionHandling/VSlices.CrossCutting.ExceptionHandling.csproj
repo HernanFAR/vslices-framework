@@ -1,18 +1,18 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	<Authors>Enryu20</Authors>
-    <Product>VSlices</Product>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
+	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	  <Authors>Enryu20</Authors>
+	  <Product>VSlices</Product>
+	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <Description>Framework web de alto nivel C#, fuertemente inspirado en la arquitectura "Vertical Slices", MediatR y la programación funcional</Description>
 	  <Copyright>Hernán Fernando Álvarez Rubio</Copyright>
-    <PackageProjectUrl>https://vslice-framework.readthedocs.io/es/latest/</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/HernanFAR/vslice-framework</RepositoryUrl>
-    <PackageTags>vertical slices;mediator;cqrs;repository;request;handler;</PackageTags>
+	  <PackageProjectUrl>https://vslice-framework.readthedocs.io/es/latest/</PackageProjectUrl>
+	  <RepositoryUrl>https://github.com/HernanFAR/vslice-framework</RepositoryUrl>
+	  <PackageTags>vertical slices;mediator;cqrs;repository;request;handler;</PackageTags>
 	  <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
@@ -28,9 +28,8 @@
 		</None>
 	</ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
-		<PackageReference Include="OneOf" Version="3.0.255" />
-	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VSlices.Core.Abstracts\VSlices.Core.Abstracts.csproj" />
+  </ItemGroup>
 
 </Project>
