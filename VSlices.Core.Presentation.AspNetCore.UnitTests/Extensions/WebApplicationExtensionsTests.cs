@@ -1,22 +1,22 @@
-﻿using FluentAssertions;
+﻿using System.Collections.ObjectModel;
+using FluentAssertions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using VSlices.Core.Abstracts.Presentation;
 
-namespace VSlices.Core.Abstracts.UnitTests.Extensions;
+namespace VSlices.Core.Presentation.AspNetCore.UnitTests.Extensions;
 
 public class WebApplicationExtensionsTests
 {
-    public class WebAppDummy : IApplicationBuilder, IEndpointRouteBuilder
+    public class WebAppDummy : IEndpointRouteBuilder
     {
         public WebAppDummy(IServiceProvider serviceProvider)
         {
             ServiceProvider = serviceProvider;
-            DataSources = new List<EndpointDataSource>();
+            DataSources = new Collection<EndpointDataSource>();
         }
 
         public IApplicationBuilder CreateApplicationBuilder()
@@ -25,27 +25,7 @@ public class WebApplicationExtensionsTests
         }
 
         public IServiceProvider ServiceProvider { get; }
-
         public ICollection<EndpointDataSource> DataSources { get; }
-
-        public IApplicationBuilder Use(Func<RequestDelegate, RequestDelegate> middleware)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IApplicationBuilder New()
-        {
-            throw new NotImplementedException();
-        }
-
-        public RequestDelegate Build()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IServiceProvider ApplicationServices { get; set; }
-        public IFeatureCollection ServerFeatures { get; }
-        public IDictionary<string, object?> Properties { get; }
     }
 
     public class Endpoint : IEndpointDefinition

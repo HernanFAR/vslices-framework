@@ -1,5 +1,4 @@
 ﻿using VSlices.Core.Abstracts.BusinessLogic;
-using VSlices.Core.Abstracts.Presentation;
 using VSlices.Core.Abstracts.Sender;
 
 // ReSharper disable once CheckNamespace
@@ -7,15 +6,6 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddEndpointDefinition<T>(this IServiceCollection services, ServiceLifetime lifetime = ServiceLifetime.Scoped)
-        where T : IEndpointDefinition
-    {
-        services.Add(new ServiceDescriptor(typeof(ISimpleEndpointDefinition), typeof(T), lifetime));
-        T.DefineDependencies(services);
-
-        return services;
-    }
-
     public static IServiceCollection AddSender<T>(this IServiceCollection services,
         ServiceLifetime lifetime = ServiceLifetime.Scoped)
         where T : ISender

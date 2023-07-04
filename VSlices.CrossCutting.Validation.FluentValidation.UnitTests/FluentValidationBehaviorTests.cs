@@ -67,7 +67,7 @@ public class FluentValidationBehaviorTests
         var validationBehaviorMock = new Mock<FluentValidationBehavior<Request, Success>>(new List<IValidator<Request>>()) { CallBase = true};
         var validationBehavior = validationBehaviorMock.Object;
 
-        var handlerResponse = await validationBehavior.HandleAsync(request, async () => new Success());
+        var handlerResponse = await validationBehavior.HandleAsync(request, () => ValueTask.FromResult<OneOf<Success, BusinessFailure>>(new Success()));
 
         handlerResponse.IsT0.Should().BeTrue();
         handlerResponse.AsT0.Should().BeOfType<Success>();

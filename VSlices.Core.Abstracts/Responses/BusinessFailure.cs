@@ -6,7 +6,8 @@ public enum FailureKind
     NotFoundResource,
     ConcurrencyError,
     ContractValidation,
-    DomainValidation
+    DomainValidation,
+    DefaultError
 }
 
 public readonly record struct BusinessFailure(FailureKind Kind, string[] Errors)
@@ -22,6 +23,9 @@ public readonly record struct BusinessFailure(FailureKind Kind, string[] Errors)
         public static BusinessFailure ContractValidation(string error) => new(FailureKind.ContractValidation, new []{ error });
         public static BusinessFailure DomainValidation(string[] errors) => new(FailureKind.DomainValidation, errors);
         public static BusinessFailure DomainValidation(string error) => new(FailureKind.DomainValidation, new []{ error });
+        public static BusinessFailure DefaultError(string[] errors) => new(FailureKind.DefaultError, errors);
+        public static BusinessFailure DefaultError(string error) => new(FailureKind.DefaultError, new []{ error });
+        public static BusinessFailure DefaultError() => new(FailureKind.DefaultError, Array.Empty<string>());
     }
 }
 
