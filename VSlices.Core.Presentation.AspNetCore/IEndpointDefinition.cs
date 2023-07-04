@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace VSlices.Core.Abstracts.Presentation;
+namespace VSlices.Core.Presentation.AspNetCore;
 
 public interface ISimpleEndpointDefinition
 {

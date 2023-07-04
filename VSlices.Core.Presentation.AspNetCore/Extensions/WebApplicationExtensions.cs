@@ -1,15 +1,13 @@
 ﻿using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using VSlices.Core.Abstracts.Presentation;
+using VSlices.Core.Presentation.AspNetCore;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.AspNetCore.Builder;
 
 public static class WebApplicationExtensions
 {
-    public static void UseEndpointDefinitions<T>(this T app)
-        where T : IApplicationBuilder, IEndpointRouteBuilder
+    public static void UseEndpointDefinitions(this IEndpointRouteBuilder app)
     {
         using var services = app.ServiceProvider.CreateScope();
 

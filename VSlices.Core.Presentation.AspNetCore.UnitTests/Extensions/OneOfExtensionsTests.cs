@@ -1,12 +1,12 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
-using OneOf.Types;
 using OneOf;
+using OneOf.Types;
 using VSlices.Core.Abstracts.Responses;
 using NotFound = Microsoft.AspNetCore.Http.HttpResults.NotFound;
 
-namespace VSlices.Core.Abstracts.UnitTests.Extensions;
+namespace VSlices.Core.Presentation.AspNetCore.UnitTests.Extensions;
 
 public class OneOfExtensionsTests
 {
@@ -43,7 +43,7 @@ public class OneOfExtensionsTests
     [Fact]
     public void MatchEndpointResult_ShouldCallReturnNotFound_DetailWithErrors()
     {
-        OneOf<Success, BusinessFailure> oneOf = BusinessFailure.Of.NotFoundResource(new []{ "XD" });
+        OneOf<Success, BusinessFailure> oneOf = BusinessFailure.Of.NotFoundResource(new[] { "XD" });
 
         var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
 
@@ -64,7 +64,7 @@ public class OneOfExtensionsTests
     [Fact]
     public void MatchEndpointResult_ShouldCallReturnConflict_DetailWithErrors()
     {
-        OneOf<Success, BusinessFailure> oneOf = BusinessFailure.Of.ConcurrencyError(new []{ "XD" });
+        OneOf<Success, BusinessFailure> oneOf = BusinessFailure.Of.ConcurrencyError(new[] { "XD" });
 
         var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
 
@@ -75,7 +75,7 @@ public class OneOfExtensionsTests
     [Fact]
     public void MatchEndpointResult_ShouldCallReturnUnprocessableEntity_DetailWithErrors()
     {
-        OneOf<Success, BusinessFailure> oneOf = BusinessFailure.Of.ContractValidation(new []{ "XD" });
+        OneOf<Success, BusinessFailure> oneOf = BusinessFailure.Of.ContractValidation(new[] { "XD" });
 
         var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
 
@@ -97,7 +97,7 @@ public class OneOfExtensionsTests
     [Fact]
     public void MatchEndpointResult_ShouldCallReturnUnprocessableEntity_DetailWithErrorsAndDomainValidation()
     {
-        OneOf<Success, BusinessFailure> oneOf = BusinessFailure.Of.DomainValidation(new []{ "XD" });
+        OneOf<Success, BusinessFailure> oneOf = BusinessFailure.Of.DomainValidation(new[] { "XD" });
 
         var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
 

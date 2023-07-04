@@ -20,6 +20,7 @@ public static class OneOfExtensions
                     FailureKind.ConcurrencyError => e.Errors.Any() ? TypedResults.Conflict(e.Errors) : TypedResults.Conflict(),
                     FailureKind.ContractValidation => TypedResults.UnprocessableEntity(e.Errors),
                     FailureKind.DomainValidation => TypedResults.UnprocessableEntity(e.Errors),
+                    FailureKind.DefaultError => e.Errors.Any() ? TypedResults.BadRequest(e.Errors) : TypedResults.BadRequest(),
                     _ => throw new ArgumentOutOfRangeException(nameof(e.Kind), "A not valid FailureKind value was returned")
                 };
             });
