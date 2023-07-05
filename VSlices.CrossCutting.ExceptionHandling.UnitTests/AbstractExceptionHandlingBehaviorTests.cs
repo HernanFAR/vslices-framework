@@ -1,0 +1,57 @@
+using System.Security.Cryptography.X509Certificates;
+using FluentAssertions;
+using Moq;
+using OneOf.Types;
+using OneOf;
+using VSlices.Core.Abstracts.BusinessLogic;
+using VSlices.Core.Abstracts.Responses;
+
+namespace VSlices.CrossCutting.ExceptionHandling.UnitTests;
+
+public class AbstractExceptionHandlingBehaviorTests
+{
+    public record Request : IRequest;
+
+    [Fact]
+    public async Task HandleAsync_ShouldReturnResponse()
+    {
+        var request = new Request();
+
+        var pipelineMock = new Mock<AbstractExceptionHandlingBehavior<Request, Success>>
+        {
+            CallBase = true
+        };
+        var pipeline = pipelineMock.Object;
+
+        RequestHandlerDelegate<Success> handler = () => ValueTask.FromResult<OneOf<Success, BusinessFailure>>(new Success());
+
+        var result = await pipeline.HandleAsync(request, handler);
+
+        result.IsT0.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task HandleAsync_ShouldReturnException()
+    {
+        var request = new Request();
+
+        var pipelineMock = new Mock<AbstractExceptionHandlingBehavior<Request, Success>>
+        {
+            CallBase = true
+        };
+        var pipeline = pipelineMock.Object;
+        var ex = new Exception();
+
+        pipelineMock.Setup(e => e.ProcessExceptionAsync(ex))
+            .Verifiable();
+
+        RequestHandlerDelegate<Success> handler = () => throw ex;
+
+        var result = await pipeline.HandleAsync(request, handler);
+
+        pipelineMock.Verify();
+
+        result.IsT1.Should().BeTrue();
+        result.AsT1.Kind.Should().Be(FailureKind.UnhandledException);
+    }
+}

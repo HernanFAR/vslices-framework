@@ -1,7 +1,12 @@
 ﻿using OneOf;
+using OneOf.Types;
 using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.Core.Abstracts.BusinessLogic;
+
+public interface IHandler<in TRequest> : IHandler<TRequest, Success>
+    where TRequest : IRequest<Success>
+{ }
 
 public interface IHandler<in TRequest, TResponse>
     where TRequest : IRequest<TResponse>
