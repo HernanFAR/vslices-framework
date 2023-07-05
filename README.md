@@ -13,8 +13,8 @@ Desarrollos propuestos para VSlices
   - Documentación 
     - En español ❌
     - En ingles ❌
-  - Implementación de un "cross cutting concerns" pipeline para el logging automatico
-  - Implementación de un "cross cutting concerns" pipeline para el manejo de excepciones automatico
+  - Implementación de un "cross cutting concerns" pipeline para el logging automatico ❌
+  - Implementación de un "cross cutting concerns" pipeline para el manejo de excepciones automatico ☑️
 - Investigación
   - Investigación sobre más "cross cutting concerns" a agregar.
   - Agregar "Streams"
