@@ -1,14 +1,13 @@
-﻿using System.Runtime.ExceptionServices;
-using OneOf;
+﻿using OneOf;
 using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.CrossCutting.ExceptionHandling;
 
-public abstract class AbstractExceptionHandlingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TRequest> 
-    where TRequest : IRequest<TRequest>
+public abstract class AbstractExceptionHandlingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : IRequest<TResponse>
 {
-    public async ValueTask<OneOf<TRequest, BusinessFailure>> HandleAsync(TRequest request, RequestHandlerDelegate<TRequest> next, CancellationToken cancellationToken = default)
+    public async ValueTask<OneOf<TResponse, BusinessFailure>> HandleAsync(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -18,9 +17,11 @@ public abstract class AbstractExceptionHandlingBehavior<TRequest, TResponse> : I
         {
             await ProcessExceptionAsync(ex);
 
-            return BusinessFailure.Of.UnhandledException();
+            return Response(ex);
         }
     }
 
-    protected abstract ValueTask ProcessExceptionAsync(Exception ex);
+    protected internal abstract ValueTask ProcessExceptionAsync(Exception ex);
+
+    protected internal virtual BusinessFailure Response(Exception ex) => BusinessFailure.Of.UnhandledException();
 }

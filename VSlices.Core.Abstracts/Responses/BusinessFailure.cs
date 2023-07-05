@@ -8,7 +8,7 @@ public enum FailureKind
     ContractValidation,
     DomainValidation,
     DefaultError,
-    UnmanagedException
+    UnhandledException
 }
 
 public readonly record struct BusinessFailure(FailureKind Kind, string[] Errors)
@@ -27,7 +27,7 @@ public readonly record struct BusinessFailure(FailureKind Kind, string[] Errors)
         public static BusinessFailure DefaultError(string[] errors) => new(FailureKind.DefaultError, errors);
         public static BusinessFailure DefaultError(string error) => new(FailureKind.DefaultError, new[] { error });
         public static BusinessFailure DefaultError() => new(FailureKind.DefaultError, Array.Empty<string>());
-        public static BusinessFailure UnhandledException() => new(FailureKind.UnmanagedException, Array.Empty<string>());
+        public static BusinessFailure UnhandledException() => new(FailureKind.UnhandledException, Array.Empty<string>());
 
     }
 }
