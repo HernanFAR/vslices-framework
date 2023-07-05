@@ -1,5 +1,4 @@
-﻿using OneOf;
-using VSlices.Core.Abstracts.BusinessLogic;
+﻿using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.CrossCutting.ExceptionHandling;
@@ -7,7 +6,7 @@ namespace VSlices.CrossCutting.ExceptionHandling;
 public abstract class AbstractExceptionHandlingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
-    public async ValueTask<OneOf<TResponse, BusinessFailure>> HandleAsync(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken = default)
+    public async ValueTask<Response<TResponse>> HandleAsync(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken = default)
     {
         try
         {

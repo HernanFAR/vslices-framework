@@ -1,13 +1,11 @@
-﻿using OneOf;
-using OneOf.Types;
-using VSlices.Core.Abstracts.BusinessLogic;
+﻿using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.Core.BusinessLogic;
 
 public abstract class CreateHandler<TRequest, TResponse, TEntity> : IHandler<TRequest, TResponse>
-    where TRequest : ICommand<TResponse> 
+    where TRequest : ICommand<TResponse>
 {
     private readonly ICreateRepository<TEntity> _repository;
 
@@ -16,28 +14,28 @@ public abstract class CreateHandler<TRequest, TResponse, TEntity> : IHandler<TRe
         _repository = repository;
     }
 
-    public virtual async ValueTask<OneOf<TResponse, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<Response<TResponse>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
     {
         var useCaseValidationResult = await ValidateUseCaseRulesAsync(request, cancellationToken);
 
-        if (useCaseValidationResult.IsT1)
+        if (useCaseValidationResult.IsFailure)
         {
-            return useCaseValidationResult.AsT1;
+            return useCaseValidationResult.BusinessFailure;
         }
 
         var entity = await CreateEntityAsync(request, cancellationToken);
 
         var dataAccessResult = await _repository.CreateAsync(entity, cancellationToken);
 
-        if (dataAccessResult.IsT1)
+        if (dataAccessResult.IsFailure)
         {
-            return dataAccessResult.AsT1;
+            return dataAccessResult.BusinessFailure;
         }
 
         return GetResponse(entity, request);
     }
 
-    protected internal abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
+    protected internal abstract ValueTask<Response<Success>> ValidateUseCaseRulesAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
     protected internal abstract ValueTask<TEntity> CreateEntityAsync(TRequest request,
@@ -56,41 +54,41 @@ public abstract class EntityValidatedCreateHandler<TRequest, TResponse, TEntity>
         _repository = repository;
     }
 
-    public virtual async ValueTask<OneOf<TResponse, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<Response<TResponse>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
     {
         var useCaseValidationResult = await ValidateUseCaseRulesAsync(request, cancellationToken);
 
-        if (useCaseValidationResult.IsT1)
+        if (useCaseValidationResult.IsFailure)
         {
-            return useCaseValidationResult.AsT1;
+            return useCaseValidationResult.BusinessFailure;
         }
 
         var entity = await CreateEntityAsync(request, cancellationToken);
 
         var entityValidationResult = await ValidateEntityAsync(entity, cancellationToken);
 
-        if (entityValidationResult.IsT1)
+        if (entityValidationResult.IsFailure)
         {
-            return entityValidationResult.AsT1;
+            return entityValidationResult.BusinessFailure;
         }
 
         var dataAccessResult = await _repository.CreateAsync(entity, cancellationToken);
 
-        if (dataAccessResult.IsT1)
+        if (dataAccessResult.IsFailure)
         {
-            return dataAccessResult.AsT1;
+            return dataAccessResult.BusinessFailure;
         }
 
         return GetResponse(entity, request);
     }
 
-    protected internal abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request,
+    protected internal abstract ValueTask<Response<Success>> ValidateUseCaseRulesAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
     protected internal abstract ValueTask<TEntity> CreateEntityAsync(TRequest request,
         CancellationToken cancellationToken = default);
 
-    protected internal abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateEntityAsync(TEntity domain,
+    protected internal abstract ValueTask<Response<Success>> ValidateEntityAsync(TEntity domain,
         CancellationToken cancellationToken = default);
 
     protected internal abstract TResponse GetResponse(TEntity entity, TRequest request);

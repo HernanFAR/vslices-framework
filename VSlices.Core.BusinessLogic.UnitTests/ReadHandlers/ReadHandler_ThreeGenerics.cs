@@ -1,8 +1,5 @@
-﻿using System.Linq.Expressions;
-using FluentAssertions;
-using Microsoft.Win32.SafeHandles;
+﻿using FluentAssertions;
 using Moq;
-using OneOf.Types;
 using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Responses;
@@ -37,7 +34,7 @@ public class ReadHandler_ThreeGenerics
 
         var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
 
-        handlerResponse.Value.Should().Be(businessFailure);
+        handlerResponse.BusinessFailure.Should().Be(businessFailure);
 
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
@@ -66,7 +63,7 @@ public class ReadHandler_ThreeGenerics
 
         var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
 
-        handlerResponse.Value.Should().Be(businessFailure);
+        handlerResponse.BusinessFailure.Should().Be(businessFailure);
 
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
@@ -98,7 +95,7 @@ public class ReadHandler_ThreeGenerics
 
         var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
 
-        handlerResponse.Value.Should().Be(response);
+        handlerResponse.SuccessValue.Should().Be(response);
 
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
@@ -109,37 +106,3 @@ public class ReadHandler_ThreeGenerics
         _mockedRepository.VerifyNoOtherCalls();
     }
 }
-
-//public record ItemContract();
-//public record BillContract(ItemContract[] Items);
-//public record ItemInfo();
-//public record BillInfo(ItemInfo[] Items);
-
-//public class A
-//{
-//    public void XD()
-//    {
-//        //1.- Leeré el grupo de objetos BillContract uno a uno
-//        //2.- Leeré el grupo ItemContract dentro del objeto Bill contract uno a uno
-//        //3.- Crearé objeto ItemInfo en base al ItemContract sacado del paso 2
-//        //4.- Crearé el objeto BillInfo usando el objeto BillContract sacado del paso 1
-//        //    y el grupo de ItemInfos obtenidos del paso 3
-//        //5.- Agruparé los objetos Bill info
-
-//        BillContract[] billContracts = null;
-
-//        foreach (var billContract in billContracts)
-//        {
-//            List<ItemInfo> items;
-
-//            foreach (var itemContract in billContract.Items)
-//            {
-//                var itemInfo = new ItemInfo(itemContract);
-
-//                items.Add(itemInfo);
-//            }
-
-//            var billInfo = new BillInfo(billContract, items);
-//        }
-//    }
-//}

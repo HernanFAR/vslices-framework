@@ -1,6 +1,4 @@
-﻿using OneOf;
-using OneOf.Types;
-using VSlices.Core.Abstracts.BusinessLogic;
+﻿using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Responses;
 
@@ -16,13 +14,13 @@ public abstract class ReadHandler<TRequest, TSearchOptions, TResponse> : IHandle
         _repository = repository;
     }
 
-    public virtual async ValueTask<OneOf<TResponse, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<Response<TResponse>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
     {
         var useCaseValidationResult = await ValidateUseCaseRulesAsync(request, cancellationToken);
 
-        if (useCaseValidationResult.IsT1)
+        if (useCaseValidationResult.IsFailure)
         {
-            return useCaseValidationResult.AsT1;
+            return useCaseValidationResult.BusinessFailure;
         }
 
         var options = await RequestToSearchOptionsAsync(request, cancellationToken);
@@ -30,7 +28,7 @@ public abstract class ReadHandler<TRequest, TSearchOptions, TResponse> : IHandle
         return await _repository.ReadAsync(options, cancellationToken);
     }
 
-    protected internal abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request, CancellationToken cancellationToken = default);
+    protected internal abstract ValueTask<Response<Success>> ValidateUseCaseRulesAsync(TRequest request, CancellationToken cancellationToken = default);
 
     protected internal abstract ValueTask<TSearchOptions> RequestToSearchOptionsAsync(TRequest request, CancellationToken cancellationToken = default);
 }
@@ -45,19 +43,19 @@ public abstract class ReadHandler<TRequest, TResponse> : IHandler<TRequest, TRes
         _repository = repository;
     }
 
-    public virtual async ValueTask<OneOf<TResponse, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<Response<TResponse>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
     {
         var useCaseValidationResult = await ValidateUseCaseRulesAsync(request, cancellationToken);
 
-        if (useCaseValidationResult.IsT1)
+        if (useCaseValidationResult.IsFailure)
         {
-            return useCaseValidationResult.AsT1;
+            return useCaseValidationResult.BusinessFailure;
         }
 
         return await _repository.ReadAsync(request, cancellationToken);
     }
 
-    protected internal abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request, CancellationToken cancellationToken = default);
+    protected internal abstract ValueTask<Response<Success>> ValidateUseCaseRulesAsync(TRequest request, CancellationToken cancellationToken = default);
 }
 
 public abstract class BasicReadHandler<TRequest, TResponse> : IHandler<TRequest, TResponse>
@@ -70,17 +68,17 @@ public abstract class BasicReadHandler<TRequest, TResponse> : IHandler<TRequest,
         _repository = repository;
     }
 
-    public virtual async ValueTask<OneOf<TResponse, BusinessFailure>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<Response<TResponse>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
     {
         var useCaseValidationResult = await ValidateUseCaseRulesAsync(request, cancellationToken);
 
-        if (useCaseValidationResult.IsT1)
+        if (useCaseValidationResult.IsFailure)
         {
-            return useCaseValidationResult.AsT1;
+            return useCaseValidationResult.BusinessFailure;
         }
 
         return await _repository.ReadAsync(cancellationToken);
     }
 
-    protected internal abstract ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(TRequest request, CancellationToken cancellationToken = default);
+    protected internal abstract ValueTask<Response<Success>> ValidateUseCaseRulesAsync(TRequest request, CancellationToken cancellationToken = default);
 }

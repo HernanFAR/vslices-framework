@@ -2,7 +2,8 @@
 
 public enum FailureKind
 {
-    UserNotAllowed,
+    NotAuthenticatedUser,
+    NotAllowedUser,
     NotFoundResource,
     ConcurrencyError,
     ContractValidation,
@@ -15,7 +16,8 @@ public readonly record struct BusinessFailure(FailureKind Kind, string[] Errors)
 {
     public static class Of
     {
-        public static BusinessFailure NotAllowedUser() => new(FailureKind.UserNotAllowed, Array.Empty<string>());
+        public static BusinessFailure UserNotAuthenticated() => new(FailureKind.NotAuthenticatedUser, Array.Empty<string>());
+        public static BusinessFailure UserNotAllowed() => new(FailureKind.NotAllowedUser, Array.Empty<string>());
         public static BusinessFailure NotFoundResource(string[] errors) => new(FailureKind.NotFoundResource, errors);
         public static BusinessFailure NotFoundResource() => new(FailureKind.NotFoundResource, Array.Empty<string>());
         public static BusinessFailure ConcurrencyError(string[] errors) => new(FailureKind.ConcurrencyError, errors);

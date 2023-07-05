@@ -1,8 +1,6 @@
-﻿using System.Text.Json;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using OneOf;
-using OneOf.Types;
+using System.Text.Json;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Responses;
 
@@ -28,7 +26,7 @@ public abstract class EFUpdateRepository<TDbContext, TEntity> : IUpdateRepositor
         => ValueTask.FromResult(BusinessFailure.Of.ConcurrencyError(Array.Empty<string>()));
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "CA2254", Justification = "Logging template can be translated to other languages in this way")]
-    public virtual async ValueTask<OneOf<TEntity, BusinessFailure>> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<Response<TEntity>> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         _context.Set<TEntity>().Update(entity);
 
@@ -62,16 +60,16 @@ public abstract class EFUpdateRepository<TDbContext, TEntity, TDbEntity> : IUpda
 
     protected internal virtual string ConcurrencyMessageTemplate
         => "There was a concurrency error when updating entity of type {EntityType}, with data {EntityJson}";
-    
+
     protected internal abstract TDbEntity ToDatabaseEntity(TEntity domain);
-    
+
     protected internal abstract TEntity ToEntity(TDbEntity entity);
 
     protected internal virtual ValueTask<BusinessFailure> ProcessConcurrencyExceptionAsync(DbUpdateConcurrencyException ex, CancellationToken cancellationToken = default)
         => ValueTask.FromResult(BusinessFailure.Of.ConcurrencyError(Array.Empty<string>()));
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "CA2254", Justification = "Logging template can be translated to other languages in this way")]
-    public virtual async ValueTask<OneOf<TEntity, BusinessFailure>> UpdateAsync(TEntity domain, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<Response<TEntity>> UpdateAsync(TEntity domain, CancellationToken cancellationToken = default)
     {
         var entity = ToDatabaseEntity(domain);
 

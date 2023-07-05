@@ -1,7 +1,5 @@
 using FluentAssertions;
 using Moq;
-using OneOf;
-using OneOf.Types;
 using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.Responses;
 
@@ -21,14 +19,14 @@ public class AbstractValidationBehaviorTests
         var response = new Success();
 
         validationBehaviorMock.Setup(e => e.ValidateAsync(request, default))
-            .ReturnsAsync(OneOf<Success, BusinessFailure>.FromT0(response));
+            .ReturnsAsync(response);
 
         var handlerResponse = await validationBehavior.HandleAsync(
-            request, 
-            () => ValueTask.FromResult<OneOf<Success, BusinessFailure>>(response));
+            request,
+            () => ValueTask.FromResult<Response<Success>>(response));
 
-        handlerResponse.IsT0.Should().BeTrue();
-        handlerResponse.AsT0.Should().Be(response);
+        handlerResponse.IsSuccess.Should().BeTrue();
+        handlerResponse.SuccessValue.Should().Be(response);
 
     }
 
@@ -42,12 +40,12 @@ public class AbstractValidationBehaviorTests
         var response = BusinessFailure.Of.ContractValidation("Error de ejemplo");
 
         validationBehaviorMock.Setup(e => e.ValidateAsync(request, default))
-            .ReturnsAsync(OneOf<Success, BusinessFailure>.FromT1(response));
+            .ReturnsAsync(response);
 
         var handlerResponse = await validationBehavior.HandleAsync(request, () => throw new Exception());
 
-        handlerResponse.IsT1.Should().BeTrue();
-        handlerResponse.AsT1.Should().Be(response);
+        handlerResponse.IsFailure.Should().BeTrue();
+        handlerResponse.BusinessFailure.Should().Be(response);
 
     }
 }

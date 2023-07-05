@@ -1,8 +1,6 @@
-﻿using System.Text.Json;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using OneOf;
-using OneOf.Types;
+using System.Text.Json;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Responses;
 
@@ -28,7 +26,7 @@ public abstract class EFRemoveRepository<TDbContext, TEntity> : IRemoveRepositor
         => ValueTask.FromResult(BusinessFailure.Of.ConcurrencyError(Array.Empty<string>()));
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "CA2254", Justification = "Logging template can be translated to other languages in this way")]
-    public virtual async ValueTask<OneOf<TEntity, BusinessFailure>> RemoveAsync(TEntity entity, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<Response<TEntity>> RemoveAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         _context.Set<TEntity>().Remove(entity);
 
@@ -71,7 +69,7 @@ public abstract class EFRemoveRepository<TDbContext, TEntity, TDbEntity> : IRemo
         => ValueTask.FromResult(BusinessFailure.Of.ConcurrencyError(Array.Empty<string>()));
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "CA2254", Justification = "Logging template can be translated to other languages in this way")]
-    public virtual async ValueTask<OneOf<TEntity, BusinessFailure>> RemoveAsync(TEntity domain, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<Response<TEntity>> RemoveAsync(TEntity domain, CancellationToken cancellationToken = default)
     {
         var entity = ToDatabaseEntity(domain);
 

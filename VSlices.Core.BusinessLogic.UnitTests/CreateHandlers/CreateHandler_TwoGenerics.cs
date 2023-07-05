@@ -1,7 +1,6 @@
 using FluentAssertions;
 using Moq;
 using Moq.Protected;
-using OneOf.Types;
 using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Responses;
@@ -35,7 +34,7 @@ public class CreateHandler_TwoGenerics
 
         var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
 
-        handlerResponse.Value.Should().Be(businessFailure);
+        handlerResponse.BusinessFailure.Should().Be(businessFailure);
 
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
@@ -65,7 +64,7 @@ public class CreateHandler_TwoGenerics
 
         var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
 
-        handlerResponse.Value.Should().Be(businessFailure);
+        handlerResponse.BusinessFailure.Should().Be(businessFailure);
 
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
@@ -81,7 +80,7 @@ public class CreateHandler_TwoGenerics
     {
         var request = new Request();
         var domain = new Domain();
-        
+
         var success = new Success();
 
         _mockedHandler.Setup(e => e.HandleAsync(request, default))
@@ -96,7 +95,7 @@ public class CreateHandler_TwoGenerics
 
         var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
 
-        handlerResponse.Value.Should().Be(success);
+        handlerResponse.SuccessValue.Should().Be(success);
 
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);

@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using OneOf;
 using System.Text.Json;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Responses;
@@ -27,7 +26,7 @@ public abstract class EFCreateRepository<TDbContext, TEntity> : ICreateRepositor
         => ValueTask.FromResult(BusinessFailure.Of.ConcurrencyError(Array.Empty<string>()));
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "CA2254", Justification = "Logging template can be translated to other languages in this way")]
-    public virtual async ValueTask<OneOf<TEntity, BusinessFailure>> CreateAsync(TEntity entity, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<Response<TEntity>> CreateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         _context.Set<TEntity>().Add(entity);
 
@@ -70,7 +69,7 @@ public abstract class EFCreateRepository<TDbContext, TEntity, TDbEntity> : ICrea
         => ValueTask.FromResult(BusinessFailure.Of.ConcurrencyError(Array.Empty<string>()));
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "CA2254", Justification = "Logging template can be translated to other languages in this way")]
-    public virtual async ValueTask<OneOf<TEntity, BusinessFailure>> CreateAsync(TEntity domain, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<Response<TEntity>> CreateAsync(TEntity domain, CancellationToken cancellationToken = default)
     {
         var entity = ToDatabaseEntity(domain);
 

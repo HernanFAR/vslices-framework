@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -55,9 +54,9 @@ public class EFRemoveRepository_ThreeGenerics : IClassFixture<Fixture>
 
         var response = await _mockedRepository.Object.RemoveAsync(entity);
 
-        response.IsT1.Should().BeTrue();
-        response.AsT1.Errors.Should().BeEmpty();
-        response.AsT1.Kind.Should().Be(FailureKind.ConcurrencyError);
+        response.IsFailure.Should().BeTrue();
+        response.BusinessFailure.Errors.Should().BeEmpty();
+        response.BusinessFailure.Kind.Should().Be(FailureKind.ConcurrencyError);
 
         _mockedLogger.Verify(e =>
             e.Log(It.Is<LogLevel>(l => l == LogLevel.Warning),
@@ -109,8 +108,8 @@ public class EFRemoveRepository_ThreeGenerics : IClassFixture<Fixture>
 
         var response = await _mockedRepository.Object.RemoveAsync(entity);
 
-        response.IsT0.Should().BeTrue();
-        response.AsT0.Should().Be(entity);
+        response.IsSuccess.Should().BeTrue();
+        response.SuccessValue.Should().Be(entity);
 
         _mockedLogger.VerifyNoOtherCalls();
 
