@@ -1,8 +1,5 @@
-﻿using System.Linq.Expressions;
-using FluentAssertions;
-using Microsoft.Win32.SafeHandles;
+﻿using FluentAssertions;
 using Moq;
-using OneOf.Types;
 using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Responses;
@@ -36,7 +33,7 @@ public class BasicReadHandler_TwoGenerics
 
         var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
 
-        handlerResponse.Value.Should().Be(businessFailure);
+        handlerResponse.BusinessFailure.Should().Be(businessFailure);
 
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
@@ -62,7 +59,7 @@ public class BasicReadHandler_TwoGenerics
 
         var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
 
-        handlerResponse.Value.Should().Be(businessFailure);
+        handlerResponse.BusinessFailure.Should().Be(businessFailure);
 
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
@@ -89,7 +86,7 @@ public class BasicReadHandler_TwoGenerics
 
         var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
 
-        handlerResponse.Value.Should().Be(response);
+        handlerResponse.SuccessValue.Should().Be(response);
 
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);

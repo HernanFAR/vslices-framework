@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using OneOf;
 using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.Abstracts.Sender;
@@ -11,7 +10,7 @@ public class ServiceCollectionExtensionsTests
 {
     public class Sender : ISender
     {
-        public ValueTask<OneOf<TResponse, BusinessFailure>> SendAsync<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
+        public ValueTask<Response<TResponse>> SendAsync<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
@@ -19,7 +18,7 @@ public class ServiceCollectionExtensionsTests
 
     public class Behavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
     {
-        public ValueTask<OneOf<TResponse, BusinessFailure>> HandleAsync(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken = default)
+        public ValueTask<Response<TResponse>> HandleAsync(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

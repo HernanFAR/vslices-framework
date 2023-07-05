@@ -1,12 +1,10 @@
 ﻿using FluentValidation;
-using OneOf;
-using OneOf.Types;
 using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.CrossCutting.Validation.FluentValidation;
 
-public class FluentValidationBehavior<TRequest, TResponse> : AbstractValidationBehavior<TRequest, TResponse> 
+public class FluentValidationBehavior<TRequest, TResponse> : AbstractValidationBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
     private readonly IValidator<TRequest>? _requestValidator;
@@ -16,7 +14,7 @@ public class FluentValidationBehavior<TRequest, TResponse> : AbstractValidationB
         _requestValidator = requestValidators.FirstOrDefault();
     }
 
-    protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateAsync(TRequest request, CancellationToken cancellationToken = default)
+    protected override async ValueTask<Response<Success>> ValidateAsync(TRequest request, CancellationToken cancellationToken = default)
     {
         if (_requestValidator is null)
         {

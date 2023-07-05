@@ -1,8 +1,5 @@
-using System.Security.Cryptography.X509Certificates;
 using FluentAssertions;
 using Moq;
-using OneOf.Types;
-using OneOf;
 using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.Responses;
 
@@ -23,11 +20,11 @@ public class AbstractExceptionHandlingBehaviorTests
         };
         var pipeline = pipelineMock.Object;
 
-        RequestHandlerDelegate<Success> handler = () => ValueTask.FromResult<OneOf<Success, BusinessFailure>>(new Success());
+        RequestHandlerDelegate<Success> handler = () => ValueTask.FromResult<Response<Success>>(new Success());
 
         var result = await pipeline.HandleAsync(request, handler);
 
-        result.IsT0.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
     }
 
     [Fact]
@@ -51,7 +48,7 @@ public class AbstractExceptionHandlingBehaviorTests
 
         pipelineMock.Verify();
 
-        result.IsT1.Should().BeTrue();
-        result.AsT1.Kind.Should().Be(FailureKind.UnhandledException);
+        result.IsFailure.Should().BeTrue();
+        result.BusinessFailure.Kind.Should().Be(FailureKind.UnhandledException);
     }
 }

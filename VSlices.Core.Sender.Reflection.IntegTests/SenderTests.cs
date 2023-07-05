@@ -1,12 +1,8 @@
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.Interfaces;
-using OneOf;
-using OneOf.Types;
 using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.Abstracts.Sender;
-using static VSlices.Core.Sender.Reflection.IntegTests.SenderTests;
 
 namespace VSlices.Core.Sender.Reflection.IntegTests;
 
@@ -17,12 +13,12 @@ public class SenderTests
         public static string Str { get; set; } = "";
     }
 
-    public class PipelineBehaviorOne<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> 
+    public class PipelineBehaviorOne<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
     {
         public static int Count { get; set; }
 
-        public ValueTask<OneOf<TResponse, BusinessFailure>> HandleAsync(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken = default)
+        public ValueTask<Response<TResponse>> HandleAsync(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken = default)
         {
             Count += 1;
             Acumulator.Str += "OpenPipelineOne_";
@@ -31,12 +27,12 @@ public class SenderTests
         }
     }
 
-    public class PipelineBehaviorTwo<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> 
+    public class PipelineBehaviorTwo<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
     {
         public static int Count { get; set; }
 
-        public ValueTask<OneOf<TResponse, BusinessFailure>> HandleAsync(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken = default)
+        public ValueTask<Response<TResponse>> HandleAsync(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken = default)
         {
             Count += 1;
             Acumulator.Str += "OpenPipelineTwo_";
@@ -45,11 +41,11 @@ public class SenderTests
         }
     }
 
-    public class ConcretePipelineBehaviorOne : IPipelineBehavior<RequestOne, Success> 
+    public class ConcretePipelineBehaviorOne : IPipelineBehavior<RequestOne, Success>
     {
         public static int Count { get; set; }
 
-        public ValueTask<OneOf<Success, BusinessFailure>> HandleAsync(RequestOne request, RequestHandlerDelegate<Success> next, CancellationToken cancellationToken = default)
+        public ValueTask<Response<Success>> HandleAsync(RequestOne request, RequestHandlerDelegate<Success> next, CancellationToken cancellationToken = default)
         {
             Count += 1;
             Acumulator.Str += "ConcretePipelineOne_";
@@ -64,12 +60,12 @@ public class SenderTests
     {
         public static int Count { get; set; }
 
-        public ValueTask<OneOf<Success, BusinessFailure>> HandleAsync(RequestOne requestOne, CancellationToken cancellationToken = default)
+        public ValueTask<Response<Success>> HandleAsync(RequestOne requestOne, CancellationToken cancellationToken = default)
         {
             Count += 1;
             Acumulator.Str += "HandlerOne_";
 
-            return ValueTask.FromResult<OneOf<Success, BusinessFailure>>(new Success());
+            return ValueTask.FromResult<Response<Success>>(new Success());
         }
     }
 
@@ -79,12 +75,12 @@ public class SenderTests
     {
         public static int Count { get; set; }
 
-        public ValueTask<OneOf<Success, BusinessFailure>> HandleAsync(RequestTwo request, CancellationToken cancellationToken = default)
+        public ValueTask<Response<Success>> HandleAsync(RequestTwo request, CancellationToken cancellationToken = default)
         {
             Count += 1;
             Acumulator.Str += "HandlerTwo_";
 
-            return ValueTask.FromResult<OneOf<Success, BusinessFailure>>(new Success());
+            return ValueTask.FromResult<Response<Success>>(new Success());
         }
     }
 
@@ -93,7 +89,7 @@ public class SenderTests
     {
         const int expCount = 1;
         var services = new ServiceCollection();
-        
+
         services.AddTransient<IHandler<RequestOne, Success>, HandlerOne>();
         services.AddTransient<ISender, ReflectionSender>();
 
@@ -102,8 +98,8 @@ public class SenderTests
 
         var response = await sender.SendAsync(new RequestOne());
 
-        response.IsT0.Should().BeTrue();
-        response.AsT0.Should().BeOfType<Success>();
+        response.IsSuccess.Should().BeTrue();
+
         Acumulator.Str.Should().Be("HandlerOne_");
         HandlerOne.Count.Should().Be(expCount);
 
@@ -117,7 +113,7 @@ public class SenderTests
     {
         const int expCount = 1;
         var services = new ServiceCollection();
-        
+
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PipelineBehaviorOne<,>));
         services.AddTransient<IHandler<RequestOne, Success>, HandlerOne>();
         services.AddTransient<ISender, ReflectionSender>();
@@ -127,8 +123,7 @@ public class SenderTests
 
         var response = await sender.SendAsync(new RequestOne());
 
-        response.IsT0.Should().BeTrue();
-        response.AsT0.Should().BeOfType<Success>();
+        response.IsSuccess.Should().BeTrue();
 
         PipelineBehaviorOne<RequestOne, Success>.Count.Should().Be(expCount);
         HandlerOne.Count.Should().Be(expCount);
@@ -145,7 +140,7 @@ public class SenderTests
     {
         const int expCount = 1;
         var services = new ServiceCollection();
-        
+
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PipelineBehaviorOne<,>));
         services.AddTransient(typeof(IPipelineBehavior<RequestOne, Success>), typeof(ConcretePipelineBehaviorOne));
         services.AddTransient<IHandler<RequestOne, Success>, HandlerOne>();
@@ -156,8 +151,7 @@ public class SenderTests
 
         var response = await sender.SendAsync(new RequestOne());
 
-        response.IsT0.Should().BeTrue();
-        response.AsT0.Should().BeOfType<Success>();
+        response.IsSuccess.Should().BeTrue();
 
         PipelineBehaviorOne<RequestOne, Success>.Count.Should().Be(expCount);
         ConcretePipelineBehaviorOne.Count.Should().Be(expCount);
@@ -187,8 +181,7 @@ public class SenderTests
 
         var response = await sender.SendAsync(new RequestOne());
 
-        response.IsT0.Should().BeTrue();
-        response.AsT0.Should().BeOfType<Success>();
+        response.IsSuccess.Should().BeTrue();
 
         PipelineBehaviorOne<RequestOne, Success>.Count.Should().Be(expCount);
         PipelineBehaviorTwo<RequestOne, Success>.Count.Should().Be(expCount);
@@ -219,8 +212,7 @@ public class SenderTests
 
         var response = await sender.SendAsync(new RequestOne());
 
-        response.IsT0.Should().BeTrue();
-        response.AsT0.Should().BeOfType<Success>();
+        response.IsSuccess.Should().BeTrue();
 
         PipelineBehaviorOne<RequestOne, Success>.Count.Should().Be(expCount);
         PipelineBehaviorTwo<RequestOne, Success>.Count.Should().Be(expCount);
@@ -254,8 +246,7 @@ public class SenderTests
 
         var response = await sender.SendAsync(new RequestTwo());
 
-        response.IsT0.Should().BeTrue();
-        response.AsT0.Should().BeOfType<Success>();
+        response.IsSuccess.Should().BeTrue();
 
         PipelineBehaviorOne<RequestTwo, Success>.Count.Should().Be(expCount);
         PipelineBehaviorTwo<RequestTwo, Success>.Count.Should().Be(expCount);

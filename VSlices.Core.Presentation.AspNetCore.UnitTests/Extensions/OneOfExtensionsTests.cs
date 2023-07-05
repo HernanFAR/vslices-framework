@@ -1,19 +1,18 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
-using OneOf;
-using OneOf.Types;
+using Microsoft.AspNetCore.Mvc;
 using VSlices.Core.Abstracts.Responses;
 using NotFound = Microsoft.AspNetCore.Http.HttpResults.NotFound;
 
 namespace VSlices.Core.Presentation.AspNetCore.UnitTests.Extensions;
 
-public class OneOfExtensionsTests
+public class ResponseExtensionsTests
 {
     [Fact]
     public void MatchEndpointResult_ShouldCallSuccessFunction()
     {
-        OneOf<Success, BusinessFailure> oneOf = new Success();
+        Response<Success> oneOf = new Success();
 
         var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
 
@@ -23,7 +22,7 @@ public class OneOfExtensionsTests
     [Fact]
     public void MatchEndpointResult_ShouldCallReturnForbidHttpResult()
     {
-        OneOf<Success, BusinessFailure> oneOf = BusinessFailure.Of.NotAllowedUser();
+        Response<Success> oneOf = BusinessFailure.Of.UserNotAllowed();
 
         var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
 
@@ -33,7 +32,7 @@ public class OneOfExtensionsTests
     [Fact]
     public void MatchEndpointResult_ShouldCallReturnNotFound()
     {
-        OneOf<Success, BusinessFailure> oneOf = BusinessFailure.Of.NotFoundResource();
+        Response<Success> oneOf = BusinessFailure.Of.NotFoundResource();
 
         var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
 
@@ -43,7 +42,7 @@ public class OneOfExtensionsTests
     [Fact]
     public void MatchEndpointResult_ShouldCallReturnNotFound_DetailWithErrors()
     {
-        OneOf<Success, BusinessFailure> oneOf = BusinessFailure.Of.NotFoundResource(new[] { "XD" });
+        Response<Success> oneOf = BusinessFailure.Of.NotFoundResource(new[] { "XD" });
 
         var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
 
@@ -54,7 +53,7 @@ public class OneOfExtensionsTests
     [Fact]
     public void MatchEndpointResult_ShouldCallReturnConflict()
     {
-        OneOf<Success, BusinessFailure> oneOf = BusinessFailure.Of.ConcurrencyError();
+        Response<Success> oneOf = BusinessFailure.Of.ConcurrencyError();
 
         var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
 
@@ -64,7 +63,7 @@ public class OneOfExtensionsTests
     [Fact]
     public void MatchEndpointResult_ShouldCallReturnConflict_DetailWithErrors()
     {
-        OneOf<Success, BusinessFailure> oneOf = BusinessFailure.Of.ConcurrencyError(new[] { "XD" });
+        Response<Success> oneOf = BusinessFailure.Of.ConcurrencyError(new[] { "XD" });
 
         var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
 
@@ -75,7 +74,7 @@ public class OneOfExtensionsTests
     [Fact]
     public void MatchEndpointResult_ShouldCallReturnUnprocessableEntity_DetailWithErrors()
     {
-        OneOf<Success, BusinessFailure> oneOf = BusinessFailure.Of.ContractValidation(new[] { "XD" });
+        Response<Success> oneOf = BusinessFailure.Of.ContractValidation(new[] { "XD" });
 
         var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
 
@@ -86,7 +85,7 @@ public class OneOfExtensionsTests
     [Fact]
     public void MatchEndpointResult_ShouldCallReturnUnprocessableEntity_DetailWithError()
     {
-        OneOf<Success, BusinessFailure> oneOf = BusinessFailure.Of.ContractValidation("XD");
+        Response<Success> oneOf = BusinessFailure.Of.ContractValidation("XD");
 
         var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
 
@@ -97,7 +96,7 @@ public class OneOfExtensionsTests
     [Fact]
     public void MatchEndpointResult_ShouldCallReturnUnprocessableEntity_DetailWithErrorsAndDomainValidation()
     {
-        OneOf<Success, BusinessFailure> oneOf = BusinessFailure.Of.DomainValidation(new[] { "XD" });
+        Response<Success> oneOf = BusinessFailure.Of.DomainValidation(new[] { "XD" });
 
         var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
 
@@ -108,7 +107,7 @@ public class OneOfExtensionsTests
     [Fact]
     public void MatchEndpointResult_ShouldCallReturnUnprocessableEntity_DetailWithErrorAndDomainValidation()
     {
-        OneOf<Success, BusinessFailure> oneOf = BusinessFailure.Of.DomainValidation("XD");
+        Response<Success> oneOf = BusinessFailure.Of.DomainValidation("XD");
 
         var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
 
@@ -117,9 +116,64 @@ public class OneOfExtensionsTests
     }
 
     [Fact]
+    public void MatchEndpointResult_ShouldCallReturnBadRequest_DetailWithErrors()
+    {
+        Response<Success> oneOf = BusinessFailure.Of.DefaultError(new [] {"XD" });
+
+        var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
+
+        result.Should().BeOfType<BadRequest<string[]>>();
+
+    }
+
+    [Fact]
+    public void MatchEndpointResult_ShouldCallReturnBadRequest_DetailWithError()
+    {
+        Response<Success> oneOf = BusinessFailure.Of.DefaultError("XD");
+
+        var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
+
+        result.Should().BeOfType<BadRequest<string[]>>();
+
+    }
+
+    [Fact]
+    public void MatchEndpointResult_ShouldCallReturnBadRequest()
+    {
+        Response<Success> oneOf = BusinessFailure.Of.DefaultError();
+
+        var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
+
+        result.Should().BeOfType<BadRequest>();
+
+    }
+
+    [Fact]
+    public void MatchEndpointResult_ShouldCallReturnUnauthorizedResult()
+    {
+        Response<Success> oneOf = BusinessFailure.Of.UserNotAuthenticated();
+
+        var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
+
+        result.Should().BeOfType<UnauthorizedHttpResult>();
+
+    }
+
+    [Fact]
+    public void MatchEndpointResult_ShouldCallReturnStatusCodeHttpResult()
+    {
+        Response<Success> oneOf = BusinessFailure.Of.UnhandledException();
+
+        var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
+
+        result.Should().BeOfType<StatusCodeHttpResult>();
+
+    }
+
+    [Fact]
     public void MatchEndpointResult_ShouldThrowArgumentOutOfRange()
     {
-        OneOf<Success, BusinessFailure> oneOf = new BusinessFailure((FailureKind)10, Array.Empty<string>());
+        Response<Success> oneOf = new BusinessFailure((FailureKind)99, Array.Empty<string>());
 
         var act = () => oneOf.MatchEndpointResult(_ => TypedResults.Ok());
 

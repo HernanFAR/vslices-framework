@@ -1,6 +1,5 @@
 using FluentAssertions;
 using Moq;
-using OneOf.Types;
 using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Responses;
@@ -11,7 +10,7 @@ public class RemoveHandler_ThreeGenerics
 {
     public record Domain;
     public record Response;
-    public record Request: ICommand<Response>;
+    public record Request : ICommand<Response>;
 
     private readonly Mock<IRemoveRepository<Domain>> _mockedRepository;
     private readonly Mock<RemoveHandler<Request, Response, Domain>> _mockedHandler;
@@ -35,7 +34,7 @@ public class RemoveHandler_ThreeGenerics
 
         var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
 
-        handlerResponse.Value.Should().Be(businessFailure);
+        handlerResponse.BusinessFailure.Should().Be(businessFailure);
 
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
@@ -65,7 +64,7 @@ public class RemoveHandler_ThreeGenerics
 
         var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
 
-        handlerResponse.Value.Should().Be(businessFailure);
+        handlerResponse.BusinessFailure.Should().Be(businessFailure);
 
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
@@ -99,7 +98,7 @@ public class RemoveHandler_ThreeGenerics
 
         var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
 
-        handlerResponse.Value.Should().Be(response);
+        handlerResponse.SuccessValue.Should().Be(response);
 
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);

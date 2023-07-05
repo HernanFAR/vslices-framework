@@ -1,6 +1,4 @@
 ﻿using FluentValidation;
-using OneOf;
-using OneOf.Types;
 using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Responses;
@@ -17,7 +15,7 @@ public abstract class EntityFluentValidatedCreateHandler<TRequest, TResponse, TE
         _entityValidator = entityValidator;
     }
 
-    protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateEntityAsync(TEntity domain, CancellationToken cancellationToken = default)
+    protected override async ValueTask<Response<Success>> ValidateEntityAsync(TEntity domain, CancellationToken cancellationToken = default)
     {
         var domainValidationResult = await _entityValidator.ValidateAsync(domain, cancellationToken);
 
@@ -41,7 +39,7 @@ public abstract class EntityFluentValidatedCreateHandler<TRequest, TEntity> : En
         _entityValidator = entityValidator;
     }
 
-    protected override async ValueTask<OneOf<Success, BusinessFailure>> ValidateEntityAsync(TEntity domain, CancellationToken cancellationToken = default)
+    protected override async ValueTask<Response<Success>> ValidateEntityAsync(TEntity domain, CancellationToken cancellationToken = default)
     {
         var domainValidationResult = await _entityValidator.ValidateAsync(domain, cancellationToken);
 

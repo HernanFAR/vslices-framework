@@ -2,9 +2,6 @@
 using FluentValidation;
 using FluentValidation.Results;
 using Moq;
-using Moq.Protected;
-using OneOf;
-using OneOf.Types;
 using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Responses;
@@ -21,8 +18,8 @@ public class DomainFluentValidatedUpdateHandler_ThreeGenerics
     {
         public EntityFluentValidatedCreateHandler(IValidator<Domain> requestValidator, ICreateRepository<Domain> repository) : base(requestValidator, repository) { }
 
-        protected override ValueTask<OneOf<Success, BusinessFailure>> ValidateUseCaseRulesAsync(Request request, CancellationToken cancellationToken = default) 
-            => ValueTask.FromResult<OneOf<Success, BusinessFailure>>(new Success());
+        protected override ValueTask<Response<Success>> ValidateUseCaseRulesAsync(Request request, CancellationToken cancellationToken = default)
+            => ValueTask.FromResult<Response<Success>>(new Success());
 
         protected override ValueTask<Domain> CreateEntityAsync(Request request, CancellationToken cancellationToken = default)
             => ValueTask.FromResult(new Domain());
@@ -60,10 +57,10 @@ public class DomainFluentValidatedUpdateHandler_ThreeGenerics
 
         var handlerResponse = await _handler.HandleAsync(request);
 
-        handlerResponse.IsT1.Should().BeTrue();
-        handlerResponse.AsT1
+        handlerResponse.IsFailure.Should().BeTrue();
+        handlerResponse.BusinessFailure
             .Errors.Should().ContainSingle(e => e == validationFailureString);
-        handlerResponse.AsT1
+        handlerResponse.BusinessFailure
             .Kind.Should().Be(FailureKind.DomainValidation);
 
         _mockedValidator.Verify();
@@ -88,8 +85,8 @@ public class DomainFluentValidatedUpdateHandler_ThreeGenerics
 
         var handlerResponse = await _handler.HandleAsync(request);
 
-        handlerResponse.IsT0.Should().BeTrue();
-        handlerResponse.AsT0
+        handlerResponse.IsSuccess.Should().BeTrue();
+        handlerResponse.SuccessValue
             .Should().BeOfType<Response>();
 
         _mockedValidator.Verify();
