@@ -1,4 +1,5 @@
 ﻿using VSlices.Core.Abstracts.BusinessLogic;
+using VSlices.Core.Abstracts.Presentation;
 using VSlices.Core.Abstracts.Sender;
 
 // ReSharper disable once CheckNamespace
@@ -24,10 +25,32 @@ public static class ServiceCollectionExtensions
 
         if (!implementsPipelineBehavior)
         {
-            throw new InvalidOperationException($"{type.FullName} does not implement {typeof(IPipelineBehavior<,>).FullName}");
+            throw new InvalidOperationException(
+                $"{type.FullName} does not implement {typeof(IPipelineBehavior<,>).FullName}");
         }
 
         services.Add(new ServiceDescriptor(typeof(IPipelineBehavior<,>), type, lifetime));
+
+        return services;
+    }
+
+    public static IServiceCollection AddCoreDependenciesFrom<TAnchor>(this IServiceCollection services)
+    {
+        var definerTypes = typeof(TAnchor).Assembly.ExportedTypes
+            .Where(e => typeof(IUseCaseDependencyDefinition).IsAssignableFrom(e))
+            .Where(e => e is { IsAbstract: false, IsInterface: false });
+
+        foreach (var definerType in definerTypes)
+        {
+            var defineDependenciesMethod = definerType.GetMethod(nameof(IUseCaseDependencyDefinition.DefineDependencies));
+
+            if (defineDependenciesMethod is null)
+            {
+                throw new InvalidOperationException($"{definerType.FullName} does not implement {nameof(IUseCaseDependencyDefinition)}");
+            }
+
+            defineDependenciesMethod.Invoke(null, new object?[] { services });
+        }
 
         return services;
     }
