@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.DependencyInjection;
+using VSlices.Core.Abstracts.Presentation;
 
 namespace VSlices.Core.Presentation.AspNetCore;
 
@@ -9,8 +9,7 @@ public interface ISimpleEndpointDefinition
 
 }
 
-public interface IEndpointDefinition : ISimpleEndpointDefinition
+public interface IEndpointDefinition : IUseCaseDependencyInjector
 {
-    static abstract void DefineDependencies(IServiceCollection services);
 
 }
