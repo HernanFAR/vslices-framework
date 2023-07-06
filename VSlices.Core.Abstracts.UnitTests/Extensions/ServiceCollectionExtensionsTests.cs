@@ -1,8 +1,10 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using VSlices.Core.Abstracts.BusinessLogic;
+using VSlices.Core.Abstracts.Presentation;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.Abstracts.Sender;
+using static VSlices.Core.Abstracts.UnitTests.Extensions.ServiceCollectionExtensionsTests.DependencyDefinition1;
 
 namespace VSlices.Core.Abstracts.UnitTests.Extensions;
 
@@ -21,6 +23,28 @@ public class ServiceCollectionExtensionsTests
         public ValueTask<Response<TResponse>> HandleAsync(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
+        }
+    }
+
+    public class DependencyDefinition1 : IUseCaseDependencyDefinition
+    {
+        public class A { }
+        public class B { }
+
+        public static void DefineDependencies(IServiceCollection services)
+        {
+            services.AddTransient<A>();
+            services.AddTransient<B>();
+        }
+    }
+
+    public class DependencyDefinition2 : IUseCaseDependencyDefinition
+    {
+        public class C { }
+
+        public static void DefineDependencies(IServiceCollection services)
+        {
+            services.AddTransient<C>();
         }
     }
 
@@ -62,5 +86,20 @@ public class ServiceCollectionExtensionsTests
         var act = () => services.AddPipelineBehavior(typeof(int));
 
         act.Should().Throw<InvalidOperationException>();
+    }
+
+    [Fact]
+    public void AddCoreDependenciesFrom_ShouldAddDependenciesInDependencyDefinitions()
+    {
+        var services = new ServiceCollection();
+
+        services.AddCoreDependenciesFrom<Anchor>();
+        
+        services.Any(e => e.ImplementationType == typeof(DependencyDefinition1.A))
+            .Should().BeTrue();
+        services.Any(e => e.ImplementationType == typeof(DependencyDefinition1.B))
+            .Should().BeTrue();
+        services.Any(e => e.ImplementationType == typeof(DependencyDefinition2.C))
+            .Should().BeTrue();
     }
 }

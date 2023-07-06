@@ -9,7 +9,7 @@ public interface ISimpleEndpointDefinition
 
 }
 
-public interface IEndpointDefinition : IUseCaseDependencyInjector
+public interface IEndpointDefinition : ISimpleEndpointDefinition, IUseCaseDependencyDefinition
 {
 
 }
