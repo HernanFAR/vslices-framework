@@ -91,6 +91,8 @@ public class DomainValidatedCreateHandler_TwoGenerics
             .ReturnsAsync(domain);
         _mockedHandler.Setup(e => e.ValidateEntityAsync(domain, default))
             .ReturnsAsync(success);
+        _mockedHandler.Setup(e => e.GetResponse(domain, request))
+            .CallBase();
 
         _mockedRepository.Setup(e => e.CreateAsync(domain, default))
             .ReturnsAsync(businessFailure);

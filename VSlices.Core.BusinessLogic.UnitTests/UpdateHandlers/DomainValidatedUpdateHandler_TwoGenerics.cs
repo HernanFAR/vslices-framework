@@ -60,6 +60,8 @@ public class DomainValidatedUpdateHandler_TwoGenerics
             .ReturnsAsync(domain);
         _mockedHandler.Setup(e => e.ValidateEntityAsync(domain, default))
             .ReturnsAsync(businessFailure);
+        _mockedHandler.Setup(e => e.GetResponse(domain, request))
+            .CallBase();
 
         var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
 
