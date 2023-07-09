@@ -89,6 +89,8 @@ public class CreateHandler_TwoGenerics
             .ReturnsAsync(success);
         _mockedHandler.Setup(e => e.CreateEntityAsync(request, default))
             .ReturnsAsync(domain);
+        _mockedHandler.Setup(e => e.GetResponse(domain, request))
+            .CallBase();
 
         _mockedRepository.Setup(e => e.CreateAsync(domain, default))
             .ReturnsAsync(domain);

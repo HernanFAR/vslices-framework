@@ -12,9 +12,9 @@ public class ValueObjectTests
 {
     public class FirstValueObject : ValueObject
     {
-        public int Number { get; }
+        public int? Number { get; }
 
-        public FirstValueObject(int number)
+        public FirstValueObject(int? number)
         {
             Number = number;
         }
@@ -27,9 +27,9 @@ public class ValueObjectTests
 
     public class SecondValueObject : ValueObject
     {
-        public int Number { get; }
+        public int? Number { get; }
 
-        public SecondValueObject(int number)
+        public SecondValueObject(int? number)
         {
             Number = number;
         }
@@ -52,8 +52,7 @@ public class ValueObjectTests
         // Assert
         firstValueObject.ValueEquals(secondValueObject).Should().BeFalse();
     }
-
-    // test ValueEquals with same type but different values
+    
     [Fact]
     public void ValueEquals_ShouldReturnFalse_DetailDifferentValues()
     {
@@ -67,8 +66,7 @@ public class ValueObjectTests
         // Assert
         firstValueObject.ValueEquals(secondValueObject).Should().BeFalse();
     }
-
-    // test ValueEquals with same type and same values  
+    
     [Fact]
     public void ValueEquals_ShouldReturnTrue_DetailSameValues()
     {
@@ -80,6 +78,19 @@ public class ValueObjectTests
 
         // Assert
         firstValueObject.ValueEquals(secondValueObject).Should().BeTrue();
+    }
+    
+    [Fact]
+    public void ValueEquals_ShouldReturnTrue_DetailDifferentValues()
+    {
+        // Arrange
+        const int number = 1;
+
+        var firstValueObject = new FirstValueObject(number);
+        var secondValueObject = new FirstValueObject(null);
+
+        // Assert
+        firstValueObject.ValueEquals(secondValueObject).Should().BeFalse();
     }
 
 }

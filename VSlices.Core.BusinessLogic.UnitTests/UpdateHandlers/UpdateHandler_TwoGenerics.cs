@@ -89,9 +89,10 @@ public class UpdateHandler_TwoGenerics
             .ReturnsAsync(success);
         _mockedHandler.Setup(e => e.GetAndProcessEntityAsync(request, default))
             .ReturnsAsync(domain);
-
         _mockedRepository.Setup(e => e.UpdateAsync(domain, default))
             .ReturnsAsync(domain);
+        _mockedHandler.Setup(e => e.GetResponse(domain, request))
+            .CallBase();
 
         var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
 

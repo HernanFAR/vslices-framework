@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
@@ -38,7 +39,7 @@ public class FluentValidationBehaviorTests
     public async Task HandleAsync_ShouldReturnBusinessFailure_DetailHasValidator()
     {
         var request = new Request();
-        var expMessage = "Error de ejemplo"; ;
+        var expMessage = "Error de ejemplo";
 
         var validator = Mock.Of<IValidator<Request>>();
         var validatorMock = Mock.Get(validator);
@@ -49,11 +50,34 @@ public class FluentValidationBehaviorTests
         var validationBehaviorMock = new Mock<FluentValidationBehavior<Request, Success>>(new List<IValidator<Request>> { validator }) { CallBase = true };
         var validationBehavior = validationBehaviorMock.Object;
 
-        var handlerResponse = await validationBehavior.HandleAsync(request, () => throw new Exception());
+        var handlerResponse = await validationBehavior.HandleAsync(request, () => throw new UnreachableException());
 
         handlerResponse.IsFailure.Should().BeTrue();
         handlerResponse.BusinessFailure.Kind.Should().Be(FailureKind.ContractValidation);
         handlerResponse.BusinessFailure.Errors.Should().ContainSingle(e => e == expMessage);
+
+    }
+
+    [Fact]
+    public async Task HandleAsync_ShouldReturnSuccess_DetailHasValidator()
+    {
+        var request = new Request();
+        const string expMessage = "Error de ejemplo";
+
+        var validator = Mock.Of<IValidator<Request>>();
+        var validatorMock = Mock.Get(validator);
+
+        validatorMock.Setup(e => e.ValidateAsync(request, default))
+            .Returns(Task.FromResult(new ValidationResult()));
+
+        var validationBehaviorMock = new Mock<FluentValidationBehavior<Request, Success>>(new List<IValidator<Request>> { validator }) { CallBase = true };
+        var validationBehavior = validationBehaviorMock.Object;
+
+        var handlerResponse = await validationBehavior.HandleAsync(
+            request, 
+            () => ValueTask.FromResult<Response<Success>>(new Success()));
+
+        handlerResponse.IsSuccess.Should().BeTrue();
 
     }
 

@@ -89,6 +89,8 @@ public class RemoveHandler_TwoGenerics
             .ReturnsAsync(success);
         _mockedHandler.Setup(e => e.GetAndProcessEntityAsync(request, default))
             .ReturnsAsync(domain);
+        _mockedHandler.Setup(e => e.GetResponse(domain, request))
+            .CallBase();
 
         _mockedRepository.Setup(e => e.RemoveAsync(domain, default))
             .ReturnsAsync(domain);
