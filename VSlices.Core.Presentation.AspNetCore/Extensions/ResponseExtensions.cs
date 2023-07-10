@@ -5,6 +5,14 @@ namespace VSlices.Core.Abstracts.Responses;
 
 public static class ResponseExtensions
 {
+    /// <summary>
+    /// Maps a <see cref="Response{TSuccess}"/> to a <see cref="IResult"/>, using the provided function in success case.
+    /// </summary>
+    /// <typeparam name="TSuccess"></typeparam>
+    /// <param name="result"></param>
+    /// <param name="successFunc"></param>
+    /// <returns>The <see cref="IResult"/> of the use case</returns>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
     public static IResult MatchEndpointResult<TSuccess>(this Response<TSuccess> result,
         Func<TSuccess, IResult> successFunc)
     {

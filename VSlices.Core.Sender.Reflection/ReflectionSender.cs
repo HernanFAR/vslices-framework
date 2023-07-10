@@ -1,58 +1,30 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.Abstracts.Sender;
+using VSlices.Core.Sender.Reflection.Internals;
 
 namespace VSlices.Core.Sender.Reflection;
 
-public abstract class AbstractHandlerWrapper
-{
-    public abstract ValueTask<Response<object?>> HandleAsync(object request, IServiceProvider serviceProvider,
-        CancellationToken cancellationToken = default);
-}
-
-public abstract class AbstractHandlerWrapper<TResponse> : AbstractHandlerWrapper
-{
-    public abstract ValueTask<Response<TResponse>> HandleAsync(IRequest<TResponse> request, IServiceProvider serviceProvider,
-        CancellationToken cancellationToken);
-}
-
-public class RequestHandlerWrapper<TRequest, TResponse> : AbstractHandlerWrapper<TResponse>
-    where TRequest : IRequest<TResponse>
-{
-    public override async ValueTask<Response<object?>> HandleAsync(
-        object request, IServiceProvider serviceProvider, CancellationToken cancellationToken = default) =>
-        await HandleAsync((IRequest<TResponse>)request, serviceProvider, cancellationToken);
-
-    public override ValueTask<Response<TResponse>> HandleAsync(
-        IRequest<TResponse> request, IServiceProvider serviceProvider, CancellationToken cancellationToken)
-    {
-        ValueTask<Response<TResponse>> Handler()
-        {
-            return serviceProvider.GetRequiredService<IHandler<TRequest, TResponse>>()
-                .HandleAsync((TRequest)request, cancellationToken);
-        }
-
-        return serviceProvider
-            .GetServices<IPipelineBehavior<TRequest, TResponse>>()
-            .Reverse()
-            .Aggregate((RequestHandlerDelegate<TResponse>)Handler,
-                (next, pipeline) => () => pipeline.HandleAsync((TRequest)request, next, cancellationToken))();
-    }
-}
-
+/// <summary>
+/// Sends a request through the VSlices pipeline to be handled by a single handler, using reflection
+/// </summary>
 public class ReflectionSender : ISender
 {
     private static readonly ConcurrentDictionary<Type, AbstractHandlerWrapper> RequestHandlers = new();
 
     private readonly IServiceProvider _serviceProvider;
 
+    /// <summary>
+    /// Creates a new instance of <see cref="ReflectionSender"/>
+    /// </summary>
+    /// <param name="serviceProvider"><see cref="IServiceProvider"/> used to resolve handlers</param>
     public ReflectionSender(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
     }
 
+    /// <inheritdoc />
     public ValueTask<Response<TResponse>> SendAsync<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
     {
         var handler = (AbstractHandlerWrapper<TResponse>)RequestHandlers.GetOrAdd(request.GetType(), static requestType =>
