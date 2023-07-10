@@ -7,6 +7,13 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
+    /// <summary>
+    /// Adds a <see cref="ISender"/> implementation to the <see cref="IServiceCollection"/>
+    /// </summary>
+    /// <typeparam name="T">Implementation of the <see cref="ISender"/></typeparam>
+    /// <param name="services">Service collection</param>
+    /// <param name="lifetime">The lifetime of the <see cref="ISender"/> implemented</param>
+    /// <returns>Service collection</returns>
     public static IServiceCollection AddSender<T>(this IServiceCollection services,
         ServiceLifetime lifetime = ServiceLifetime.Scoped)
         where T : ISender
@@ -16,6 +23,14 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
+    /// <summary>
+    /// Adds a open <see cref="IPipelineBehavior{TRequest,TResponse}"/> to the <see cref="IServiceCollection"/>
+    /// </summary>
+    /// <param name="services">Service collection</param>
+    /// <param name="type">The implementation type of the open behavior</param>
+    /// <param name="lifetime">The lifetime of the <see cref="ISender"/> implemented</param>
+    /// <returns>Service collection</returns>
+    /// <exception cref="InvalidOperationException"></exception>
     public static IServiceCollection AddPipelineBehavior(this IServiceCollection services,
         Type type, ServiceLifetime lifetime = ServiceLifetime.Scoped)
     {
@@ -34,6 +49,13 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
+    /// <summary>
+    /// Adds the dependencies defined in the <see cref="IUseCaseDependencyDefinition"/> implementations
+    /// </summary>
+    /// <typeparam name="TAnchor"></typeparam>
+    /// <param name="services">Service collection</param>
+    /// <returns>Service collection</returns>
+    /// <exception cref="InvalidOperationException"></exception>
     public static IServiceCollection AddCoreDependenciesFrom<TAnchor>(this IServiceCollection services)
     {
         var definerTypes = typeof(TAnchor).Assembly.ExportedTypes
