@@ -15,6 +15,7 @@
     <PackageTags>vertical slices;mediator;cqrs;repository;request;handler;sender;functional;EntityFrameworkCore;EF Core;data access;</PackageTags>
 	<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 	<PackageLicenseFile>LICENSE</PackageLicenseFile>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
 	<ItemGroup>
