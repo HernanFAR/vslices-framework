@@ -1,4 +1,6 @@
-﻿using VSlices.Core.Abstracts.Presentation;
+﻿using System.Net.NetworkInformation;
+using VSlices.Core.Abstracts.BusinessLogic;
+using VSlices.Core.Abstracts.Presentation;
 using VSlices.Core.Presentation.AspNetCore;
 
 // ReSharper disable once CheckNamespace
@@ -64,6 +66,24 @@ public static class ServiceCollectionExtensions
             services.Add(new ServiceDescriptor(typeof(ISimpleEndpointDefinition), definerType, lifetime)); 
             
             defineDependenciesMethod.Invoke(null, new object?[] { services });
+        }
+
+        return services;
+    }
+
+    public static IServiceCollection AddHandlersFrom<TAnchor>(this IServiceCollection services,
+        ServiceLifetime lifetime = ServiceLifetime.Scoped)
+    {
+        var definerTypes = typeof(TAnchor).Assembly.ExportedTypes
+            .Where(e => e.GetInterfaces().Where(o => o.IsGenericType).Any(o => o.GetGenericTypeDefinition() == typeof(IHandler<,>)))
+            .Where(e => e is { IsAbstract: false, IsInterface: false })
+            .Select(e => (e, e.GetInterfaces()
+                .Where(o => o.IsGenericType)
+                .Single(o => o.GetGenericTypeDefinition() == typeof(IHandler<,>))));
+
+        foreach (var (handlerType, handlerInterface) in definerTypes)
+        {
+            services.Add(new ServiceDescriptor(handlerInterface, handlerType, lifetime));
         }
 
         return services;
