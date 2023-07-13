@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using VSlices.Core.Abstracts.BusinessLogic;
+using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.Core.Presentation.AspNetCore.UnitTests.Extensions;
 
@@ -39,6 +41,25 @@ public class ServiceCollectionExtensionsTests
         public static void DefineDependencies(IServiceCollection services)
         {
             services.AddScoped<Dependency2>();
+        }
+    }
+
+    public record Request1 : IRequest { }
+    public class Handler1 : IHandler<Request1>
+    {
+        public ValueTask<Response<Success>> HandleAsync(Request1 request, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public record Response2 { }
+    public record Request2 : IRequest<Response2> { }
+    public class Handler2 : IHandler<Request2, Response2>
+    {
+        public ValueTask<Response<Response2>> HandleAsync(Request2 request, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -110,6 +131,29 @@ public class ServiceCollectionExtensionsTests
             .Where(e => e.ServiceType == typeof(Dependency2))
             .Where(e => e.ImplementationType == typeof(Dependency2))
             .Any(e => e.Lifetime == ServiceLifetime.Scoped)
+            .Should().BeTrue();
+
+    }
+
+    [Fact]
+    public void AddHandlersFrom_ShouldAdHandlerImplementationsUsingTwoGenericOverload()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+
+        // Act
+        services.AddHandlersFrom<Handler1>();
+
+
+        // Assert
+        services
+            .Where(e => e.ImplementationType == typeof(Handler1))
+            .Any(e => e.ServiceType == typeof(IHandler<Request1, Success>))
+            .Should().BeTrue();
+
+        services
+            .Where(e => e.ImplementationType == typeof(Handler2))
+            .Any(e => e.ServiceType == typeof(IHandler<Request2, Response2>))
             .Should().BeTrue();
 
     }
