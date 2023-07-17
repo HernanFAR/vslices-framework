@@ -49,7 +49,7 @@ public class ReadHandler_ThreeGenerics
         var request = new Request();
         var searchOptions = new SearchOptions();
         var businessFailure = BusinessFailure.Of.NotFoundResource();
-        var success = new Success();
+        var success = Success.Value;
 
         _mockedHandler.Setup(e => e.HandleAsync(request, default))
             .CallBase();
@@ -81,7 +81,7 @@ public class ReadHandler_ThreeGenerics
         var searchOptions = new SearchOptions();
         var response = new Response();
         var businessFailure = BusinessFailure.Of.NotFoundResource();
-        var success = new Success();
+        var success = Success.Value;
 
         _mockedHandler.Setup(e => e.HandleAsync(request, default))
             .CallBase();

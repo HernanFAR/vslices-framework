@@ -16,7 +16,7 @@ public class AbstractValidationBehaviorTests
         var validationBehaviorMock = Mock.Get(validationBehavior);
 
         var request = new Request();
-        var response = new Success();
+        var response = Success.Value;
 
         validationBehaviorMock.Setup(e => e.ValidateAsync(request, default))
             .ReturnsAsync(response);

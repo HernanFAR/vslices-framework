@@ -50,7 +50,7 @@ public class DomainValidatedCreateHandler_TwoGenerics
         var domain = new Domain();
 
         var businessFailure = BusinessFailure.Of.NotFoundResource();
-        var success = new Success();
+        var success = Success.Value;
 
         _mockedHandler.Setup(e => e.HandleAsync(request, default))
             .CallBase();
@@ -80,7 +80,7 @@ public class DomainValidatedCreateHandler_TwoGenerics
         var request = new Request();
         var domain = new Domain();
 
-        var success = new Success();
+        var success = Success.Value;
         var businessFailure = BusinessFailure.Of.NotFoundResource();
 
         _mockedHandler.Setup(e => e.HandleAsync(request, default))
@@ -117,7 +117,7 @@ public class DomainValidatedCreateHandler_TwoGenerics
         var request = new Request();
         var domain = new Domain();
 
-        var success = new Success();
+        var success = Success.Value;
 
         _mockedHandler.Setup(e => e.HandleAsync(request, default))
             .CallBase();

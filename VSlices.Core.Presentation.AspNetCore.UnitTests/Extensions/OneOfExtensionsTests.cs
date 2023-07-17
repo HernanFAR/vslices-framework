@@ -12,7 +12,7 @@ public class ResponseExtensionsTests
     [Fact]
     public void MatchEndpointResult_ShouldCallSuccessFunction()
     {
-        Response<Success> oneOf = new Success();
+        Response<Success> oneOf = Success.Value;
 
         var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
 

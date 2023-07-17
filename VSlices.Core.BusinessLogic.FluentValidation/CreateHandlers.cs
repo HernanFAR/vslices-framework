@@ -32,7 +32,7 @@ public abstract class EntityFluentValidatedCreateHandler<TRequest, TResponse, TE
     {
         var domainValidationResult = await _entityValidator.ValidateAsync(domain, cancellationToken);
 
-        if (domainValidationResult.IsValid) return new Success();
+        if (domainValidationResult.IsValid) return Success.Value;
 
         var errors = domainValidationResult
             .Errors.Select(e => e.ErrorMessage)
@@ -68,7 +68,7 @@ public abstract class EntityFluentValidatedCreateHandler<TRequest, TEntity> : En
     {
         var domainValidationResult = await _entityValidator.ValidateAsync(domain, cancellationToken);
 
-        if (domainValidationResult.IsValid) return new Success();
+        if (domainValidationResult.IsValid) return Success.Value;
 
         var errors = domainValidationResult
             .Errors.Select(e => e.ErrorMessage)

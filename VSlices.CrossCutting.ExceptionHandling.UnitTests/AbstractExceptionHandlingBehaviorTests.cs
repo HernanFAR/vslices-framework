@@ -20,7 +20,7 @@ public class AbstractExceptionHandlingBehaviorTests
         };
         var pipeline = pipelineMock.Object;
 
-        RequestHandlerDelegate<Success> handler = () => ValueTask.FromResult<Response<Success>>(new Success());
+        RequestHandlerDelegate<Success> handler = () => ValueTask.FromResult<Response<Success>>(Success.Value);
 
         var result = await pipeline.HandleAsync(request, handler);
 
