@@ -45,7 +45,7 @@ public abstract class ReadHandler<TRequest, TSearchOptions, TResponse> : IHandle
     /// <param name="request">The request to validate</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A <see cref="ValueTask{T}"/> holding a <see cref="Response{TRequest}"/> of <see cref="Success"/> that represents the result of the operation </returns>
-    protected internal abstract ValueTask<Response<Success>> ValidateUseCaseRulesAsync(TRequest request, CancellationToken cancellationToken = default);
+    protected internal abstract ValueTask<Response<Success>> ValidateUseCaseRulesAsync(TRequest request, CancellationToken cancellationToken);
 
     /// <summary>
     /// Converts the <see cref="TRequest"/> to <see cref="TSearchOptions"/>
@@ -53,7 +53,7 @@ public abstract class ReadHandler<TRequest, TSearchOptions, TResponse> : IHandle
     /// <param name="request">The request to convert</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A <see cref="TSearchOptions"/></returns>
-    protected internal abstract ValueTask<TSearchOptions> RequestToSearchOptionsAsync(TRequest request, CancellationToken cancellationToken = default);
+    protected internal abstract ValueTask<TSearchOptions> RequestToSearchOptionsAsync(TRequest request, CancellationToken cancellationToken);
 }
 
 /// <summary>
@@ -136,5 +136,5 @@ public abstract class BasicReadHandler<TRequest, TResponse> : IHandler<TRequest,
     /// <param name="request">The request to validate</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A <see cref="ValueTask{T}"/> holding a <see cref="Response{TRequest}"/> of <see cref="Success"/> that represents the result of the operation </returns>
-    protected internal abstract ValueTask<Response<Success>> ValidateUseCaseRulesAsync(TRequest request, CancellationToken cancellationToken = default);
+    protected internal abstract ValueTask<Response<Success>> ValidateUseCaseRulesAsync(TRequest request, CancellationToken cancellationToken);
 }

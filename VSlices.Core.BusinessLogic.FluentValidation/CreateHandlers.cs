@@ -28,7 +28,7 @@ public abstract class EntityFluentValidatedCreateHandler<TRequest, TResponse, TE
     }
     
     /// <inheritdoc />
-    protected override async ValueTask<Response<Success>> ValidateEntityAsync(TEntity domain, CancellationToken cancellationToken = default)
+    protected override async ValueTask<Response<Success>> ValidateEntityAsync(TEntity domain, CancellationToken cancellationToken)
     {
         var domainValidationResult = await _entityValidator.ValidateAsync(domain, cancellationToken);
 
@@ -64,7 +64,7 @@ public abstract class EntityFluentValidatedCreateHandler<TRequest, TEntity> : En
     }
 
     /// <inheritdoc />
-    protected override async ValueTask<Response<Success>> ValidateEntityAsync(TEntity domain, CancellationToken cancellationToken = default)
+    protected override async ValueTask<Response<Success>> ValidateEntityAsync(TEntity domain, CancellationToken cancellationToken)
     {
         var domainValidationResult = await _entityValidator.ValidateAsync(domain, cancellationToken);
 

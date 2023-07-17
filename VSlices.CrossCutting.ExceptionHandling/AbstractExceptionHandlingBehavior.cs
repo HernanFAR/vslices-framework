@@ -22,7 +22,7 @@ public abstract class AbstractExceptionHandlingBehavior<TRequest, TResponse> : I
         {
             await ProcessExceptionAsync(ex);
 
-            return Response(ex);
+            return BusinessFailure.Of.UnhandledException();
         }
     }
 
@@ -33,6 +33,5 @@ public abstract class AbstractExceptionHandlingBehavior<TRequest, TResponse> : I
     /// <param name="ex">The throw exception</param>
     /// <returns>A <see cref="ValueTask"/> representing the processing of the exception</returns>
     protected internal abstract ValueTask ProcessExceptionAsync(Exception ex);
-
-    protected internal BusinessFailure Response(Exception ex) => BusinessFailure.Of.UnhandledException();
+    
 }

@@ -29,5 +29,5 @@ public abstract class AbstractValidationBehavior<TRequest, TResponse> : IPipelin
     /// <param name="request">The request to validate</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A <see cref="ValueTask{T}"/> holding a <see cref="Response{TRequest}"/> of <see cref="Success"/> that represents the result of the operation </returns>
-    protected internal abstract ValueTask<Response<Success>> ValidateAsync(TRequest request, CancellationToken cancellationToken = default);
+    protected internal abstract ValueTask<Response<Success>> ValidateAsync(TRequest request, CancellationToken cancellationToken);
 }
