@@ -11,11 +11,12 @@ public static class LoggingExtensions
     /// </summary>
     /// <param name="services">Service collection</param>
     /// <param name="configAction">Setups the <see cref="LoggingConfiguration"/></param>
+    /// <param name="lifetime">Service lifetime</param>
     /// <returns>Service collection</returns>
     public static IServiceCollection AddLoggingBehavior(this IServiceCollection services,
-        Action<LoggingConfiguration>? configAction = null)
+        Action<LoggingConfiguration>? configAction = null, ServiceLifetime lifetime = ServiceLifetime.Scoped)
     {
-        return services.AddLoggingBehavior(typeof(LoggingBehavior<,>), configAction);
+        return services.AddLoggingBehavior(typeof(LoggingBehavior<,>), configAction, lifetime);
     }
 
     /// <summary>
@@ -24,18 +25,19 @@ public static class LoggingExtensions
     /// <param name="services">Service collection</param>
     /// <param name="loggingBehaviorType">The specific logging behavior to add</param>
     /// <param name="configAction">Setups the <see cref="LoggingConfiguration"/></param>
-    /// <returns>Service collection</returns>
+    /// <param name="lifetime">Service lifetime</param>
     /// <returns>Service collection</returns>
     public static IServiceCollection AddLoggingBehavior(this IServiceCollection services,
         Type loggingBehaviorType,
-        Action<LoggingConfiguration>? configAction = null)
+        Action<LoggingConfiguration>? configAction = null, 
+        ServiceLifetime lifetime = ServiceLifetime.Scoped)
     {
         var configuration = new LoggingConfiguration();
 
         configAction?.Invoke(configuration);
 
         services.AddSingleton(configuration);
-        services.AddPipelineBehavior(loggingBehaviorType);
+        services.AddPipelineBehavior(loggingBehaviorType, lifetime);
 
         return services;
     }
