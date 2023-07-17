@@ -148,7 +148,7 @@ public abstract class EntityValidatedRemoveHandler<TRequest, TResponse, TEntity>
     /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>A <see cref="ValueTask{T}"/> holding a <see cref="Response{TRequest}"/> of <see cref="Success"/> that represents the result of the operation </returns>
     protected internal abstract ValueTask<Response<Success>> ValidateEntityAsync(TEntity entity,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken);
 
     /// <summary>
     /// Creates the response to be returned
@@ -173,7 +173,7 @@ public abstract class RemoveHandler<TRequest, TEntity> : RemoveHandler<TRequest,
     { }
 
     /// <inheritdoc />
-    protected internal override Success GetResponse(TEntity _, TRequest r) => new();
+    protected internal override Success GetResponse(TEntity _, TRequest r) => Success.Value;
 }
 
 /// <summary>
@@ -190,6 +190,6 @@ public abstract class EntityValidatedRemoveHandler<TRequest, TEntity> : EntityVa
     { }
 
     /// <inheritdoc />
-    protected internal override Success GetResponse(TEntity _, TRequest r) => new();
+    protected internal override Success GetResponse(TEntity _, TRequest r) => Success.Value;
 
 }

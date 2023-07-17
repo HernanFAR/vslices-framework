@@ -53,7 +53,7 @@ public abstract class CreateHandler<TRequest, TResponse, TEntity> : IHandler<TRe
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A <see cref="ValueTask{T}"/> holding a <see cref="Response{TRequest}"/> of <see cref="Success"/> that represents the result of the operation </returns>
     protected internal abstract ValueTask<Response<Success>> ValidateUseCaseRulesAsync(TRequest request,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken);
 
     /// <summary>
     /// Creates the entity to be persisted
@@ -62,7 +62,7 @@ public abstract class CreateHandler<TRequest, TResponse, TEntity> : IHandler<TRe
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A <see cref="ValueTask{T}"/> with a <see cref="TEntity"/> in</returns>
     protected internal abstract ValueTask<TEntity> CreateEntityAsync(TRequest request,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken);
 
     /// <summary>
     /// Creates the response to be returned
@@ -130,7 +130,7 @@ public abstract class EntityValidatedCreateHandler<TRequest, TResponse, TEntity>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A <see cref="ValueTask{T}"/> holding a <see cref="Response{TRequest}"/> of <see cref="Success"/> that represents the result of the operation </returns>
     protected internal abstract ValueTask<Response<Success>> ValidateUseCaseRulesAsync(TRequest request,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken);
 
     /// <summary>
     /// Creates the entity to be persisted
@@ -139,7 +139,7 @@ public abstract class EntityValidatedCreateHandler<TRequest, TResponse, TEntity>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A <see cref="ValueTask{T}"/> with a <see cref="TEntity"/> in</returns>
     protected internal abstract ValueTask<TEntity> CreateEntityAsync(TRequest request,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken);
 
     /// <summary>
     /// Validates the before created entity
@@ -148,7 +148,7 @@ public abstract class EntityValidatedCreateHandler<TRequest, TResponse, TEntity>
     /// <param name="cancellationToken">Cancellation Token</param>
     /// <returns>A <see cref="ValueTask{T}"/> holding a <see cref="Response{TResponse}" /> of <see cref="Success"/> that represents the result of the process</returns>
     protected internal abstract ValueTask<Response<Success>> ValidateEntityAsync(TEntity entity,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken);
 
     /// <summary>
     /// Creates the response to be returned
@@ -173,7 +173,7 @@ public abstract class CreateHandler<TRequest, TEntity> : CreateHandler<TRequest,
     { }
 
     /// <inheritdoc />
-    protected internal override Success GetResponse(TEntity _, TRequest r) => new();
+    protected internal override Success GetResponse(TEntity _, TRequest r) => Success.Value;
 }
 
 /// <summary>
@@ -190,5 +190,5 @@ public abstract class EntityValidatedCreateHandler<TRequest, TEntity> : EntityVa
     { }
 
     /// <inheritdoc />
-    protected internal override Success GetResponse(TEntity _, TRequest r) => new();
+    protected internal override Success GetResponse(TEntity _, TRequest r) => Success.Value;
 }

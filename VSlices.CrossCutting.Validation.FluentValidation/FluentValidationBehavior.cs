@@ -25,7 +25,7 @@ public class FluentValidationBehavior<TRequest, TResponse> : AbstractValidationB
     }
 
     /// <inheritdoc/>
-    protected override async ValueTask<Response<Success>> ValidateAsync(TRequest request, CancellationToken cancellationToken = default)
+    protected override async ValueTask<Response<Success>> ValidateAsync(TRequest request, CancellationToken cancellationToken)
     {
         if (_requestValidator is null)
         {

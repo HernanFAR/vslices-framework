@@ -7,7 +7,7 @@ namespace VSlices.Core.Sender.Reflection.Internals;
 internal abstract class AbstractHandlerWrapper
 {
     public abstract ValueTask<Response<object?>> HandleAsync(object request, IServiceProvider serviceProvider,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken);
 }
 
 internal abstract class AbstractHandlerWrapper<TResponse> : AbstractHandlerWrapper
@@ -20,7 +20,7 @@ internal class RequestHandlerWrapper<TRequest, TResponse> : AbstractHandlerWrapp
     where TRequest : IRequest<TResponse>
 {
     public override async ValueTask<Response<object?>> HandleAsync(
-        object request, IServiceProvider serviceProvider, CancellationToken cancellationToken = default) =>
+        object request, IServiceProvider serviceProvider, CancellationToken cancellationToken) =>
         await HandleAsync((IRequest<TResponse>)request, serviceProvider, cancellationToken);
 
     public override ValueTask<Response<TResponse>> HandleAsync(

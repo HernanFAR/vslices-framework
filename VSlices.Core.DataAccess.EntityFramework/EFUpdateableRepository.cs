@@ -41,7 +41,7 @@ public abstract class EFUpdateRepository<TDbContext, TEntity> : IUpdateRepositor
     /// <param name="ex">The concurrency error</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A <see cref="ValueTask{T}"/> holding a <see cref="BusinessFailure"/></returns>
-    protected internal virtual ValueTask<BusinessFailure> ProcessConcurrencyExceptionAsync(DbUpdateConcurrencyException ex, CancellationToken cancellationToken = default)
+    protected internal virtual ValueTask<BusinessFailure> ProcessConcurrencyExceptionAsync(DbUpdateConcurrencyException ex, CancellationToken cancellationToken)
         => ValueTask.FromResult(BusinessFailure.Of.ConcurrencyError(Array.Empty<string>()));
 
     /// <inheritdoc/>
@@ -115,7 +115,7 @@ public abstract class EFUpdateRepository<TDbContext, TEntity, TDbEntity> : IUpda
     /// <param name="ex">The concurrency error</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A <see cref="ValueTask{T}"/> holding a <see cref="BusinessFailure"/></returns>
-    protected internal virtual ValueTask<BusinessFailure> ProcessConcurrencyExceptionAsync(DbUpdateConcurrencyException ex, CancellationToken cancellationToken = default)
+    protected internal virtual ValueTask<BusinessFailure> ProcessConcurrencyExceptionAsync(DbUpdateConcurrencyException ex, CancellationToken cancellationToken)
         => ValueTask.FromResult(BusinessFailure.Of.ConcurrencyError(Array.Empty<string>()));
 
     /// <inheritdoc/>
