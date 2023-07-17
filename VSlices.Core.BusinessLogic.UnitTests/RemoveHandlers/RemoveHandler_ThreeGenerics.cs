@@ -49,7 +49,7 @@ public class RemoveHandler_ThreeGenerics
         var request = new Request();
         var domain = new Domain();
 
-        var success = new Success();
+        var success = Success.Value;
         var businessFailure = BusinessFailure.Of.NotFoundResource();
 
         _mockedHandler.Setup(e => e.HandleAsync(request, default))
@@ -82,7 +82,7 @@ public class RemoveHandler_ThreeGenerics
         var domain = new Domain();
         var response = new Response();
 
-        var success = new Success();
+        var success = Success.Value;
 
         _mockedHandler.Setup(e => e.HandleAsync(request, default))
             .CallBase();

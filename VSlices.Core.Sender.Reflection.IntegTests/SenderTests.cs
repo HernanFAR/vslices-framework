@@ -65,7 +65,7 @@ public class SenderTests
             Count += 1;
             Acumulator.Str += "HandlerOne_";
 
-            return ValueTask.FromResult<Response<Success>>(new Success());
+            return ValueTask.FromResult<Response<Success>>(Success.Value);
         }
     }
 
@@ -80,7 +80,7 @@ public class SenderTests
             Count += 1;
             Acumulator.Str += "HandlerTwo_";
 
-            return ValueTask.FromResult<Response<Success>>(new Success());
+            return ValueTask.FromResult<Response<Success>>(Success.Value);
         }
     }
 

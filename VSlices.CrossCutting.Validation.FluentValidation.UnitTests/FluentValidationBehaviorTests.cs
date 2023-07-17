@@ -16,7 +16,7 @@ public class FluentValidationBehaviorTests
     public async Task HandleAsync_ShouldReturnSuccess()
     {
         var request = new Request();
-        var response = new Success();
+        var response = Success.Value;
 
         var validator = Mock.Of<IValidator<Request>>();
         var validatorMock = Mock.Get(validator);
@@ -75,7 +75,7 @@ public class FluentValidationBehaviorTests
 
         var handlerResponse = await validationBehavior.HandleAsync(
             request, 
-            () => ValueTask.FromResult<Response<Success>>(new Success()));
+            () => ValueTask.FromResult<Response<Success>>(Success.Value));
 
         handlerResponse.IsSuccess.Should().BeTrue();
 
@@ -89,7 +89,7 @@ public class FluentValidationBehaviorTests
         var validationBehaviorMock = new Mock<FluentValidationBehavior<Request, Success>>(new List<IValidator<Request>>()) { CallBase = true };
         var validationBehavior = validationBehaviorMock.Object;
 
-        var handlerResponse = await validationBehavior.HandleAsync(request, () => ValueTask.FromResult<Response<Success>>(new Success()));
+        var handlerResponse = await validationBehavior.HandleAsync(request, () => ValueTask.FromResult<Response<Success>>(Success.Value));
 
         handlerResponse.IsSuccess.Should().BeTrue();
 

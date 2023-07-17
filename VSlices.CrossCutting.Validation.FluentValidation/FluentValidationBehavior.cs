@@ -29,12 +29,12 @@ public class FluentValidationBehavior<TRequest, TResponse> : AbstractValidationB
     {
         if (_requestValidator is null)
         {
-            return new Success();
+            return Success.Value;
         }
 
         var requestValidationResult = await _requestValidator.ValidateAsync(request, cancellationToken);
 
-        if (requestValidationResult.IsValid) return new Success();
+        if (requestValidationResult.IsValid) return Success.Value;
 
         var errors = requestValidationResult
             .Errors.Select(e => e.ErrorMessage)

@@ -47,7 +47,7 @@ public class BasicReadHandler_TwoGenerics
     {
         var request = new Request();
         var businessFailure = BusinessFailure.Of.NotFoundResource();
-        var success = new Success();
+        var success = Success.Value;
 
         _mockedHandler.Setup(e => e.HandleAsync(request, default))
             .CallBase();
@@ -74,7 +74,7 @@ public class BasicReadHandler_TwoGenerics
     {
         var request = new Request();
         var response = new Response();
-        var success = new Success();
+        var success = Success.Value;
 
         _mockedHandler.Setup(e => e.HandleAsync(request, default))
             .CallBase();
