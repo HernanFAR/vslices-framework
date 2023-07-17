@@ -87,8 +87,8 @@ public abstract class SwaggerDocumentation
     /// <summary>
     /// The main content type that the endpoint consumes
     /// </summary>
-    /// <remarks>Usually <see cref="MediaTypeNames.Application.Json"/> </remarks>
-    public abstract string MainConsumingContentType { get; }
+    /// <remarks>Usually <see cref="MediaTypeNames.Application.Json"/> if the endpoint is not a <see cref="HttpMethod.Get"/></remarks>
+    public virtual string? MainConsumingContentType => null;
 
     /// <summary>
     /// Other content types that the endpoint consumes
@@ -110,8 +110,12 @@ public abstract class SwaggerDocumentation
             .WithName(Name)
             .WithTags(Tags)
             .WithSummary(Summary)
-            .WithDescription(Description)
-            .WithMetadata(new ConsumesAttribute(MainConsumingContentType, OtherConsumingContentTypes));
+            .WithDescription(Description);
+
+        if (MainConsumingContentType is not null)
+        {
+            builder.WithMetadata(new ConsumesAttribute(MainConsumingContentType, OtherConsumingContentTypes));
+        }
 
         foreach (var producesInfo in Responses)
         {
