@@ -5,13 +5,37 @@
 /// </summary>
 public enum FailureKind
 {
+    /// <summary>
+    /// Error used with authentication errors
+    /// </summary>
     NotAuthenticatedUser,
+    /// <summary>
+    /// Error used with authorization errors
+    /// </summary>
     NotAllowedUser,
+    /// <summary>
+    /// Error used when a resource is not found
+    /// </summary>
     NotFoundResource,
+    /// <summary>
+    /// Error used when a concurrency error occurs
+    /// </summary>
     ConcurrencyError,
+    /// <summary>
+    /// Error used when a contract validation fails
+    /// </summary>
     ContractValidation,
+    /// <summary>
+    /// Error used when a domain validation fails
+    /// </summary>
     DomainValidation,
+    /// <summary>
+    /// Error used when a not specified error occurs
+    /// </summary>
     DefaultError,
+    /// <summary>
+    /// Error used when an unhandled exception occurs
+    /// </summary>
     UnhandledException
 }
 
@@ -31,10 +55,22 @@ public readonly record struct BusinessFailure(FailureKind Kind, string[] Errors)
         public static BusinessFailure UserNotAuthenticated() => new(FailureKind.NotAuthenticatedUser, Array.Empty<string>());
 
         /// <summary>
+        /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.NotAuthenticatedUser"/> and and error message
+        /// </summary>
+        /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.NotAuthenticatedUser"/> and one error message</returns>
+        public static BusinessFailure UserNotAuthenticated(string error) => new(FailureKind.NotAuthenticatedUser, new[] { error });
+
+        /// <summary>
         /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.NotAllowedUser"/>
         /// </summary>
         /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.NotAllowedUser"/> and no error messages</returns>
         public static BusinessFailure UserNotAllowed() => new(FailureKind.NotAllowedUser, Array.Empty<string>());
+
+        /// <summary>
+        /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.NotAllowedUser"/> and one error message
+        /// </summary>
+        /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.NotAllowedUser"/> and one error message</returns>
+        public static BusinessFailure UserNotAllowed(string error) => new(FailureKind.NotAllowedUser, new []{ error });
 
         /// <summary>
         /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.NotFoundResource"/> and given error messages

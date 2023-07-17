@@ -31,6 +31,16 @@ public class BusinessFailureTests
         bus.Kind.Should().Be(FailureKind.NotAuthenticatedUser);
         bus.Errors.Should().BeEmpty();
     }
+
+    [Fact]
+    public void UserNotAuthenticated_ShouldReturnKindNotAuthenticatedUserAndEmptyErrors_DetailOneError()
+    {
+        const string error = "Test";
+        var bus = BusinessFailure.Of.UserNotAuthenticated(error);
+        
+        bus.Kind.Should().Be(FailureKind.NotAuthenticatedUser);
+        bus.Errors.Should().ContainSingle(error);
+    }
     
     [Fact]
     public void UserNotAllowed_ShouldReturnKindNotAllowedUserAndEmptyErrors()
@@ -39,6 +49,16 @@ public class BusinessFailureTests
         
         bus.Kind.Should().Be(FailureKind.NotAllowedUser);
         bus.Errors.Should().BeEmpty();
+    }
+    
+    [Fact]
+    public void UserNotAllowed_ShouldReturnKindNotAllowedUserAndEmptyErrors_DetailOneError()
+    {
+        const string error = "Test";
+        var bus = BusinessFailure.Of.UserNotAllowed(error);
+        
+        bus.Kind.Should().Be(FailureKind.NotAllowedUser);
+        bus.Errors.Should().ContainSingle(error);
     }
     
     [Fact]
