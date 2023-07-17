@@ -3,7 +3,7 @@
 namespace VSlices.Core.Abstracts.DataAccess;
 
 /// <summary>
-/// A repository that can create <see cref="TEntity"/> entities
+/// Defines a repository that can create <see cref="TEntity"/> entities
 /// </summary>
 /// <typeparam name="TEntity">The entity type to create</typeparam>
 public interface ICreateRepository<TEntity>
@@ -18,7 +18,7 @@ public interface ICreateRepository<TEntity>
 }
 
 /// <summary>
-/// A repository that can update <see cref="TEntity"/> entities
+/// Defines a repository that can update <see cref="TEntity"/> entities
 /// </summary>
 /// <typeparam name="TEntity">The entity type to update</typeparam>
 public interface IUpdateRepository<TEntity>
@@ -33,7 +33,7 @@ public interface IUpdateRepository<TEntity>
 }
 
 /// <summary>
-/// A repository that can remove <see cref="TEntity"/> entities
+/// Defines a repository that can remove <see cref="TEntity"/> entities
 /// </summary>
 /// <typeparam name="TEntity">The entity type to remove</typeparam>
 public interface IRemoveRepository<TEntity>
@@ -48,7 +48,7 @@ public interface IRemoveRepository<TEntity>
 }
 
 /// <summary>
-/// A repository that response with a <see cref="TDto"/> 
+/// Defines a repository that response with a <see cref="TDto"/> 
 /// </summary>
 /// <typeparam name="TDto">The response to get</typeparam>
 public interface IReadRepository<TDto>
@@ -62,7 +62,7 @@ public interface IReadRepository<TDto>
 }
 
 /// <summary>
-/// A repository that response with a <see cref="TDto"/> with <see cref="TSearchOptions"/> search options
+/// Defines a repository that response with a <see cref="TDto"/> with <see cref="TSearchOptions"/> search options
 /// </summary>
 /// <typeparam name="TDto"></typeparam>
 /// <typeparam name="TSearchOptions"></typeparam>
