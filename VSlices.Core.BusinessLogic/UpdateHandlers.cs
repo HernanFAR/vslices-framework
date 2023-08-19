@@ -25,7 +25,7 @@ public abstract class UpdateHandler<TRequest, TResponse, TEntity> : IHandler<TRe
     }
 
     /// <inheritdoc />
-    public virtual async ValueTask<Response<TResponse>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<Response<TResponse>> HandleAsync(TRequest request, CancellationToken cancellationToken)
     {
         var useCaseValidationResult = await ValidateUseCaseRulesAsync(request, cancellationToken);
 
@@ -95,7 +95,7 @@ public abstract class EntityValidatedUpdateHandler<TRequest, TResponse, TEntity>
     }
 
     /// <inheritdoc />
-    public virtual async ValueTask<Response<TResponse>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<Response<TResponse>> HandleAsync(TRequest request, CancellationToken cancellationToken)
     {
         var useCaseValidationResult = await ValidateUseCaseRulesAsync(request, cancellationToken);
 
