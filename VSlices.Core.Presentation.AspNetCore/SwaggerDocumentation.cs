@@ -104,7 +104,7 @@ public abstract class SwaggerDocumentation
     /// Defines the Swagger documentation for the endpoint
     /// </summary>
     /// <param name="routeBuilder"></param>
-    internal void DefineSwaggerDocumentation(RouteHandlerBuilder routeBuilder)
+    public void DefineSwaggerDocumentation(RouteHandlerBuilder routeBuilder)
     {
         var builder = routeBuilder
             .WithName(Name)
@@ -122,18 +122,5 @@ public abstract class SwaggerDocumentation
             builder.WithMetadata(new SwaggerResponseAttribute(
                 producesInfo.HttpStatusCode, producesInfo.Description, producesInfo.Type, producesInfo.ContentTypes));
         }
-    }
-
-    /// <summary>
-    /// Base class for Swagger documentation, with a singleton property
-    /// </summary>
-    /// <typeparam name="T">The type of the singleton instance. Must be a subclass of <see cref="SwaggerDocumentation"/></typeparam>
-    public abstract class WithSingleton<T> : SwaggerDocumentation
-        where T : SwaggerDocumentation, new()
-    {
-        /// <summary>
-        /// The singleton instance of the Swagger documentation
-        /// </summary>
-        public static readonly T Instance = new();
     }
 }
