@@ -1,30 +1,40 @@
-﻿using VSlices.Domain.Internals;
+﻿using VSlices.Domain.Abstractions;
 
 namespace VSlices.Domain;
 
 /// <summary>
-/// Base entity with non specified keys
+/// Defines an entity with non specified keys
 /// </summary>
-/// <remarks>Provides a better <see cref="ToString()"/> implementation, aside of a <see cref="GetKeys()"/> and an <see cref="EntityEquals"/> method</remarks>
-public abstract class Entity
+public interface IEntity
 {
-    /// <inheritdoc/>
-    public override string ToString() => $"[{GetType().Name} | {WriteKeys()}]";
-
     /// <summary>
     /// Gets the keys of the entity
     /// </summary>
     /// <returns>A array with the keys of the entity</returns>
-    public abstract object[] GetKeys();
-
-    private string WriteKeys() => string.Join(", ", GetKeys());
+    object[] GetKeys();
 
     /// <summary>
     /// Performs a identity check between two entities
     /// </summary>
     /// <param name="other">The other entity to </param>
     /// <returns>true if is equal, false if not</returns>
-    public bool EntityEquals(Entity? other) => EntityAbstractions.EntityEqualsTo(this, other);
+    bool EntityEquals(IEntity? other);
+}
+
+/// <summary>
+/// Base entity with non specified keys
+/// </summary>
+/// <remarks>Provides a better <see cref="ToString()"/> implementation, aside of a <see cref="GetKeys()"/> and an <see cref="EntityEquals"/> method</remarks>
+public abstract class Entity : IEntity
+{
+    /// <inheritdoc/>
+    public override string ToString() => this.EntityToString();
+
+    /// <inheritdoc/>
+    public abstract object[] GetKeys();
+
+    /// <inheritdoc/>
+    public bool EntityEquals(IEntity? other) => this.EntityEqualsTo(other);
 }
 
 /// <summary>
