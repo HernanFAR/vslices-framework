@@ -4,6 +4,8 @@ using System.Text.Json;
 using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.CrossCutting.Logging.Configurations;
+// ReSharper disable UnassignedGetOnlyAutoProperty
+#pragma warning disable CS8618
 
 namespace VSlices.CrossCutting.Logging.UnitTests.Extensions;
 

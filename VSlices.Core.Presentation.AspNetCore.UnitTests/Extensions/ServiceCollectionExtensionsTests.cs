@@ -142,7 +142,7 @@ public class ServiceCollectionExtensionsTests
         var services = new ServiceCollection();
 
         // Act
-        services.AddHandlersFrom<Handler1>();
+        services.AddHandlersFromAssemblyContaining<Handler1>();
 
 
         // Assert

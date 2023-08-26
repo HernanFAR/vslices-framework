@@ -60,7 +60,7 @@ public abstract class CreateHandler<TRequest, TResponse, TEntity> : IHandler<TRe
     /// </summary>
     /// <param name="request">The request to convert</param>
     /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>A <see cref="ValueTask{T}"/> with a <see cref="TEntity"/> in</returns>
+    /// <returns>A <see cref="ValueTask{T}"/> with a <typeparamref name="TEntity"/> in</returns>
     protected internal abstract ValueTask<TEntity> CreateEntityAsync(TRequest request,
         CancellationToken cancellationToken);
 
@@ -69,7 +69,7 @@ public abstract class CreateHandler<TRequest, TResponse, TEntity> : IHandler<TRe
     /// </summary>
     /// <param name="entity">The created entity</param>
     /// <param name="request">The handled request</param>
-    /// <returns>A <see cref="TResponse"/> </returns>
+    /// <returns>A <typeparamref name="TResponse"/> </returns>
     protected internal abstract TResponse GetResponse(TEntity entity, TRequest request);
 }
 
@@ -137,7 +137,7 @@ public abstract class EntityValidatedCreateHandler<TRequest, TResponse, TEntity>
     /// </summary>
     /// <param name="request">The request to convert</param>
     /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>A <see cref="ValueTask{T}"/> with a <see cref="TEntity"/> in</returns>
+    /// <returns>A <see cref="ValueTask{T}"/> with a <typeparamref name="TEntity"/> in</returns>
     protected internal abstract ValueTask<TEntity> CreateEntityAsync(TRequest request,
         CancellationToken cancellationToken);
 
@@ -155,7 +155,7 @@ public abstract class EntityValidatedCreateHandler<TRequest, TResponse, TEntity>
     /// </summary>
     /// <param name="entity">The created entity</param>
     /// <param name="request">The handled request</param>
-    /// <returns>A <see cref="TResponse"/>A <see cref="TResponse"/> </returns>
+    /// <returns>A <typeparamref name="TResponse"/>A <typeparamref name="TResponse"/> </returns>
     protected internal abstract TResponse GetResponse(TEntity entity, TRequest request);
 }
 

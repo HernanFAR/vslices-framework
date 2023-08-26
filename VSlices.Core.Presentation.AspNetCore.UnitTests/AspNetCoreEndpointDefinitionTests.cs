@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Routing;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Collections.ObjectModel;
 using System.Net.Mime;
+#pragma warning disable CS8602
 
 namespace VSlices.Core.Presentation.AspNetCore.UnitTests;
 
@@ -100,7 +101,7 @@ public class AspNetCoreEndpointDefinitionTests
 
         var addedEndpoint = (RouteEndpoint)endpointSource.Endpoints[0];
 
-        addedEndpoint.Metadata.First().Should().BeSameAs(endpoint.DelegateHandler.Method);
+        addedEndpoint.Metadata[0].Should().BeSameAs(endpoint.DelegateHandler.Method);
         addedEndpoint.Metadata
             .OfType<HttpMethodMetadata>()
             .First()
@@ -126,7 +127,7 @@ public class AspNetCoreEndpointDefinitionTests
 
         var addedEndpoint = (RouteEndpoint)endpointSource.Endpoints[0];
 
-        addedEndpoint.Metadata.First().Should().BeSameAs(endpoint.DelegateHandler.Method);
+        addedEndpoint.Metadata[0].Should().BeSameAs(endpoint.DelegateHandler.Method);
         addedEndpoint.Metadata
             .OfType<HttpMethodMetadata>()
             .First()
@@ -193,7 +194,7 @@ public class AspNetCoreEndpointDefinitionTests
 
         var addedEndpoint = (RouteEndpoint)endpointSource.Endpoints[0];
 
-        addedEndpoint.Metadata.First().Should().BeSameAs(endpoint.DelegateHandler.Method);
+        addedEndpoint.Metadata[0].Should().BeSameAs(endpoint.DelegateHandler.Method);
         addedEndpoint.Metadata
             .OfType<HttpMethodMetadata>()
             .First()

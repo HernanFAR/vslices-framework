@@ -42,7 +42,7 @@ public class EntityTests
         const int key1 = 1;
         const int key2 = 2;
 
-        var entity = new TwoKeyEntity1(key1, key2);
+        IEntity entity = new TwoKeyEntity1(key1, key2);
 
 
         // Assert
@@ -58,7 +58,7 @@ public class EntityTests
         const int key1 = 1;
         const int key2 = 2;
 
-        var entity = new TwoKeyEntity1(key1, key2);
+        IEntity entity = new TwoKeyEntity1(key1, key2);
 
 
         // Assert
@@ -74,8 +74,8 @@ public class EntityTests
         const int key1 = 1;
         const int key2 = 2;
 
-        var entity1 = new TwoKeyEntity1(key1, key2);
-        var entity2 = new TwoKeyEntity1(key1, key2);
+        IEntity entity1 = new TwoKeyEntity1(key1, key2);
+        IEntity entity2 = new TwoKeyEntity1(key1, key2);
 
 
         // Assert
@@ -92,8 +92,8 @@ public class EntityTests
         const int key2 = 2;
         const int key3 = 3;
 
-        var entity1 = new TwoKeyEntity1(key1, key2);
-        var entity2 = new TwoKeyEntity1(key1, key3);
+        IEntity entity1 = new TwoKeyEntity1(key1, key2);
+        IEntity entity2 = new TwoKeyEntity1(key1, key3);
 
 
         // Assert
@@ -109,8 +109,8 @@ public class EntityTests
         const int key1 = 1;
         const int key2 = 2;
 
-        var entity1 = new TwoKeyEntity1(key1, key2);
-        TwoKeyEntity1? entity2 = null;
+        IEntity entity1 = new TwoKeyEntity1(key1, key2);
+        IEntity? entity2 = null;
 
 
         // Assert
@@ -126,8 +126,8 @@ public class EntityTests
         const int key1 = 1;
         const int key2 = 2;
 
-        var entity1 = new TwoKeyEntity1(key1, key2);
-        var entity2 = new TwoKeyEntity2(key1, key2);
+        IEntity entity1 = new TwoKeyEntity1(key1, key2);
+        IEntity entity2 = new TwoKeyEntity2(key1, key2);
 
 
         // Assert
