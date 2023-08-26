@@ -31,7 +31,7 @@ public class ReadHandler_TwoGenerics
         _mockedHandler.Setup(e => e.ValidateUseCaseRulesAsync(request, default))
             .ReturnsAsync(businessFailure);
 
-        var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
+        var handlerResponse = await _mockedHandler.Object.HandleAsync(request, default);
 
         handlerResponse.BusinessFailure.Should().Be(businessFailure);
 
@@ -57,7 +57,7 @@ public class ReadHandler_TwoGenerics
         _mockedRepository.Setup(e => e.ReadAsync(request, default))
             .ReturnsAsync(businessFailure);
 
-        var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
+        var handlerResponse = await _mockedHandler.Object.HandleAsync(request, default);
 
         handlerResponse.BusinessFailure.Should().Be(businessFailure);
 
@@ -84,7 +84,7 @@ public class ReadHandler_TwoGenerics
         _mockedRepository.Setup(e => e.ReadAsync(request, default))
             .ReturnsAsync(response);
 
-        var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
+        var handlerResponse = await _mockedHandler.Object.HandleAsync(request, default);
 
         handlerResponse.SuccessValue.Should().Be(response);
 

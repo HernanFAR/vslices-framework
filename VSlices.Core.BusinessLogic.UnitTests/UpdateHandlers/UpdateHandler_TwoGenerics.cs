@@ -32,7 +32,7 @@ public class UpdateHandler_TwoGenerics
         _mockedHandler.Setup(e => e.ValidateUseCaseRulesAsync(request, default))
             .ReturnsAsync(businessFailure);
 
-        var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
+        var handlerResponse = await _mockedHandler.Object.HandleAsync(request, default);
 
         handlerResponse.BusinessFailure.Should().Be(businessFailure);
 
@@ -62,7 +62,7 @@ public class UpdateHandler_TwoGenerics
         _mockedRepository.Setup(e => e.UpdateAsync(domain, default))
             .ReturnsAsync(businessFailure);
 
-        var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
+        var handlerResponse = await _mockedHandler.Object.HandleAsync(request, default);
 
         handlerResponse.BusinessFailure.Should().Be(businessFailure);
 
@@ -94,7 +94,7 @@ public class UpdateHandler_TwoGenerics
         _mockedHandler.Setup(e => e.GetResponse(domain, request))
             .CallBase();
 
-        var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
+        var handlerResponse = await _mockedHandler.Object.HandleAsync(request, default);
 
         handlerResponse.SuccessValue.Should().Be(success);
 
