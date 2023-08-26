@@ -56,7 +56,7 @@ public class DomainFluentValidatedRemoveHandler_ThreeGenerics
             .ReturnsAsync(validationResult)
             .Verifiable();
 
-        var handlerResponse = await _handler.HandleAsync(request);
+        var handlerResponse = await _handler.HandleAsync(request, default);
 
         handlerResponse.IsFailure.Should().BeTrue();
         handlerResponse.BusinessFailure
@@ -84,7 +84,7 @@ public class DomainFluentValidatedRemoveHandler_ThreeGenerics
             .ReturnsAsync(domain)
             .Verifiable();
 
-        var handlerResponse = await _handler.HandleAsync(request);
+        var handlerResponse = await _handler.HandleAsync(request, default);
 
         handlerResponse.IsSuccess.Should().BeTrue();
         handlerResponse.SuccessValue

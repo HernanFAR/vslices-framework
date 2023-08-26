@@ -25,7 +25,7 @@ public abstract class ReadHandler<TRequest, TSearchOptions, TResponse> : IHandle
     }
 
     /// <inheritdoc />
-    public virtual async ValueTask<Response<TResponse>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<Response<TResponse>> HandleAsync(TRequest request, CancellationToken cancellationToken)
     {
         var useCaseValidationResult = await ValidateUseCaseRulesAsync(request, cancellationToken);
 
@@ -77,7 +77,7 @@ public abstract class ReadHandler<TRequest, TResponse> : IHandler<TRequest, TRes
     }
 
     /// <inheritdoc />
-    public virtual async ValueTask<Response<TResponse>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<Response<TResponse>> HandleAsync(TRequest request, CancellationToken cancellationToken)
     {
         var useCaseValidationResult = await ValidateUseCaseRulesAsync(request, cancellationToken);
 
@@ -118,7 +118,7 @@ public abstract class BasicReadHandler<TRequest, TResponse> : IHandler<TRequest,
     }
 
     /// <inheritdoc />
-    public virtual async ValueTask<Response<TResponse>> HandleAsync(TRequest request, CancellationToken cancellationToken = default)
+    public virtual async ValueTask<Response<TResponse>> HandleAsync(TRequest request, CancellationToken cancellationToken)
     {
         var useCaseValidationResult = await ValidateUseCaseRulesAsync(request, cancellationToken);
 

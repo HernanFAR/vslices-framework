@@ -32,7 +32,7 @@ public class DomainValidatedCreateHandler_TwoGenerics
         _mockedHandler.Setup(e => e.ValidateUseCaseRulesAsync(request, default))
             .ReturnsAsync(businessFailure);
 
-        var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
+        var handlerResponse = await _mockedHandler.Object.HandleAsync(request, default);
 
         handlerResponse.BusinessFailure.Should().Be(businessFailure);
 
@@ -61,7 +61,7 @@ public class DomainValidatedCreateHandler_TwoGenerics
         _mockedHandler.Setup(e => e.ValidateEntityAsync(domain, default))
             .ReturnsAsync(businessFailure);
 
-        var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
+        var handlerResponse = await _mockedHandler.Object.HandleAsync(request, default);
 
         handlerResponse.BusinessFailure.Should().Be(businessFailure);
 
@@ -97,7 +97,7 @@ public class DomainValidatedCreateHandler_TwoGenerics
         _mockedRepository.Setup(e => e.CreateAsync(domain, default))
             .ReturnsAsync(businessFailure);
 
-        var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
+        var handlerResponse = await _mockedHandler.Object.HandleAsync(request, default);
 
         handlerResponse.BusinessFailure.Should().Be(businessFailure);
 
@@ -131,7 +131,7 @@ public class DomainValidatedCreateHandler_TwoGenerics
         _mockedRepository.Setup(e => e.CreateAsync(domain, default))
             .ReturnsAsync(domain);
 
-        var handlerResponse = await _mockedHandler.Object.HandleAsync(request);
+        var handlerResponse = await _mockedHandler.Object.HandleAsync(request, default);
 
         handlerResponse.SuccessValue.Should().Be(success);
 

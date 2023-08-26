@@ -49,5 +49,5 @@ public interface IPipelineBehavior<in TRequest, TResponse>
     /// <param name="next">The next action</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A <see cref="ValueTask{T}"/> holding a <see cref="Response{TRequest}"/> of <see cref="Success"/> that represents the result of the operation </returns>
-    ValueTask<Response<TResponse>> HandleAsync(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken = default);
+    ValueTask<Response<TResponse>> HandleAsync(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken);
 }
