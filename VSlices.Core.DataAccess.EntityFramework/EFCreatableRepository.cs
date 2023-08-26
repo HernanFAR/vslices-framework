@@ -7,7 +7,7 @@ using VSlices.Core.Abstracts.Responses;
 namespace VSlices.Core.DataAccess.EntityFramework;
 
 /// <summary>
-/// Defines a repository that can create <see cref="TEntity"/> entities using EntityFramework Core
+/// Defines a repository that can create <typeparamref name="TEntity"/> entities using EntityFramework Core
 /// </summary>
 /// <typeparam name="TDbContext">The <see cref="DbContext"/> related to the use case</typeparam>
 /// <typeparam name="TEntity">The entity to be created</typeparam>
@@ -19,7 +19,7 @@ public abstract class EFCreateRepository<TDbContext, TEntity> : ICreateRepositor
     private readonly ILogger _logger;
 
     /// <summary>
-    /// Creates a new instance with a given <see cref="TDbContext"/> and <see cref="ILogger"/>
+    /// Creates a new instance with a given <typeparamref name="TDbContext"/> and <see cref="ILogger"/>
     /// </summary>
     /// <param name="context">EF Core Context of the use case</param>
     /// <param name="logger">Logger in case of errors</param>
@@ -66,7 +66,7 @@ public abstract class EFCreateRepository<TDbContext, TEntity> : ICreateRepositor
 }
 
 /// <summary>
-/// Defines a repository that can create <see cref="TDbContext"/> with <see cref="TEntity"/> input, using EntityFramework Core, useful to use DDD with database-first scenarios
+/// Defines a repository that can create <typeparamref name="TDbContext"/> with <typeparamref name="TEntity"/> input, using EntityFramework Core, useful to use DDD with database-first scenarios
 /// </summary>
 /// <typeparam name="TDbContext">The <see cref="DbContext"/> related to the use case</typeparam>
 /// <typeparam name="TEntity">The entity to input</typeparam>
@@ -79,7 +79,7 @@ public abstract class EFCreateRepository<TDbContext, TEntity, TDbEntity> : ICrea
     private readonly ILogger _logger;
 
     /// <summary>
-    /// Creates a new instance with a given <see cref="TDbContext"/> and <see cref="ILogger"/>
+    /// Creates a new instance with a given <typeparamref name="TDbContext"/> and <see cref="ILogger"/>
     /// </summary>
     /// <param name="context">EF Core Context of the use case</param>
     /// <param name="logger">Logger in case of errors</param>
@@ -96,17 +96,17 @@ public abstract class EFCreateRepository<TDbContext, TEntity, TDbEntity> : ICrea
         => "There was a concurrency error when creating entity of type {EntityType}, with data {EntityJson}";
 
     /// <summary>
-    /// Converts a <see cref="TEntity"/> to a <see cref="TDbEntity"/>
+    /// Converts a <typeparamref name="TEntity"/> to a <typeparamref name="TDbEntity"/>
     /// </summary>
     /// <param name="entity">The database entity to convert</param>
-    /// <returns>A <see cref="TDbEntity"/></returns>
+    /// <returns>A <typeparamref name="TDbEntity"/></returns>
     protected internal abstract TDbEntity ToDatabaseEntity(TEntity entity);
 
     /// <summary>
-    /// Converts a <see cref="TDbEntity"/> to a <see cref="TEntity"/>
+    /// Converts a <typeparamref name="TDbEntity"/> to a <typeparamref name="TEntity"/>
     /// </summary>
     /// <param name="entity">The entity to convert</param>
-    /// <returns>A <see cref="TEntity"/></returns>
+    /// <returns>A <typeparamref name="TEntity"/></returns>
     protected internal abstract TEntity ToEntity(TDbEntity entity);
 
     /// <summary>

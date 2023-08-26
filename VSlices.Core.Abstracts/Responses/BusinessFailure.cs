@@ -46,6 +46,9 @@ public enum FailureKind
 /// <param name="Errors">Error messages related to the failure</param>
 public readonly record struct BusinessFailure(FailureKind Kind, string[] Errors)
 {
+    /// <summary>
+    /// Shortcut to create a <see cref="BusinessFailure"/> with specified <see cref="FailureKind"/> 
+    /// </summary>
     public static class Of
     {
         /// <summary>

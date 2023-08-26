@@ -48,11 +48,11 @@ public abstract class ReadHandler<TRequest, TSearchOptions, TResponse> : IHandle
     protected internal abstract ValueTask<Response<Success>> ValidateUseCaseRulesAsync(TRequest request, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Converts the <see cref="TRequest"/> to <see cref="TSearchOptions"/>
+    /// Converts the <typeparamref name="TRequest"/> to <typeparamref name="TSearchOptions"/>
     /// </summary>
     /// <param name="request">The request to convert</param>
     /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>A <see cref="TSearchOptions"/></returns>
+    /// <returns>A <typeparamref name="TSearchOptions"/></returns>
     protected internal abstract ValueTask<TSearchOptions> RequestToSearchOptionsAsync(TRequest request, CancellationToken cancellationToken);
 }
 

@@ -7,6 +7,7 @@ using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.CrossCutting.Logging.Attributes;
 using VSlices.CrossCutting.Logging.Configurations;
+#pragma warning disable CS8602
 
 namespace VSlices.CrossCutting.Logging.UnitTests;
 

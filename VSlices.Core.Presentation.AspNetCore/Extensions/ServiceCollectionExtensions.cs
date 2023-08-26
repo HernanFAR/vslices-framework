@@ -71,7 +71,14 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddHandlersFrom<TAnchor>(this IServiceCollection services,
+    /// <summary>
+    /// Adds <see cref="IHandler{TRequest,TResponse}"/> implementations from the specified assembly of the <typeparamref name="TAnchor"/> type, to the service collection.
+    /// </summary>
+    /// <typeparam name="TAnchor"></typeparam>
+    /// <param name="services"></param>
+    /// <param name="lifetime"></param>
+    /// <returns></returns>
+    public static IServiceCollection AddHandlersFromAssemblyContaining<TAnchor>(this IServiceCollection services,
         ServiceLifetime lifetime = ServiceLifetime.Scoped)
     {
         var definerTypes = typeof(TAnchor).Assembly.ExportedTypes

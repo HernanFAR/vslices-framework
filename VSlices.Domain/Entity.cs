@@ -1,6 +1,4 @@
-﻿using VSlices.Domain.Abstractions;
-
-namespace VSlices.Domain;
+﻿namespace VSlices.Domain;
 
 /// <summary>
 /// Defines an entity with non specified keys
