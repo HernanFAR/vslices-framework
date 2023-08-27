@@ -32,7 +32,7 @@ public enum FailureKind
     /// <summary>
     /// Error used when a not specified error occurs
     /// </summary>
-    DefaultError,
+    Unspecified,
     /// <summary>
     /// Error used when an unhandled exception occurs
     /// </summary>
@@ -40,11 +40,32 @@ public enum FailureKind
 }
 
 /// <summary>
-/// Represents a failure in the given business logic
+/// Represents a validation error
 /// </summary>
-/// <param name="Kind">Reason of the failure</param>
-/// <param name="Errors">Error messages related to the failure</param>
-public readonly record struct BusinessFailure(FailureKind Kind, string[] Errors)
+/// <param name="Name">
+/// Name of the property that failed validation
+/// </param>
+/// <param name="Detail">
+/// A human-readable explanation specific to this occurrence of the error
+/// </param>
+public readonly record struct ValidationError(string Name, string Detail);
+
+/// <summary>
+/// Represents a failure in the given business logic. Based on <see href="https://datatracker.ietf.org/doc/html/rfc9457"/>
+/// </summary>
+/// <param name="Kind">
+/// Failure kind. See <see cref="FailureKind"/> for more information
+/// </param>
+/// <param name="Title">
+/// A short, human-readable summary of the problem type
+/// </param>
+/// <param name="Detail">
+/// A human-readable explanation specific to this occurrence of the problem
+/// </param>
+/// <param name="Errors">
+/// A list of validation errors, if any
+/// </param>
+public readonly record struct BusinessFailure(FailureKind Kind, string? Title, string? Detail, ValidationError[] Errors)
 {
     /// <summary>
     /// Shortcut to create a <see cref="BusinessFailure"/> with specified <see cref="FailureKind"/> 
@@ -54,106 +75,96 @@ public readonly record struct BusinessFailure(FailureKind Kind, string[] Errors)
         /// <summary>
         /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.NotAuthenticatedUser"/>
         /// </summary>
-        /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.NotAuthenticatedUser"/> and no error messages</returns>
-        public static BusinessFailure UserNotAuthenticated() => new(FailureKind.NotAuthenticatedUser, Array.Empty<string>());
-
-        /// <summary>
-        /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.NotAuthenticatedUser"/> and and error message
-        /// </summary>
-        /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.NotAuthenticatedUser"/> and one error message</returns>
-        public static BusinessFailure UserNotAuthenticated(string error) => new(FailureKind.NotAuthenticatedUser, new[] { error });
+        /// <param name="title">Title of the problem</param>
+        /// <param name="detail">Detail of the problem</param>
+        /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.NotAuthenticatedUser"/>, and the specified title and detail</returns>
+        public static BusinessFailure UserNotAuthenticated(string? title = null, string? detail = null) 
+            => new(FailureKind.NotAuthenticatedUser, title, detail, null);
 
         /// <summary>
         /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.NotAllowedUser"/>
         /// </summary>
-        /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.NotAllowedUser"/> and no error messages</returns>
-        public static BusinessFailure UserNotAllowed() => new(FailureKind.NotAllowedUser, Array.Empty<string>());
+        /// <param name="title">Title of the problem</param>
+        /// <param name="detail">Detail of the problem</param>
+        /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.NotAllowedUser"/>, and the specified title and detail</returns>
+        public static BusinessFailure UserNotAllowed(string? title = null, string? detail = null) 
+            => new(FailureKind.NotAllowedUser, title, detail, Array.Empty<ValidationError>());
 
         /// <summary>
-        /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.NotAllowedUser"/> and one error message
+        /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.NotFoundResource"/>
         /// </summary>
-        /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.NotAllowedUser"/> and one error message</returns>
-        public static BusinessFailure UserNotAllowed(string error) => new(FailureKind.NotAllowedUser, new []{ error });
+        /// <param name="title">Title of the problem</param>
+        /// <param name="detail">Detail of the problem</param>
+        /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.NotFoundResource"/>, and the specified title and detail</returns>
+        public static BusinessFailure NotFoundResource(string? title = null, string? detail = null) 
+            => new(FailureKind.NotFoundResource, title, detail, Array.Empty<ValidationError>());
+    
+        /// <summary>
+        /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.ConcurrencyError"/>
+        /// </summary>
+        /// <param name="title">Title of the problem</param>
+        /// <param name="detail">Detail of the problem</param>
+        /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.ConcurrencyError"/>, and the specified title and detail</returns>
+        public static BusinessFailure ConcurrencyError(string? title = null, string? detail = null)
+            => new(FailureKind.ConcurrencyError, title, detail, Array.Empty<ValidationError>());
 
         /// <summary>
-        /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.NotFoundResource"/> and given error messages
+        /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.ContractValidation"/>
         /// </summary>
-        /// <param name="errors">The error messages related to the failure</param>
-        /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.NotFoundResource"/> and error messages</returns>
-        public static BusinessFailure NotFoundResource(string[] errors) => new(FailureKind.NotFoundResource, errors);
+        /// <param name="title">Title of the problem</param>
+        /// <param name="detail">Detail of the problem</param>
+        /// <param name="errors">Related validation errors</param>
+        /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.ContractValidation"/>, and the specified title and detail</returns>
+        public static BusinessFailure ContractValidation(string? title = null, string? detail = null, ValidationError[]? errors = null) 
+            => new(FailureKind.ContractValidation, title, detail, errors ?? Array.Empty<ValidationError>());
+    
+        /// <summary>
+        /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.ContractValidation"/>
+        /// </summary>
+        /// <param name="title">Title of the problem</param>
+        /// <param name="detail">Detail of the problem</param>
+        /// <param name="error">Related validation error</param>
+        /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.ContractValidation"/>, and the specified title and detail</returns>
+        public static BusinessFailure ContractValidation(string? title = null, string? detail = null, ValidationError? error = null)
+            => new(FailureKind.ContractValidation, title, detail, error is null ? Array.Empty<ValidationError>() : new[]{ error.Value });
 
         /// <summary>
-        /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.NotFoundResource"/> and no error messages
+        /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.DomainValidation"/>
         /// </summary>
-        /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.NotFoundResource"/> and no error messages</returns>
-        public static BusinessFailure NotFoundResource() => new(FailureKind.NotFoundResource, Array.Empty<string>());
+        /// <param name="title">Title of the problem</param>
+        /// <param name="detail">Detail of the problem</param>
+        /// <param name="errors">Related validation errors</param>
+        /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.DomainValidation"/>, and the specified title and detail</returns>
+        public static BusinessFailure DomainValidation(string? title = null, string? detail = null, ValidationError[]? errors = null)
+            => new(FailureKind.DomainValidation, title, detail, errors ?? Array.Empty<ValidationError>());
+    
+        /// <summary>
+        /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.DomainValidation"/>
+        /// </summary>
+        /// <param name="title">Title of the problem</param>
+        /// <param name="detail">Detail of the problem</param>
+        /// <param name="error">Related validation error</param>
+        /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.DomainValidation"/>, and the specified title and detail</returns>
+        public static BusinessFailure DomainValidation(string? title = null, string? detail = null, ValidationError? error = null)
+            => new(FailureKind.DomainValidation, title, detail, error is null ? Array.Empty<ValidationError>() : new[] { error.Value });
+    
+        /// <summary>
+        /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.Unspecified"/>
+        /// </summary>
+        /// <param name="title">Title of the problem</param>
+        /// <param name="detail">Detail of the problem</param>
+        /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.Unspecified"/>, and the specified title and detail</returns>
+        public static BusinessFailure Unspecified(string? title = null, string? detail = null) 
+            => new(FailureKind.Unspecified, title, detail, Array.Empty<ValidationError>());
 
         /// <summary>
-        /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.ConcurrencyError"/> and given error messages
+        /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.UnhandledException"/>
         /// </summary>
-        /// <param name="errors">The error messages related to the failure</param>
-        /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.ConcurrencyError"/> and no error messages</returns>
-        public static BusinessFailure ConcurrencyError(string[] errors) => new(FailureKind.ConcurrencyError, errors);
-
-        /// <summary>
-        /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.ConcurrencyError"/> and no error messages
-        /// </summary>
-        /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.ConcurrencyError"/> and no error messages</returns>
-        public static BusinessFailure ConcurrencyError() => new(FailureKind.ConcurrencyError, Array.Empty<string>());
-
-        /// <summary>
-        /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.ContractValidation"/> and given error messages
-        /// </summary>
-        /// <param name="errors">The error messages related to the failure</param>
-        /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.ContractValidation"/> and given error messages</returns>
-        public static BusinessFailure ContractValidation(string[] errors) => new(FailureKind.ContractValidation, errors);
-
-        /// <summary>
-        /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.ContractValidation"/> and one error message
-        /// </summary>
-        /// <param name="error">The error message related to the failure</param>
-        /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.ContractValidation"/> and one error message</returns>
-        public static BusinessFailure ContractValidation(string error) => new(FailureKind.ContractValidation, new[] { error });
-
-        /// <summary>
-        /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.DomainValidation"/> and given error messages
-        /// </summary>
-        /// <param name="errors">The error messages related to the failure</param>
-        /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.DomainValidation"/> and given error messages</returns>
-        public static BusinessFailure DomainValidation(string[] errors) => new(FailureKind.DomainValidation, errors);
-
-        /// <summary>
-        /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.DomainValidation"/> and one error message
-        /// </summary>
-        /// <param name="error">The error message related to the failure</param>
-        /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.DomainValidation"/> and one error message</returns>
-        public static BusinessFailure DomainValidation(string error) => new(FailureKind.DomainValidation, new[] { error });
-
-        /// <summary>
-        /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.DefaultError"/> and given error messages
-        /// </summary>
-        /// <param name="errors">The error messages related to the failure</param>
-        /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.DefaultError"/> and given error messages</returns>
-        public static BusinessFailure DefaultError(string[] errors) => new(FailureKind.DefaultError, errors);
-
-        /// <summary>
-        /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.DefaultError"/> and one error message
-        /// </summary>
-        /// <param name="error">The error message related to the failure</param>
-        /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.DefaultError"/> and one error message</returns>
-        public static BusinessFailure DefaultError(string error) => new(FailureKind.DefaultError, new[] { error });
-
-        /// <summary>
-        /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.DefaultError"/> and no error messages
-        /// </summary>
-        /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.DefaultError"/> and no error messages</returns>
-        public static BusinessFailure DefaultError() => new(FailureKind.DefaultError, Array.Empty<string>());
-
-        /// <summary>
-        /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.UnhandledException"/> and no error messages
-        /// </summary>
-        /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.UnhandledException"/> and no error messages</returns>
-        public static BusinessFailure UnhandledException() => new(FailureKind.UnhandledException, Array.Empty<string>());
+        /// <param name="title">Title of the problem</param>
+        /// <param name="detail">Detail of the problem</param>
+        /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.UnhandledException"/>, and the specified title and detail</returns>
+        public static BusinessFailure UnhandledException(string? title = null, string? detail = null) 
+            => new(FailureKind.UnhandledException, title, detail, Array.Empty<ValidationError>());
 
     }
 }
