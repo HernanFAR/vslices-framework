@@ -40,5 +40,5 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\VSlices.Core.Abstracts\VSlices.Core.Abstracts.csproj" />
 	</ItemGroup>
-
+	
 </Project>
