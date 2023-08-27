@@ -79,7 +79,7 @@ public readonly record struct BusinessFailure(FailureKind Kind, string? Title, s
         /// <param name="detail">Detail of the problem</param>
         /// <returns>A <see cref="BusinessFailure"/> with <see cref="FailureKind.NotAuthenticatedUser"/>, and the specified title and detail</returns>
         public static BusinessFailure UserNotAuthenticated(string? title = null, string? detail = null) 
-            => new(FailureKind.NotAuthenticatedUser, title, detail, null);
+            => new(FailureKind.NotAuthenticatedUser, title, detail, Array.Empty<ValidationError>());
 
         /// <summary>
         /// Creates a <see cref="BusinessFailure"/> with <see cref="FailureKind.NotAllowedUser"/>

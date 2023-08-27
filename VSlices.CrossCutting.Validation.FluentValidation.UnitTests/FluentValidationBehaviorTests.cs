@@ -38,14 +38,16 @@ public class FluentValidationBehaviorTests
     [Fact]
     public async Task HandleAsync_ShouldReturnBusinessFailure_DetailHasValidator()
     {
-        var request = new Request();
-        var expMessage = "Error de ejemplo";
+        const string errorDetail = "errorDetail";
+        const string errorName = "errorName";
 
+        var request = new Request();
+        
         var validator = Mock.Of<IValidator<Request>>();
         var validatorMock = Mock.Get(validator);
 
         validatorMock.Setup(e => e.ValidateAsync(request, default))
-            .Returns(Task.FromResult(new ValidationResult(new[] { new ValidationFailure("", expMessage) })));
+            .Returns(Task.FromResult(new ValidationResult(new[] { new ValidationFailure(errorName, errorDetail) })));
 
         var validationBehaviorMock = new Mock<FluentValidationBehavior<Request, Success>>(new List<IValidator<Request>> { validator }) { CallBase = true };
         var validationBehavior = validationBehaviorMock.Object;
@@ -53,8 +55,10 @@ public class FluentValidationBehaviorTests
         var handlerResponse = await validationBehavior.HandleAsync(request, () => throw new UnreachableException());
 
         handlerResponse.IsFailure.Should().BeTrue();
-        handlerResponse.BusinessFailure.Kind.Should().Be(FailureKind.ContractValidation);
-        handlerResponse.BusinessFailure.Errors.Should().ContainSingle(e => e == expMessage);
+        handlerResponse.BusinessFailure.Kind
+            .Should().Be(FailureKind.ContractValidation);
+        handlerResponse.BusinessFailure.Errors
+            .Should().ContainSingle(e => e.Name == errorName && e.Detail == errorDetail);
 
     }
 
@@ -62,7 +66,6 @@ public class FluentValidationBehaviorTests
     public async Task HandleAsync_ShouldReturnSuccess_DetailHasValidator()
     {
         var request = new Request();
-        const string expMessage = "Error de ejemplo";
 
         var validator = Mock.Of<IValidator<Request>>();
         var validatorMock = Mock.Get(validator);

@@ -37,7 +37,8 @@ public class AbstractValidationBehaviorTests
         var validationBehaviorMock = Mock.Get(validationBehavior);
 
         var request = new Request();
-        var response = BusinessFailure.Of.ContractValidation("Error de ejemplo");
+        var response = BusinessFailure.Of.ContractValidation(
+            error: new ValidationError("ErrorName", "ErrorDetail"));
 
         validationBehaviorMock.Setup(e => e.ValidateAsync(request, default))
             .ReturnsAsync(response);

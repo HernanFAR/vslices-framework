@@ -42,7 +42,7 @@ public abstract class EFRemoveRepository<TDbContext, TEntity> : IRemoveRepositor
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A <see cref="ValueTask{T}"/> holding a <see cref="BusinessFailure"/></returns>
     protected internal virtual ValueTask<BusinessFailure> ProcessConcurrencyExceptionAsync(DbUpdateConcurrencyException ex, CancellationToken cancellationToken)
-        => ValueTask.FromResult(BusinessFailure.Of.ConcurrencyError(Array.Empty<string>()));
+        => ValueTask.FromResult(BusinessFailure.Of.ConcurrencyError());
 
     /// <inheritdoc/>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "CA2254", Justification = "Logging template can be translated to other languages in this way")]
@@ -116,7 +116,7 @@ public abstract class EFRemoveRepository<TDbContext, TEntity, TDbEntity> : IRemo
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A <see cref="ValueTask{T}"/> holding a <see cref="BusinessFailure"/></returns>
     protected internal virtual ValueTask<BusinessFailure> ProcessConcurrencyExceptionAsync(DbUpdateConcurrencyException ex, CancellationToken cancellationToken)
-        => ValueTask.FromResult(BusinessFailure.Of.ConcurrencyError(Array.Empty<string>()));
+        => ValueTask.FromResult(BusinessFailure.Of.ConcurrencyError());
 
     /// <inheritdoc/>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "CA2254", Justification = "Logging template can be translated to other languages in this way")]

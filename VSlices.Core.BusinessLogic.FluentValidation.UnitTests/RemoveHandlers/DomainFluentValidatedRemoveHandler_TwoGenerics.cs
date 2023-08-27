@@ -40,13 +40,14 @@ public class DomainFluentValidatedRemoveHandler_TwoGenerics
     [Fact]
     public async Task ValidateAsync_ReturnBusinessFailure()
     {
-        const string validationFailureString = "TestingTesting";
+        const string errorDetail = "errorDetail";
+        const string errorName = "errorName";
 
         var request = new Request();
         var validationResult = new ValidationResult(
             new List<ValidationFailure>
             {
-                new (string.Empty, validationFailureString)
+                new (errorName, errorDetail)
             });
 
         _mockedValidator.Setup(e => e.ValidateAsync(It.IsAny<Domain>(), default))
@@ -56,8 +57,8 @@ public class DomainFluentValidatedRemoveHandler_TwoGenerics
         var handlerResponse = await _handler.HandleAsync(request, default);
 
         handlerResponse.IsFailure.Should().BeTrue();
-        handlerResponse.BusinessFailure
-            .Errors.Should().ContainSingle(e => e == validationFailureString);
+        handlerResponse.BusinessFailure.Errors
+            .Should().ContainSingle(e => e.Name == errorName && e.Detail == errorDetail);
         handlerResponse.BusinessFailure
             .Kind.Should().Be(FailureKind.DomainValidation);
 

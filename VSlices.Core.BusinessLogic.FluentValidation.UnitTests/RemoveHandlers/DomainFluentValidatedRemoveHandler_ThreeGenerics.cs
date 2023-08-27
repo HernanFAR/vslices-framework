@@ -43,13 +43,14 @@ public class DomainFluentValidatedRemoveHandler_ThreeGenerics
     [Fact]
     public async Task ValidateAsync_ReturnBusinessFailure()
     {
-        const string validationFailureString = "TestingTesting";
+        const string errorDetail = "errorDetail";
+        const string errorName = "errorName";
 
         var request = new Request();
         var validationResult = new ValidationResult(
             new List<ValidationFailure>
             {
-                new (string.Empty, validationFailureString)
+                new (errorName, errorDetail)
             });
 
         _mockedValidator.Setup(e => e.ValidateAsync(It.IsAny<Domain>(), default))
@@ -60,7 +61,7 @@ public class DomainFluentValidatedRemoveHandler_ThreeGenerics
 
         handlerResponse.IsFailure.Should().BeTrue();
         handlerResponse.BusinessFailure
-            .Errors.Should().ContainSingle(e => e == validationFailureString);
+            .Errors.Should().ContainSingle(e => e.Detail == errorDetail && e.Name == errorName);
         handlerResponse.BusinessFailure
             .Kind.Should().Be(FailureKind.DomainValidation);
 

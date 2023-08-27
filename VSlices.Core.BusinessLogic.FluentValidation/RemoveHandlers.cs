@@ -35,10 +35,11 @@ public abstract class EntityFluentValidatedRemoveHandler<TRequest, TResponse, TE
         if (domainValidationResult.IsValid) return Success.Value;
 
         var errors = domainValidationResult
-            .Errors.Select(e => e.ErrorMessage)
+            .Errors
+            .Select(e => new ValidationError(e.PropertyName, e.ErrorMessage))
             .ToArray();
 
-        return BusinessFailure.Of.DomainValidation(errors);
+        return BusinessFailure.Of.DomainValidation(errors: errors);
     }
 }
 
@@ -71,9 +72,10 @@ public abstract class EntityFluentValidatedRemoveHandler<TRequest, TEntity> : En
         if (domainValidationResult.IsValid) return Success.Value;
 
         var errors = domainValidationResult
-            .Errors.Select(e => e.ErrorMessage)
+            .Errors
+            .Select(e => new ValidationError(e.PropertyName, e.ErrorMessage))
             .ToArray();
 
-        return BusinessFailure.Of.DomainValidation(errors);
+        return BusinessFailure.Of.DomainValidation(errors: errors);
     }
 }

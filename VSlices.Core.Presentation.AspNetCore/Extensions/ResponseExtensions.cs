@@ -25,91 +25,57 @@ public static class ResponseExtensions
 
         return bf.Kind switch
         {
-            FailureKind.Unspecified => bf.Errors.Any()
-                ? TypedResults.Problem(new HttpValidationProblemDetails(bf.Errors.ToDictionary())
-                {
-                    Status = StatusCodes.Status400BadRequest,
-                    Detail = bf.Detail,
-                    Title = bf.Title ?? "The request could not be processed because of a client error."
-                })
-                : TypedResults.Problem(new HttpValidationProblemDetails
+            FailureKind.Unspecified => 
+                TypedResults.Problem(new HttpValidationProblemDetails(bf.Errors.ToDictionary())
                 {
                     Status = StatusCodes.Status400BadRequest,
                     Detail = bf.Detail,
                     Title = bf.Title ?? "The request could not be processed because of a client error."
                 }),
-            FailureKind.NotAuthenticatedUser => bf.Errors.Any()
-                ? TypedResults.Problem(new HttpValidationProblemDetails(bf.Errors.ToDictionary())
-                {
-                    Status = StatusCodes.Status401Unauthorized,
-                    Detail = bf.Detail,
-                    Title = bf.Title ?? "The request could not be processed because of a authentication error."
-                })
-                : TypedResults.Problem(new HttpValidationProblemDetails
+            FailureKind.NotAuthenticatedUser => 
+                TypedResults.Problem(new HttpValidationProblemDetails(bf.Errors.ToDictionary())
                 {
                     Status = StatusCodes.Status401Unauthorized,
                     Detail = bf.Detail,
                     Title = bf.Title ?? "The request could not be processed because of a authentication error."
                 }),
-            FailureKind.NotAllowedUser => bf.Errors.Any()
-                ? TypedResults.Problem(new HttpValidationProblemDetails(bf.Errors.ToDictionary())
-                {
-                    Status = StatusCodes.Status403Forbidden,
-                    Detail = bf.Detail,
-                    Title = bf.Title ?? "The request could not be processed because of a authentication error."
-                })
-                : TypedResults.Problem(new HttpValidationProblemDetails
+            FailureKind.NotAllowedUser =>
+                TypedResults.Problem(new HttpValidationProblemDetails(bf.Errors.ToDictionary())
                 {
                     Status = StatusCodes.Status403Forbidden,
                     Detail = bf.Detail,
                     Title = bf.Title ?? "The request could not be processed because of a authentication error."
                 }),
-            FailureKind.NotFoundResource => bf.Errors.Any()
-                ? TypedResults.Problem(new HttpValidationProblemDetails(bf.Errors.ToDictionary())
-                {
-                    Status = StatusCodes.Status404NotFound,
-                    Detail = bf.Detail,
-                    Title = bf.Title ?? "The requested resource was not found."
-                })
-                : TypedResults.Problem(new HttpValidationProblemDetails
+            FailureKind.NotFoundResource =>
+                TypedResults.Problem(new HttpValidationProblemDetails(bf.Errors.ToDictionary())
                 {
                     Status = StatusCodes.Status404NotFound,
                     Detail = bf.Detail,
                     Title = bf.Title ?? "The requested resource was not found."
                 }),
-            FailureKind.ConcurrencyError => bf.Errors.Any()
-                ? TypedResults.Problem(new HttpValidationProblemDetails(bf.Errors.ToDictionary())
-                {
-                    Status = StatusCodes.Status409Conflict,
-                    Detail = bf.Detail,
-                    Title = bf.Title ?? "The request could not be processed because of a concurrency error."
-                })
-                : TypedResults.Problem(new HttpValidationProblemDetails
+            FailureKind.ConcurrencyError => 
+                TypedResults.Problem(new HttpValidationProblemDetails(bf.Errors.ToDictionary())
                 {
                     Status = StatusCodes.Status409Conflict,
                     Detail = bf.Detail,
                     Title = bf.Title ?? "The request could not be processed because of a concurrency error."
                 }),
-            FailureKind.ContractValidation => TypedResults.Problem(new HttpValidationProblemDetails(bf.Errors.ToDictionary())
+            FailureKind.ContractValidation => 
+                TypedResults.Problem(new HttpValidationProblemDetails(bf.Errors.ToDictionary())
                 {
                     Status = StatusCodes.Status422UnprocessableEntity,
                     Detail = bf.Detail,
                     Title = bf.Title ?? "The request could not be processed because of one or more validation errors."
                 }),
-            FailureKind.DomainValidation => TypedResults.Problem(new HttpValidationProblemDetails(bf.Errors.ToDictionary())
+            FailureKind.DomainValidation => 
+                TypedResults.Problem(new HttpValidationProblemDetails(bf.Errors.ToDictionary())
                 {
                     Status = StatusCodes.Status422UnprocessableEntity,
                     Detail = bf.Detail,
                     Title = bf.Title ?? "The request could not be processed because of one or more validation errors."
                 }),
-            FailureKind.UnhandledException => bf.Errors.Any()
-                ? TypedResults.Problem(new HttpValidationProblemDetails(bf.Errors.ToDictionary())
-                {
-                    Status = StatusCodes.Status500InternalServerError,
-                    Detail = bf.Detail,
-                    Title = bf.Title ?? "The request could not be processed because of a server error."
-                })
-                : TypedResults.Problem(new HttpValidationProblemDetails
+            FailureKind.UnhandledException =>
+                TypedResults.Problem(new HttpValidationProblemDetails(bf.Errors.ToDictionary())
                 {
                     Status = StatusCodes.Status500InternalServerError,
                     Detail = bf.Detail,

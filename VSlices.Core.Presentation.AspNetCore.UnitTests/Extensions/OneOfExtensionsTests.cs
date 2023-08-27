@@ -1,9 +1,8 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 using VSlices.Core.Abstracts.Responses;
-using NotFound = Microsoft.AspNetCore.Http.HttpResults.NotFound;
 
 namespace VSlices.Core.Presentation.AspNetCore.UnitTests.Extensions;
 
@@ -20,162 +19,258 @@ public class ResponseExtensionsTests
     }
 
     [Fact]
-    public void MatchEndpointResult_ShouldCallReturnForbidHttpResult()
+    public void MatchEndpointResult_ShouldCallReturnProblemHttpResult_BadRequestStatusCode()
     {
-        Response<Success> oneOf = BusinessFailure.Of.UserNotAllowed();
+        const string expTitle = "Title";
+        const string expDetail = "Detail";
 
-        var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
+        Response<Success> oneOf = BusinessFailure.Of.Unspecified(expTitle, expDetail);
 
-        result.Should().BeOfType<ForbidHttpResult>();
-    }
+        var result = oneOf.MatchEndpointResult(_ => throw new UnreachableException());
 
-    [Fact]
-    public void MatchEndpointResult_ShouldCallReturnNotFound()
-    {
-        Response<Success> oneOf = BusinessFailure.Of.NotFoundResource();
+        var problemDetails = result.Should().BeOfType<ProblemHttpResult>()
+            .Subject.ProblemDetails;
 
-        var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
-
-        result.Should().BeOfType<NotFound>();
-    }
-
-    [Fact]
-    public void MatchEndpointResult_ShouldCallReturnNotFound_DetailWithErrors()
-    {
-        Response<Success> oneOf = BusinessFailure.Of.NotFoundResource(new[] { "XD" });
-
-        var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
-
-        result.Should().BeOfType<NotFound<string[]>>();
-
-    }
-
-    [Fact]
-    public void MatchEndpointResult_ShouldCallReturnConflict()
-    {
-        Response<Success> oneOf = BusinessFailure.Of.ConcurrencyError();
-
-        var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
-
-        result.Should().BeOfType<Conflict>();
-    }
-
-    [Fact]
-    public void MatchEndpointResult_ShouldCallReturnConflict_DetailWithErrors()
-    {
-        Response<Success> oneOf = BusinessFailure.Of.ConcurrencyError(new[] { "XD" });
-
-        var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
-
-        result.Should().BeOfType<Conflict<string[]>>();
-
-    }
-
-    [Fact]
-    public void MatchEndpointResult_ShouldCallReturnUnprocessableEntity_DetailWithErrors()
-    {
-        Response<Success> oneOf = BusinessFailure.Of.ContractValidation(new[] { "XD" });
-
-        var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
-
-        result.Should().BeOfType<UnprocessableEntity<string[]>>();
-
-    }
-
-    [Fact]
-    public void MatchEndpointResult_ShouldCallReturnUnprocessableEntity_DetailWithError()
-    {
-        Response<Success> oneOf = BusinessFailure.Of.ContractValidation("XD");
-
-        var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
-
-        result.Should().BeOfType<UnprocessableEntity<string[]>>();
-
-    }
-
-    [Fact]
-    public void MatchEndpointResult_ShouldCallReturnUnprocessableEntity_DetailWithErrorsAndDomainValidation()
-    {
-        Response<Success> oneOf = BusinessFailure.Of.DomainValidation(new[] { "XD" });
-
-        var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
-
-        result.Should().BeOfType<UnprocessableEntity<string[]>>();
-
-    }
-
-    [Fact]
-    public void MatchEndpointResult_ShouldCallReturnUnprocessableEntity_DetailWithErrorAndDomainValidation()
-    {
-        Response<Success> oneOf = BusinessFailure.Of.DomainValidation("XD");
-
-        var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
-
-        result.Should().BeOfType<UnprocessableEntity<string[]>>();
-
-    }
-
-    [Fact]
-    public void MatchEndpointResult_ShouldCallReturnBadRequest_DetailWithErrors()
-    {
-        Response<Success> oneOf = BusinessFailure.Of.DefaultError(new [] {"XD" });
-
-        var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
-
-        result.Should().BeOfType<BadRequest<string[]>>();
-
-    }
-
-    [Fact]
-    public void MatchEndpointResult_ShouldCallReturnBadRequest_DetailWithError()
-    {
-        Response<Success> oneOf = BusinessFailure.Of.DefaultError("XD");
-
-        var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
-
-        result.Should().BeOfType<BadRequest<string[]>>();
-
-    }
-
-    [Fact]
-    public void MatchEndpointResult_ShouldCallReturnBadRequest()
-    {
-        Response<Success> oneOf = BusinessFailure.Of.DefaultError();
-
-        var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
-
-        result.Should().BeOfType<BadRequest>();
+        problemDetails.Status.Should().Be(StatusCodes.Status400BadRequest);
+        problemDetails.Title.Should().Be(expTitle);
+        problemDetails.Detail.Should().Be(expDetail);
 
     }
 
     [Fact]
     public void MatchEndpointResult_ShouldCallReturnUnauthorizedResult()
     {
-        Response<Success> oneOf = BusinessFailure.Of.UserNotAuthenticated();
+        const string expTitle = "Title";
+        const string expDetail = "Detail";
 
-        var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
+        Response<Success> oneOf = BusinessFailure.Of.UserNotAuthenticated(expTitle, expDetail);
 
-        result.Should().BeOfType<UnauthorizedHttpResult>();
+        var result = oneOf.MatchEndpointResult(_ => throw new UnreachableException());
+
+        var problemDetails = result.Should().BeOfType<ProblemHttpResult>()
+            .Subject.ProblemDetails;
+
+        problemDetails.Status.Should().Be(StatusCodes.Status401Unauthorized);
+        problemDetails.Title.Should().Be(expTitle);
+        problemDetails.Detail.Should().Be(expDetail);
+
+    }
+
+    [Fact]
+    public void MatchEndpointResult_ShouldCallReturnProblemHttpResult_ForbiddenStatusCode()
+    {
+        const string expTitle = "Title";
+        const string expDetail = "Detail";
+
+        Response<Success> oneOf = BusinessFailure.Of.UserNotAllowed(expTitle, expDetail);
+
+        var result = oneOf.MatchEndpointResult(_ => throw new UnreachableException());
+
+        var problemDetails = result.Should().BeOfType<ProblemHttpResult>()
+            .Subject.ProblemDetails;
+
+        problemDetails.Status.Should().Be(StatusCodes.Status403Forbidden);
+        problemDetails.Title.Should().Be(expTitle);
+        problemDetails.Detail.Should().Be(expDetail);
+    }
+
+    [Fact]
+    public void MatchEndpointResult_ShouldCallReturnProblemHttpResult_NotFoundStatusCode()
+    {
+        const string expTitle = "Title";
+        const string expDetail = "Detail";
+
+        Response<Success> oneOf = BusinessFailure.Of.NotFoundResource(expTitle, expDetail);
+
+        var result = oneOf.MatchEndpointResult(_ => throw new UnreachableException());
+
+        var problemDetails = result.Should().BeOfType<ProblemHttpResult>()
+            .Subject.ProblemDetails;
+
+        problemDetails.Status.Should().Be(StatusCodes.Status404NotFound);
+        problemDetails.Title.Should().Be(expTitle);
+        problemDetails.Detail.Should().Be(expDetail);
+    }
+
+    [Fact]
+    public void MatchEndpointResult_ShouldCallReturnConflict()
+    {
+        const string expTitle = "Title";
+        const string expDetail = "Detail";
+
+        Response<Success> oneOf = BusinessFailure.Of.ConcurrencyError(expTitle, expDetail);
+
+        var result = oneOf.MatchEndpointResult(_ => throw new UnreachableException());
+
+        var problemDetails = result.Should().BeOfType<ProblemHttpResult>()
+            .Subject.ProblemDetails;
+
+        problemDetails.Status.Should().Be(StatusCodes.Status409Conflict);
+        problemDetails.Title.Should().Be(expTitle);
+        problemDetails.Detail.Should().Be(expDetail);
+    }
+
+    [Fact]
+    public void MatchEndpointResult_ShouldCallReturnUnprocessableEntity_DetailWithErrors()
+    {
+        const string expTitle = "Title";
+        const string expDetail = "Detail";
+        const string expErrorName1 = "ErrorName1";
+        const string expErrorName2 = "ErrorName2";
+        const string expErrorDetail1_1 = "ErrorDetail1";
+        const string expErrorDetail1_2 = "ErrorDetail2";
+        const string expErrorDetail2_1 = "ErrorDetail3";
+        var validationErrors = new ValidationError[]
+        {
+            new (expErrorName1, expErrorDetail1_1),
+            new (expErrorName1, expErrorDetail1_2),
+            new (expErrorName2, expErrorDetail2_1)
+        };
+
+        Response<Success> oneOf = BusinessFailure.Of.ContractValidation(expTitle, expDetail, validationErrors);
+
+        var result = oneOf.MatchEndpointResult(_ => throw new UnreachableException());
+
+        var problemDetails = result.Should().BeOfType<ProblemHttpResult>()
+            .Subject.ProblemDetails;
+
+        problemDetails.Status.Should().Be(StatusCodes.Status422UnprocessableEntity);
+        problemDetails.Title.Should().Be(expTitle);
+        problemDetails.Detail.Should().Be(expDetail);
+        ((HttpValidationProblemDetails)problemDetails).Errors
+            .Should().BeEquivalentTo(new Dictionary<string, string[]>
+            {
+                { expErrorName1, new [] { expErrorDetail1_1, expErrorDetail1_2 } },
+                { expErrorName2, new [] { expErrorDetail2_1 } }
+            });
+
+    }
+
+    [Fact]
+    public void MatchEndpointResult_ShouldCallReturnUnprocessableEntity_DetailWithError()
+    {
+        const string expTitle = "Title";
+        const string expDetail = "Detail";
+        const string expErrorName1 = "ErrorName1";
+        const string expErrorDetail1_1 = "ErrorDetail1";
+        const string expErrorDetail1_2 = "ErrorDetail2";
+        var validationErrors = new ValidationError[]
+        {
+            new (expErrorName1, expErrorDetail1_1),
+            new (expErrorName1, expErrorDetail1_2),
+        };
+
+        Response<Success> oneOf = BusinessFailure.Of.ContractValidation(expTitle, expDetail, validationErrors);
+
+        var result = oneOf.MatchEndpointResult(_ => throw new UnreachableException());
+
+        var problemDetails = result.Should().BeOfType<ProblemHttpResult>()
+            .Subject.ProblemDetails;
+
+        problemDetails.Status.Should().Be(StatusCodes.Status422UnprocessableEntity);
+        problemDetails.Title.Should().Be(expTitle);
+        problemDetails.Detail.Should().Be(expDetail);
+        ((HttpValidationProblemDetails)problemDetails).Errors
+            .Should().BeEquivalentTo(new Dictionary<string, string[]>
+            {
+                { expErrorName1, new [] { expErrorDetail1_1, expErrorDetail1_2 } }
+            });
+
+    }
+
+    [Fact]
+    public void MatchEndpointResult_ShouldCallReturnUnprocessableEntity_DetailWithErrorsAndDomainValidation()
+    {
+        const string expTitle = "Title";
+        const string expDetail = "Detail";
+        const string expErrorName1 = "ErrorName1";
+        const string expErrorName2 = "ErrorName2";
+        const string expErrorDetail1_1 = "ErrorDetail1";
+        const string expErrorDetail1_2 = "ErrorDetail2";
+        const string expErrorDetail2_1 = "ErrorDetail3";
+        var validationErrors = new ValidationError[]
+        {
+            new (expErrorName1, expErrorDetail1_1),
+            new (expErrorName1, expErrorDetail1_2),
+            new (expErrorName2, expErrorDetail2_1)
+        };
+
+        Response<Success> oneOf = BusinessFailure.Of.DomainValidation(expTitle, expDetail, validationErrors);
+
+        var result = oneOf.MatchEndpointResult(_ => throw new UnreachableException());
+
+        var problemDetails = result.Should().BeOfType<ProblemHttpResult>()
+            .Subject.ProblemDetails;
+
+        problemDetails.Status.Should().Be(StatusCodes.Status422UnprocessableEntity);
+        problemDetails.Title.Should().Be(expTitle);
+        problemDetails.Detail.Should().Be(expDetail);
+        ((HttpValidationProblemDetails)problemDetails).Errors
+            .Should().BeEquivalentTo(new Dictionary<string, string[]>
+            {
+                { expErrorName1, new [] { expErrorDetail1_1, expErrorDetail1_2 } },
+                { expErrorName2, new [] { expErrorDetail2_1 } }
+            });
+
+    }
+
+    [Fact]
+    public void MatchEndpointResult_ShouldCallReturnUnprocessableEntity_DetailWithErrorAndDomainValidation()
+    {
+        const string expTitle = "Title";
+        const string expDetail = "Detail";
+        const string expErrorName1 = "ErrorName1";
+        const string expErrorDetail1_1 = "ErrorDetail1";
+        const string expErrorDetail1_2 = "ErrorDetail2";
+        var validationErrors = new ValidationError[]
+        {
+            new (expErrorName1, expErrorDetail1_1),
+            new (expErrorName1, expErrorDetail1_2),
+        };
+
+        Response<Success> oneOf = BusinessFailure.Of.DomainValidation(expTitle, expDetail, validationErrors);
+
+        var result = oneOf.MatchEndpointResult(_ => throw new UnreachableException());
+
+        var problemDetails = result.Should().BeOfType<ProblemHttpResult>()
+            .Subject.ProblemDetails;
+
+        problemDetails.Status.Should().Be(StatusCodes.Status422UnprocessableEntity);
+        problemDetails.Title.Should().Be(expTitle);
+        problemDetails.Detail.Should().Be(expDetail);
+        ((HttpValidationProblemDetails)problemDetails).Errors
+            .Should().BeEquivalentTo(new Dictionary<string, string[]>
+            {
+                { expErrorName1, new [] { expErrorDetail1_1, expErrorDetail1_2 } }
+            });
 
     }
 
     [Fact]
     public void MatchEndpointResult_ShouldCallReturnStatusCodeHttpResult()
     {
-        Response<Success> oneOf = BusinessFailure.Of.UnhandledException();
+        const string expTitle = "Title";
+        const string expDetail = "Detail";
 
-        var result = oneOf.MatchEndpointResult(_ => TypedResults.Ok());
+        Response<Success> oneOf = BusinessFailure.Of.UnhandledException(expTitle, expDetail);
 
-        result.Should().BeOfType<StatusCodeHttpResult>();
+        var result = oneOf.MatchEndpointResult(_ => throw new UnreachableException());
+
+        var problemDetails = result.Should().BeOfType<ProblemHttpResult>()
+            .Subject.ProblemDetails;
+
+        problemDetails.Status.Should().Be(StatusCodes.Status500InternalServerError);
+        problemDetails.Title.Should().Be(expTitle);
+        problemDetails.Detail.Should().Be(expDetail);
 
     }
 
     [Fact]
     public void MatchEndpointResult_ShouldThrowArgumentOutOfRange()
     {
-        Response<Success> oneOf = new BusinessFailure((FailureKind)99, Array.Empty<string>());
+        Response<Success> oneOf = new BusinessFailure((FailureKind)99, null, null, Array.Empty<ValidationError>());
 
-        var act = () => oneOf.MatchEndpointResult(_ => TypedResults.Ok());
+        var act = () => oneOf.MatchEndpointResult(_ => throw new UnreachableException());
 
         act.Should().ThrowExactly<ArgumentOutOfRangeException>();
 
