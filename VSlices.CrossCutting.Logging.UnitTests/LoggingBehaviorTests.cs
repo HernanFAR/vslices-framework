@@ -17,7 +17,7 @@ public class LoggingBehaviorTests
 
     public record Response1
     {
-        public string Test => "Testing";
+        public static string Test => "Testing";
     }
 
     [NoLoggable]
@@ -26,7 +26,7 @@ public class LoggingBehaviorTests
     [NoLoggable]
     public record Response2
     {
-        public string Test => "Testing";
+        public static string Test => "Testing";
     }
 
     [Fact]
@@ -38,13 +38,14 @@ public class LoggingBehaviorTests
         
         var request = new Request1();
         var response = new Response1();
-        RequestHandlerDelegate<Response1> next = () => ValueTask.FromResult<Response<Response1>>(response);
+
+        ValueTask<Response<Response1>> Next() => ValueTask.FromResult<Response<Response1>>(response);
 
         var loggingBehavior = new LoggingBehavior<Request1, Response1>(logger, configuration);
 
 
         // Act
-        var handlerResponse = await loggingBehavior.HandleAsync(request, next, CancellationToken.None);
+        var handlerResponse = await loggingBehavior.HandleAsync(request, Next, CancellationToken.None);
 
 
         // Assert
@@ -95,13 +96,14 @@ public class LoggingBehaviorTests
         
         var request = new Request2();
         var response = new Response2();
-        RequestHandlerDelegate<Response2> next = () => ValueTask.FromResult<Response<Response2>>(response);
+
+        ValueTask<Response<Response2>> Next() => ValueTask.FromResult<Response<Response2>>(response);
 
         var loggingBehavior = new LoggingBehavior<Request2, Response2>(logger, configuration);
 
 
         // Act
-        var handlerResponse = await loggingBehavior.HandleAsync(request, next, CancellationToken.None);
+        var handlerResponse = await loggingBehavior.HandleAsync(request, Next, CancellationToken.None);
 
 
         // Assert
@@ -150,13 +152,14 @@ public class LoggingBehaviorTests
         
         var request = new Request2();
         var response = new Response2();
-        RequestHandlerDelegate<Response2> next = () => ValueTask.FromResult<Response<Response2>>(response);
+
+        ValueTask<Response<Response2>> Next() => ValueTask.FromResult<Response<Response2>>(response);
 
         var loggingBehavior = new LoggingBehavior<Request2, Response2>(logger, configuration);
 
 
         // Act
-        var handlerResponse = await loggingBehavior.HandleAsync(request, next, CancellationToken.None);
+        var handlerResponse = await loggingBehavior.HandleAsync(request, Next, CancellationToken.None);
 
 
         // Assert
@@ -198,14 +201,14 @@ public class LoggingBehaviorTests
         var configuration = new LoggingConfiguration();
         
         var request = new Request1();
-        var response = BusinessFailure.Of.DefaultError("Test");
-        RequestHandlerDelegate<Response1> next = () => ValueTask.FromResult<Response<Response1>>(response);
+        var response = BusinessFailure.Of.Unspecified("Test");
+        ValueTask<Response<Response1>> Next() => ValueTask.FromResult<Response<Response1>>(response);
 
         var loggingBehavior = new LoggingBehavior<Request1, Response1>(logger, configuration);
 
 
         // Act
-        var handlerResponse = await loggingBehavior.HandleAsync(request, next, CancellationToken.None);
+        var handlerResponse = await loggingBehavior.HandleAsync(request, Next, CancellationToken.None);
 
 
         // Assert
@@ -254,14 +257,14 @@ public class LoggingBehaviorTests
         };
         
         var request = new Request2();
-        var response = BusinessFailure.Of.DefaultError("Test");
-        RequestHandlerDelegate<Response2> next = () => ValueTask.FromResult<Response<Response2>>(response);
+        var response = BusinessFailure.Of.Unspecified("Test");
+        ValueTask<Response<Response2>> Next() => ValueTask.FromResult<Response<Response2>>(response);
 
         var loggingBehavior = new LoggingBehavior<Request2, Response2>(logger, configuration);
 
 
         // Act
-        var handlerResponse = await loggingBehavior.HandleAsync(request, next, CancellationToken.None);
+        var handlerResponse = await loggingBehavior.HandleAsync(request, Next, CancellationToken.None);
 
 
         // Assert

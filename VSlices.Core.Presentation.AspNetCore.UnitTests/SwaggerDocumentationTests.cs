@@ -17,7 +17,7 @@ public class SingletonSwaggerDocumentation : SwaggerDocumentation.WithSingleton<
 public class SwaggerDocumentationTests
 {
     [Fact]
-    public async Task Instantiation_ShouldHaveInstanceProperty()
+    public void Instantiation_ShouldHaveInstanceProperty()
     {
         // Act
         var swaggerDocumentation1 = SingletonSwaggerDocumentation.Instance;

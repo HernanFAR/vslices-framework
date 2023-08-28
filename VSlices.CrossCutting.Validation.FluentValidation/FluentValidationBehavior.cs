@@ -37,9 +37,10 @@ public class FluentValidationBehavior<TRequest, TResponse> : AbstractValidationB
         if (requestValidationResult.IsValid) return Success.Value;
 
         var errors = requestValidationResult
-            .Errors.Select(e => e.ErrorMessage)
+            .Errors
+            .Select(e => new ValidationError(e.PropertyName, e.ErrorMessage))
             .ToArray();
 
-        return BusinessFailure.Of.ContractValidation(errors);
+        return BusinessFailure.Of.ContractValidation(errors: errors);
     }
 }

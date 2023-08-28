@@ -13,167 +13,175 @@ public class BusinessFailureTests
     [Fact]
     public void UserNotAuthenticated_ShouldReturnKindNotAuthenticatedUserAndEmptyErrors_DetailInitAccesors()
     {
-        var bus = new BusinessFailure()
+        const string expTitle = "Title";
+        const string expDetail = "Detail";
+        const string expErrorName = "ErrorName";
+        const string expErrorDetail = "ErrorDetail";
+        var expErrors = new[] { new ValidationError(expErrorName, expErrorDetail) };
+
+        var bus = new BusinessFailure
         {
-            Errors = Array.Empty<string>(),
-            Kind = FailureKind.NotAuthenticatedUser
+            Kind = FailureKind.NotAuthenticatedUser,
+            Title = expTitle,
+            Detail = expDetail,
+            Errors = expErrors
         };
         
         bus.Kind.Should().Be(FailureKind.NotAuthenticatedUser);
-        bus.Errors.Should().BeEmpty();
+        bus.Title.Should().Be(expTitle);
+        bus.Detail.Should().Be(expDetail);
+        bus.Errors.Should().BeEquivalentTo(expErrors);
     }
 
     [Fact]
-    public void UserNotAuthenticated_ShouldReturnKindNotAuthenticatedUserAndEmptyErrors()
+    public void UserNotAuthenticated_ShouldReturnKindNotAuthenticated()
     {
-        var bus = BusinessFailure.Of.UserNotAuthenticated();
+        const string expTitle = "Title";
+        const string expDetail = "Detail";
+
+        var bus = BusinessFailure.Of.UserNotAuthenticated(title: expTitle, detail: expDetail);
         
         bus.Kind.Should().Be(FailureKind.NotAuthenticatedUser);
+        bus.Title.Should().Be(expTitle);
+        bus.Detail.Should().Be(expDetail);
+        bus.Errors.Should().BeEmpty();
+    }
+    
+    [Fact]
+    public void UserNotAllowed_ShouldReturnKindNotAllowedUser()
+    {
+        const string expTitle = "Title";
+        const string expDetail = "Detail";
+
+        var bus = BusinessFailure.Of.UserNotAllowed(title: expTitle, detail: expDetail);
+
+        bus.Kind.Should().Be(FailureKind.NotAllowedUser);
+        bus.Title.Should().Be(expTitle);
+        bus.Detail.Should().Be(expDetail);
+        bus.Errors.Should().BeEmpty();
+    }
+    
+    [Fact]
+    public void NotFoundResource_ShouldReturnKindNotFoundResource()
+    {
+        const string expTitle = "Title";
+        const string expDetail = "Detail";
+
+        var bus = BusinessFailure.Of.NotFoundResource(title: expTitle, detail: expDetail);
+        
+        bus.Kind.Should().Be(FailureKind.NotFoundResource);
+        bus.Title.Should().Be(expTitle);
+        bus.Detail.Should().Be(expDetail);
+        bus.Errors.Should().BeEmpty();
+    }
+    
+    [Fact]
+    public void ConcurrencyError_ShouldReturnKindConcurrencyError()
+    {
+        const string expTitle = "Title";
+        const string expDetail = "Detail";
+
+        var bus = BusinessFailure.Of.ConcurrencyError(title: expTitle, detail: expDetail);
+
+        bus.Kind.Should().Be(FailureKind.ConcurrencyError);
+        bus.Title.Should().Be(expTitle);
+        bus.Detail.Should().Be(expDetail);
         bus.Errors.Should().BeEmpty();
     }
 
-    [Fact]
-    public void UserNotAuthenticated_ShouldReturnKindNotAuthenticatedUserAndEmptyErrors_DetailOneError()
-    {
-        const string error = "Test";
-        var bus = BusinessFailure.Of.UserNotAuthenticated(error);
-        
-        bus.Kind.Should().Be(FailureKind.NotAuthenticatedUser);
-        bus.Errors.Should().ContainSingle(error);
-    }
-    
-    [Fact]
-    public void UserNotAllowed_ShouldReturnKindNotAllowedUserAndEmptyErrors()
-    {
-        var bus = BusinessFailure.Of.UserNotAllowed();
-        
-        bus.Kind.Should().Be(FailureKind.NotAllowedUser);
-        bus.Errors.Should().BeEmpty();
-    }
-    
-    [Fact]
-    public void UserNotAllowed_ShouldReturnKindNotAllowedUserAndEmptyErrors_DetailOneError()
-    {
-        const string error = "Test";
-        var bus = BusinessFailure.Of.UserNotAllowed(error);
-        
-        bus.Kind.Should().Be(FailureKind.NotAllowedUser);
-        bus.Errors.Should().ContainSingle(error);
-    }
-    
-    [Fact]
-    public void NotFoundResource_ShouldReturnKindNotFoundResourceAndErrors()
-    {
-        var errors = new[] { "error1", "error2" };
-        var bus = BusinessFailure.Of.NotFoundResource(errors);
-        
-        bus.Kind.Should().Be(FailureKind.NotFoundResource);
-        bus.Errors.Should().BeEquivalentTo(errors);
-    }
-    
-    [Fact]
-    public void NotFoundResource_ShouldReturnKindNotFoundResourceAndEmptyErrors()
-    {
-        var bus = BusinessFailure.Of.NotFoundResource();
-        
-        bus.Kind.Should().Be(FailureKind.NotFoundResource);
-        bus.Errors.Should().BeEmpty();
-    }
-    
-    [Fact]
-    public void ConcurrencyError_ShouldReturnKindConcurrencyErrorAndErrors()
-    {
-        var errors = new[] { "error1", "error2" };
-        var bus = BusinessFailure.Of.ConcurrencyError(errors);
-        
-        bus.Kind.Should().Be(FailureKind.ConcurrencyError);
-        bus.Errors.Should().BeEquivalentTo(errors);
-    }
-    
-    [Fact]
-    public void ConcurrencyError_ShouldReturnKindConcurrencyErrorAndEmptyErrors()
-    {
-        var bus = BusinessFailure.Of.ConcurrencyError();
-        
-        bus.Kind.Should().Be(FailureKind.ConcurrencyError);
-        bus.Errors.Should().BeEmpty();
-    }
-    
     [Fact]
     public void ContractValidation_ShouldReturnKindContractValidationAndErrors()
     {
-        var errors = new[] { "error1", "error2" };
-        var bus = BusinessFailure.Of.ContractValidation(errors);
+        const string expTitle = "Title";
+        const string expDetail = "Detail";
+        const string expErrorName = "ErrorName";
+        const string expErrorDetail = "ErrorDetail";
+        var expErrors = new[] { new ValidationError(expErrorName, expErrorDetail) };
+        
+        var bus = BusinessFailure.Of.ContractValidation(title: expTitle, detail: expDetail, expErrors);
         
         bus.Kind.Should().Be(FailureKind.ContractValidation);
-        bus.Errors.Should().BeEquivalentTo(errors);
+        bus.Title.Should().Be(expTitle);
+        bus.Detail.Should().Be(expDetail);
+        bus.Errors.Should().BeEquivalentTo(expErrors);
     }
     
     [Fact]
-    public void ContractValidation_ShouldReturnKindContractValidationAndErrorsWithOneError()
+    public void ContractValidation_ShouldReturnKindContractValidationAndError()
     {
-        const string error = "error1";
-        var bus = BusinessFailure.Of.ContractValidation(error);
-        
+        const string expTitle = "Title";
+        const string expDetail = "Detail";
+        const string expErrorName = "ErrorName";
+        const string expErrorDetail = "ErrorDetail";
+        var expError = new ValidationError(expErrorName, expErrorDetail);
+
+        var bus = BusinessFailure.Of.ContractValidation(title: expTitle, detail: expDetail, expError);
+
         bus.Kind.Should().Be(FailureKind.ContractValidation);
-        bus.Errors.Should().BeEquivalentTo(error);
+        bus.Title.Should().Be(expTitle);
+        bus.Detail.Should().Be(expDetail);
+        bus.Errors.Should().BeEquivalentTo(new[] { expError });
     }
     
     [Fact]
     public void DomainValidation_ShouldReturnKindDomainValidationAndErrors()
     {
-        var errors = new[] { "error1", "error2" };
-        var bus = BusinessFailure.Of.DomainValidation(errors);
-        
-        bus.Kind.Should().Be(FailureKind.DomainValidation);
-        bus.Errors.Should().BeEquivalentTo(errors);
-    }
-    
-    [Fact]
-    public void DomainValidation_ShouldReturnKindDomainValidationAndErrorsWithOneError()
-    {
-        const string error = "error1";
-        var bus = BusinessFailure.Of.DomainValidation(error);
-        
-        bus.Kind.Should().Be(FailureKind.DomainValidation);
-        bus.Errors.Should().BeEquivalentTo(error);
-    }
-    
-    [Fact]
-    public void DefaultError_ShouldReturnKindDefaultErrorAndErrors()
-    {
-        var errors = new[] { "error1", "error2" };
-        var bus = BusinessFailure.Of.DefaultError(errors);
-        
-        bus.Kind.Should().Be(FailureKind.DefaultError);
-        bus.Errors.Should().BeEquivalentTo(errors);
-    }
-    
-    [Fact]
-    public void DefaultError_ShouldReturnKindDefaultErrorAndErrorsWithOneError()
-    {
-        const string error = "error1";
-        var bus = BusinessFailure.Of.DefaultError(error);
-        
-        bus.Kind.Should().Be(FailureKind.DefaultError);
-        bus.Errors.Should().BeEquivalentTo(error);
-    }
+        const string expTitle = "Title";
+        const string expDetail = "Detail";
+        const string expErrorName = "ErrorName";
+        const string expErrorDetail = "ErrorDetail";
+        var expErrors = new[] { new ValidationError(expErrorName, expErrorDetail) };
 
+        var bus = BusinessFailure.Of.DomainValidation(title: expTitle, detail: expDetail, expErrors);
+
+        bus.Kind.Should().Be(FailureKind.DomainValidation);
+        bus.Title.Should().Be(expTitle);
+        bus.Detail.Should().Be(expDetail);
+        bus.Errors.Should().BeEquivalentTo(expErrors);
+    }
+    
     [Fact]
-    public void DefaultError_ShouldReturnKindDefaultErrorAndEmptyErrors()
+    public void DomainValidation_ShouldReturnKindDomainValidationAndError()
     {
-        var bus = BusinessFailure.Of.DefaultError();
+        const string expTitle = "Title";
+        const string expDetail = "Detail";
+        const string expErrorName = "ErrorName";
+        const string expErrorDetail = "ErrorDetail";
+        var expError = new ValidationError(expErrorName, expErrorDetail);
+
+        var bus = BusinessFailure.Of.DomainValidation(title: expTitle, detail: expDetail, expError);
+
+        bus.Kind.Should().Be(FailureKind.DomainValidation);
+        bus.Title.Should().Be(expTitle);
+        bus.Detail.Should().Be(expDetail);
+        bus.Errors.Should().BeEquivalentTo(new[] { expError });
+    }
+    
+    [Fact]
+    public void DefaultError_ShouldReturnKindUnspecified()
+    {
+        const string expTitle = "Title";
+        const string expDetail = "Detail";
+
+        var bus = BusinessFailure.Of.Unspecified(title: expTitle, detail: expDetail);
         
-        bus.Kind.Should().Be(FailureKind.DefaultError);
+        bus.Kind.Should().Be(FailureKind.Unspecified);
+        bus.Title.Should().Be(expTitle);
+        bus.Detail.Should().Be(expDetail);
         bus.Errors.Should().BeEmpty();
     }
     
     [Fact]
     public void UnhandledException_ShouldReturnKindUnhandledExceptionAndErrors()
     {
-        var bus = BusinessFailure.Of.UnhandledException();
-        
+        const string expTitle = "Title";
+        const string expDetail = "Detail";
+
+        var bus = BusinessFailure.Of.UnhandledException(title: expTitle, detail: expDetail);
+
         bus.Kind.Should().Be(FailureKind.UnhandledException);
+        bus.Title.Should().Be(expTitle);
+        bus.Detail.Should().Be(expDetail);
         bus.Errors.Should().BeEmpty();
     }
 }
