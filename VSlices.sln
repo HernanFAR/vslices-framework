@@ -65,7 +65,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.CrossCutting.Loggin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Domain", "VSlices.Domain\VSlices.Domain.csproj", "{B15D0CA4-E28A-4084-8DE8-A740DC35D296}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSlices.Domain.UnitTests", "VSlices.Domain.UnitTests\VSlices.Domain.UnitTests.csproj", "{C96835B2-9F94-4834-9C27-31C92772CA45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Domain.UnitTests", "VSlices.Domain.UnitTests\VSlices.Domain.UnitTests.csproj", "{C96835B2-9F94-4834-9C27-31C92772CA45}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
