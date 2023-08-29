@@ -25,7 +25,8 @@ public class DomainFluentValidatedRemoveHandler_ThreeGenerics
         protected override ValueTask<Domain> GetAndProcessEntityAsync(Request request, CancellationToken cancellationToken = default)
             => ValueTask.FromResult(new Domain());
 
-        protected override Response GetResponse(Domain domainEntity, Request request) => new();
+        protected override ValueTask<Response> GetResponseAsync(Domain domainEntity, Request request,
+            CancellationToken cancellationToken) => ValueTask.FromResult(new Response());
 
     }
 

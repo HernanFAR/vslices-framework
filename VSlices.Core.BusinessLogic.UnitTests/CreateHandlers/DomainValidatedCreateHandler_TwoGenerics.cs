@@ -91,7 +91,7 @@ public class DomainValidatedCreateHandler_TwoGenerics
             .ReturnsAsync(domain);
         _mockedHandler.Setup(e => e.ValidateEntityAsync(domain, default))
             .ReturnsAsync(success);
-        _mockedHandler.Setup(e => e.GetResponse(domain, request))
+        _mockedHandler.Setup(e => e.GetResponseAsync(domain, request, default))
             .CallBase();
 
         _mockedRepository.Setup(e => e.CreateAsync(domain, default))
@@ -139,7 +139,7 @@ public class DomainValidatedCreateHandler_TwoGenerics
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.CreateEntityAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateEntityAsync(domain, default), Times.Once);
-        _mockedHandler.Protected().Verify("GetResponse", Times.Once(), domain, request);
+        _mockedHandler.Protected().Verify("GetResponseAsync", Times.Once(), domain, request, default(CancellationToken));
         _mockedHandler.VerifyNoOtherCalls();
 
         _mockedRepository.Verify(e => e.CreateAsync(domain, default), Times.Once);

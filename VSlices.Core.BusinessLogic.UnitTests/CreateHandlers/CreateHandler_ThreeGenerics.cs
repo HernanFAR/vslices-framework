@@ -90,8 +90,8 @@ public class CreateHandler_ThreeGenerics
             .ReturnsAsync(success);
         _mockedHandler.Setup(e => e.CreateEntityAsync(request, default))
             .ReturnsAsync(domain);
-        _mockedHandler.Setup(e => e.GetResponse(domain, request))
-            .Returns(response);
+        _mockedHandler.Setup(e => e.GetResponseAsync(domain, request, default))
+            .ReturnsAsync(response);
 
         _mockedRepository.Setup(e => e.CreateAsync(domain, default))
             .ReturnsAsync(domain);
@@ -103,7 +103,7 @@ public class CreateHandler_ThreeGenerics
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.CreateEntityAsync(request, default), Times.Once);
-        _mockedHandler.Verify(e => e.GetResponse(domain, request), Times.Once);
+        _mockedHandler.Verify(e => e.GetResponseAsync(domain, request, default), Times.Once);
         _mockedHandler.VerifyNoOtherCalls();
 
         _mockedRepository.Verify(e => e.CreateAsync(domain, default), Times.Once);

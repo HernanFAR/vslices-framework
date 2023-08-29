@@ -60,7 +60,7 @@ public class DomainValidatedRemoveHandler_TwoGenerics
             .ReturnsAsync(domain);
         _mockedHandler.Setup(e => e.ValidateEntityAsync(domain, default))
             .ReturnsAsync(businessFailure);
-        _mockedHandler.Setup(e => e.GetResponse(domain, request))
+        _mockedHandler.Setup(e => e.GetResponseAsync(domain, request, default))
             .CallBase();
 
         var handlerResponse = await _mockedHandler.Object.HandleAsync(request, default);
@@ -139,7 +139,7 @@ public class DomainValidatedRemoveHandler_TwoGenerics
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.GetAndProcessEntityAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateEntityAsync(domain, default), Times.Once);
-        _mockedHandler.Protected().Verify("GetResponse", Times.Once(), domain, request);
+        _mockedHandler.Protected().Verify("GetResponseAsync", Times.Once(), domain, request, default(CancellationToken));
         _mockedHandler.VerifyNoOtherCalls();
 
         _mockedRepository.Verify(e => e.RemoveAsync(domain, default), Times.Once);
