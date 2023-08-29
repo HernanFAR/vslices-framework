@@ -44,25 +44,6 @@ public class ServiceCollectionExtensionsTests
         }
     }
 
-    public record Request1 : IRequest { }
-    public class Handler1 : IHandler<Request1>
-    {
-        public ValueTask<Response<Success>> HandleAsync(Request1 request, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public record Response2 { }
-    public record Request2 : IRequest<Response2> { }
-    public class Handler2 : IHandler<Request2, Response2>
-    {
-        public ValueTask<Response<Response2>> HandleAsync(Request2 request, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     [Fact]
     public void AddEndpointDefinition_ShouldAddSimpleEndpointAndDependencies()
     {
@@ -107,7 +88,7 @@ public class ServiceCollectionExtensionsTests
     {
         var services = new ServiceCollection();
 
-        services.AddEndpointDefinitionsFrom<Endpoint>();
+        services.AddEndpointDefinitionsFromAssemblyContaining<Endpoint>();
         
         services
             .Where(e => e.ServiceType == typeof(ISimpleEndpointDefinition))
@@ -131,29 +112,6 @@ public class ServiceCollectionExtensionsTests
             .Where(e => e.ServiceType == typeof(Dependency2))
             .Where(e => e.ImplementationType == typeof(Dependency2))
             .Any(e => e.Lifetime == ServiceLifetime.Scoped)
-            .Should().BeTrue();
-
-    }
-
-    [Fact]
-    public void AddHandlersFrom_ShouldAdHandlerImplementationsUsingTwoGenericOverload()
-    {
-        // Arrange
-        var services = new ServiceCollection();
-
-        // Act
-        services.AddHandlersFromAssemblyContaining<Handler1>();
-
-
-        // Assert
-        services
-            .Where(e => e.ImplementationType == typeof(Handler1))
-            .Any(e => e.ServiceType == typeof(IHandler<Request1, Success>))
-            .Should().BeTrue();
-
-        services
-            .Where(e => e.ImplementationType == typeof(Handler2))
-            .Any(e => e.ServiceType == typeof(IHandler<Request2, Response2>))
             .Should().BeTrue();
 
     }
