@@ -47,7 +47,7 @@ public static class ServiceCollectionExtensions
     /// <typeparam name="TAnchor">Assembly to Scan</typeparam>
     /// <returns>Service collection</returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public static IServiceCollection AddEndpointDefinitionsFrom<TAnchor>(
+    public static IServiceCollection AddEndpointDefinitionsFromAssemblyContaining<TAnchor>(
         this IServiceCollection services, ServiceLifetime lifetime = ServiceLifetime.Scoped)
     {
         var definerTypes = typeof(TAnchor).Assembly.ExportedTypes
@@ -66,31 +66,6 @@ public static class ServiceCollectionExtensions
             services.Add(new ServiceDescriptor(typeof(ISimpleEndpointDefinition), definerType, lifetime)); 
             
             defineDependenciesMethod.Invoke(null, new object?[] { services });
-        }
-
-        return services;
-    }
-
-    /// <summary>
-    /// Adds <see cref="IHandler{TRequest,TResponse}"/> implementations from the specified assembly of the <typeparamref name="TAnchor"/> type, to the service collection.
-    /// </summary>
-    /// <typeparam name="TAnchor"></typeparam>
-    /// <param name="services"></param>
-    /// <param name="lifetime"></param>
-    /// <returns></returns>
-    public static IServiceCollection AddHandlersFromAssemblyContaining<TAnchor>(this IServiceCollection services,
-        ServiceLifetime lifetime = ServiceLifetime.Scoped)
-    {
-        var definerTypes = typeof(TAnchor).Assembly.ExportedTypes
-            .Where(e => e.GetInterfaces().Where(o => o.IsGenericType).Any(o => o.GetGenericTypeDefinition() == typeof(IHandler<,>)))
-            .Where(e => e is { IsAbstract: false, IsInterface: false })
-            .Select(e => (e, e.GetInterfaces()
-                .Where(o => o.IsGenericType)
-                .Single(o => o.GetGenericTypeDefinition() == typeof(IHandler<,>))));
-
-        foreach (var (handlerType, handlerInterface) in definerTypes)
-        {
-            services.Add(new ServiceDescriptor(handlerInterface, handlerType, lifetime));
         }
 
         return services;

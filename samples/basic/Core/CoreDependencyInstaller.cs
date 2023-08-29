@@ -12,7 +12,7 @@ public static class CoreDependencyInstaller
         services.AddSender<ReflectionSender>()
             .AddHandlersFromAssemblyContaining<Anchor>()
             .AddEndpointDefinitionsFromAssemblyContaining<Anchor>()
-            .AddValidatorsFromAssembly(typeof(Anchor).Assembly);
+            .AddValidatorsFromAssemblyContaining<Anchor>();
 
         return services;
     }

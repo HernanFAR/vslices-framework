@@ -4,7 +4,6 @@ using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.Presentation;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.Abstracts.Sender;
-using static VSlices.Core.Abstracts.UnitTests.Extensions.ServiceCollectionExtensionsTests.DependencyDefinition1;
 
 namespace VSlices.Core.Abstracts.UnitTests.Extensions;
 
@@ -45,6 +44,25 @@ public class ServiceCollectionExtensionsTests
         public static void DefineDependencies(IServiceCollection services)
         {
             services.AddTransient<C>();
+        }
+    }
+
+    public record Request1 : IRequest { }
+    public class Handler1 : IHandler<Request1>
+    {
+        public ValueTask<Response<Success>> HandleAsync(Request1 request, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public record Response2 { }
+    public record Request2 : IRequest<Response2> { }
+    public class Handler2 : IHandler<Request2, Response2>
+    {
+        public ValueTask<Response<Response2>> HandleAsync(Request2 request, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -93,13 +111,36 @@ public class ServiceCollectionExtensionsTests
     {
         var services = new ServiceCollection();
 
-        services.AddCoreDependenciesFrom<Anchor>();
-        
+        services.AddCoreDependenciesFromAssemblyContaining<Anchor>();
+
         services.Any(e => e.ImplementationType == typeof(DependencyDefinition1.A))
             .Should().BeTrue();
         services.Any(e => e.ImplementationType == typeof(DependencyDefinition1.B))
             .Should().BeTrue();
         services.Any(e => e.ImplementationType == typeof(DependencyDefinition2.C))
             .Should().BeTrue();
+    }
+
+    [Fact]
+    public void AddHandlersFrom_ShouldAdHandlerImplementationsUsingTwoGenericOverload()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+
+        // Act
+        services.AddHandlersFromAssemblyContaining<Handler1>();
+
+
+        // Assert
+        services
+            .Where(e => e.ImplementationType == typeof(Handler1))
+            .Any(e => e.ServiceType == typeof(IHandler<Request1, Success>))
+            .Should().BeTrue();
+
+        services
+            .Where(e => e.ImplementationType == typeof(Handler2))
+            .Any(e => e.ServiceType == typeof(IHandler<Request2, Response2>))
+            .Should().BeTrue();
+
     }
 }
