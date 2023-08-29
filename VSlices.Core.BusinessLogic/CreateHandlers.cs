@@ -43,7 +43,7 @@ public abstract class CreateHandler<TRequest, TResponse, TEntity> : IHandler<TRe
             return dataAccessResult.BusinessFailure;
         }
 
-        return GetResponse(entity, request);
+        return await GetResponseAsync(entity, request, cancellationToken);
     }
 
     /// <summary>
@@ -69,8 +69,10 @@ public abstract class CreateHandler<TRequest, TResponse, TEntity> : IHandler<TRe
     /// </summary>
     /// <param name="entity">The created entity</param>
     /// <param name="request">The handled request</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>A <typeparamref name="TResponse"/> </returns>
-    protected internal abstract TResponse GetResponse(TEntity entity, TRequest request);
+    protected internal abstract ValueTask<TResponse> GetResponseAsync(TEntity entity, TRequest request,
+        CancellationToken cancellationToken);
 }
 
 /// <summary>
@@ -120,7 +122,7 @@ public abstract class EntityValidatedCreateHandler<TRequest, TResponse, TEntity>
             return dataAccessResult.BusinessFailure;
         }
 
-        return GetResponse(entity, request);
+        return await GetResponseAsync(entity, request, cancellationToken);
     }
 
     /// <summary>
@@ -155,8 +157,10 @@ public abstract class EntityValidatedCreateHandler<TRequest, TResponse, TEntity>
     /// </summary>
     /// <param name="entity">The created entity</param>
     /// <param name="request">The handled request</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>A <typeparamref name="TResponse"/>A <typeparamref name="TResponse"/> </returns>
-    protected internal abstract TResponse GetResponse(TEntity entity, TRequest request);
+    protected internal abstract ValueTask<TResponse> GetResponseAsync(TEntity entity, TRequest request,
+        CancellationToken cancellationToken);
 }
 
 /// <summary>
@@ -173,7 +177,8 @@ public abstract class CreateHandler<TRequest, TEntity> : CreateHandler<TRequest,
     { }
 
     /// <inheritdoc />
-    protected internal override Success GetResponse(TEntity _, TRequest r) => Success.Value;
+    protected internal override ValueTask<Success> GetResponseAsync(TEntity _, TRequest r, CancellationToken c) 
+        => Success.TaskValue;
 }
 
 /// <summary>
@@ -190,5 +195,6 @@ public abstract class EntityValidatedCreateHandler<TRequest, TEntity> : EntityVa
     { }
 
     /// <inheritdoc />
-    protected internal override Success GetResponse(TEntity _, TRequest r) => Success.Value;
+    protected internal override ValueTask<Success> GetResponseAsync(TEntity _, TRequest r, CancellationToken c) 
+        => Success.TaskValue;
 }

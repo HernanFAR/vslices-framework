@@ -94,8 +94,8 @@ public class CreateQuestionHandler : EntityFluentValidatedCreateHandler<CreateQu
     public CreateQuestionHandler(IValidator<Question> entityValidator, ICreateQuestionRepository repository)
         : base(entityValidator, repository) { }
 
-    protected override async ValueTask<Response<Success>> ValidateUseCaseRulesAsync(
-        CreateQuestionCommand request, CancellationToken cancellationToken) => Success.Value;
+    protected override ValueTask<Response<Success>> ValidateUseCaseRulesAsync(
+        CreateQuestionCommand request, CancellationToken cancellationToken) => ResponseDefaults.TaskSuccess;
 
     protected override async ValueTask<Question> CreateEntityAsync(
         CreateQuestionCommand request, CancellationToken cancellationToken)

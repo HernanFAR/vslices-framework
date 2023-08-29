@@ -52,3 +52,19 @@ public readonly struct Response<TResponse>
     public static implicit operator Response<TResponse>(BusinessFailure businessFailure) => new(businessFailure);
     public static implicit operator Response<TResponse>(TResponse businessFailure) => new(businessFailure);
 }
+
+/// <summary>
+/// Shorthands to create <see cref="Response{TResponse}"/> instances with some common values
+/// </summary>
+public static class ResponseDefaults
+{
+    /// <summary>
+    /// Default success response
+    /// </summary>
+    public static readonly Response<Success> Success = new(Responses.Success.Value);
+
+    /// <summary>
+    /// Default failure response, in a <see cref="ValueTask"/>
+    /// </summary>
+    public static ValueTask<Response<Success>> TaskSuccess => ValueTask.FromResult(Success);
+}
