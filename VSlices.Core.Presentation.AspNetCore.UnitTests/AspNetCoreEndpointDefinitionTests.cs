@@ -46,7 +46,7 @@ public class AspNetCoreEndpointDefinitionTests
         public override SwaggerResponse[] Responses => new[]
         {
             SwaggerResponse.WithStatusCode(StatusCodes.Status200OK, "TestResponse1"),
-            SwaggerResponse.WithJsonOf<ValidationProblemDetails>(StatusCodes.Status422UnprocessableEntity, "TestResponse1")
+            SwaggerResponse.WithJson.Of < ValidationProblemDetails >(StatusCodes.Status422UnprocessableEntity, "TestResponse1")
         };
     }
 
@@ -69,7 +69,7 @@ public class AspNetCoreEndpointDefinitionTests
         public override SwaggerResponse[] Responses => new[]
         {
             SwaggerResponse.WithStatusCode(StatusCodes.Status200OK, "TestResponse2"),
-            SwaggerResponse.WithJsonOf<ValidationProblemDetails>(StatusCodes.Status422UnprocessableEntity, "TestResponse2")
+            SwaggerResponse.WithJson.Of<ValidationProblemDetails>(StatusCodes.Status422UnprocessableEntity, "TestResponse2")
         };
     }
 

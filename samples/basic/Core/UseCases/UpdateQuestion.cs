@@ -29,8 +29,8 @@ public class UpdateQuestionSwaggerDocs : SwaggerDocumentation
     public override SwaggerResponse[] Responses => new[]
     {
         SwaggerResponse.WithStatusCode(StatusCodes.Status200OK, "Se actualizo correctamente la pregunta"),
-        SwaggerResponse.WithStatusCode(StatusCodes.Status404NotFound, "No se encontró la pregunta"),
-        SwaggerResponse.WithJsonOf<string[]>(StatusCodes.Status422UnprocessableEntity, "No se pudo actualizar la pregunta")
+        SwaggerResponse.WithJson.OfProblemDetails(StatusCodes.Status404NotFound, "No se encontró la pregunta"),
+        SwaggerResponse.WithJson.OfProblemDetails(StatusCodes.Status422UnprocessableEntity, "No se pudo actualizar la pregunta")
     };
 }
 

@@ -25,8 +25,8 @@ public class RemoveQuestionSwaggerDocs : SwaggerDocumentation
 
     public override SwaggerResponse[] Responses => new[]
     {
-        SwaggerResponse.WithStatusCode(StatusCodes.Status200OK, "Se elimino correctamente la pregunta"),
-        SwaggerResponse.WithStatusCode(StatusCodes.Status404NotFound, "No se encontro la pregunta")
+        SwaggerResponse.WithJson.OfProblemDetails(StatusCodes.Status200OK, "Se elimino correctamente la pregunta"),
+        SwaggerResponse.WithJson.OfProblemDetails(StatusCodes.Status404NotFound, "No se encontro la pregunta")
     };
 }
 

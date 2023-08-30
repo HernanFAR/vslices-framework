@@ -21,7 +21,7 @@ public class ReadQuestionSwaggerDocs : SwaggerDocumentation
 
     public override SwaggerResponse[] Responses => new[]
     {
-        SwaggerResponse.WithJsonOf<ReadQuestionResponse[]>(StatusCodes.Status200OK,
+        SwaggerResponse.WithJson.Of<ReadQuestionResponse[]>(StatusCodes.Status200OK,
             "Se obtuvieron las preguntas correctamente"),
     };
 }
