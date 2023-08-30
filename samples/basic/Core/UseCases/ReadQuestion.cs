@@ -19,9 +19,9 @@ public class ReadQuestionSwaggerDocs : SwaggerDocumentation
     public override string[] Tags => new[] { "Questions" };
     public override string Summary => "Obtiene todas las preguntas creadas";
 
-    public override Response[] Responses => new[]
+    public override SwaggerResponse[] Responses => new[]
     {
-        Response.WithJsonOf<ReadQuestionResponse[]>(StatusCodes.Status200OK,
+        SwaggerResponse.WithJson.Of<ReadQuestionResponse[]>(StatusCodes.Status200OK,
             "Se obtuvieron las preguntas correctamente"),
     };
 }

@@ -27,10 +27,10 @@ public class CreateQuestionSwaggerDocs : SwaggerDocumentation
     public override string Summary => "Crea una pregunta";
     public override string MainConsumingContentType => MediaTypeNames.Application.Json;
 
-    public override Response[] Responses => new[]
+    public override SwaggerResponse[] Responses => new[]
     {
-        Response.WithStatusCode(StatusCodes.Status200OK, "Se creo correctamente la pregunta"),
-        Response.WithJsonOf<string[]>(StatusCodes.Status422UnprocessableEntity, "Hubieron errores al crear la pregunta")
+        SwaggerResponse.WithStatusCode(StatusCodes.Status200OK, "Se creo correctamente la pregunta"),
+        SwaggerResponse.WithJson.OfProblemDetails(StatusCodes.Status422UnprocessableEntity, "Hubieron errores al crear la pregunta")
     };
 }
 

@@ -43,10 +43,10 @@ public class AspNetCoreEndpointDefinitionTests
         public override string[] Tags => new[] { "TestTag1" };
         public override string Summary => "TestSummary1";
         public override string MainConsumingContentType => MediaTypeNames.Application.Json;
-        public override Response[] Responses => new[]
+        public override SwaggerResponse[] Responses => new[]
         {
-            Response.WithStatusCode(StatusCodes.Status200OK, "TestResponse1"),
-            Response.WithJsonOf<ValidationProblemDetails>(StatusCodes.Status422UnprocessableEntity, "TestResponse1")
+            SwaggerResponse.WithStatusCode(StatusCodes.Status200OK, "TestResponse1"),
+            SwaggerResponse.WithJson.Of < ValidationProblemDetails >(StatusCodes.Status422UnprocessableEntity, "TestResponse1")
         };
     }
 
@@ -66,10 +66,10 @@ public class AspNetCoreEndpointDefinitionTests
         public override string Name => "TestName2";
         public override string[] Tags => new[] { "TestTag2" };
         public override string Summary => "TestSummary2";
-        public override Response[] Responses => new[]
+        public override SwaggerResponse[] Responses => new[]
         {
-            Response.WithStatusCode(StatusCodes.Status200OK, "TestResponse2"),
-            Response.WithJsonOf<ValidationProblemDetails>(StatusCodes.Status422UnprocessableEntity, "TestResponse2")
+            SwaggerResponse.WithStatusCode(StatusCodes.Status200OK, "TestResponse2"),
+            SwaggerResponse.WithJson.Of<ValidationProblemDetails>(StatusCodes.Status422UnprocessableEntity, "TestResponse2")
         };
     }
 

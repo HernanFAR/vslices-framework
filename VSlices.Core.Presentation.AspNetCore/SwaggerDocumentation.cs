@@ -7,59 +7,6 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace VSlices.Core.Presentation.AspNetCore;
 
 /// <summary>
-/// A response that an endpoint can return
-/// </summary>
-public readonly struct Response
-{
-    /// <summary>
-    /// The associated HTTP status code
-    /// </summary>
-    public int HttpStatusCode { get; }
-
-    /// <summary>
-    /// A description of when the response is returned
-    /// </summary>
-    public string? Description { get; }
-
-    /// <summary>
-    /// The associated type to the response
-    /// </summary>
-    public Type Type { get; }
-
-    /// <summary>
-    /// The content types that the response can be
-    /// </summary>
-    public string[]? ContentTypes { get; }
-
-    private Response(int httpStatusCode, string? description, Type type, string[]? contentTypes)
-    {
-        HttpStatusCode = httpStatusCode;
-        Description = description;
-        Type = type;
-        ContentTypes = contentTypes;
-    }
-
-    /// <summary>
-    /// Creates a response without a type and content type, only a status code and description
-    /// </summary>
-    /// <param name="httpStatusCode">Associated HTTP status code</param>
-    /// <param name="description">Description of when the response is returned</param>
-    /// <returns>The created response with the given status code and description</returns>
-    public static Response WithStatusCode(int httpStatusCode, string? description)
-        => new(httpStatusCode, description, typeof(void), null);
-
-    /// <summary>
-    /// Creates a typed response with a <see cref="MediaTypeNames.Application.Json"/> content type, as well as a status code and description
-    /// </summary>
-    /// <typeparam name="T">The type of the response</typeparam>
-    /// <param name="httpStatusCode">Associated HTTP status code</param>
-    /// <param name="description">Description of when the response is returned</param>
-    /// <returns>The created response with the given status code and description</returns>
-    public static Response WithJsonOf<T>(int httpStatusCode, string? description)
-        => new(httpStatusCode, description, typeof(T), new[] { MediaTypeNames.Application.Json });
-}
-
-/// <summary>
 /// Base class for Swagger documentation.
 /// </summary>
 public abstract class SwaggerDocumentation
@@ -98,7 +45,7 @@ public abstract class SwaggerDocumentation
     /// <summary>
     /// The responses that the endpoint can return
     /// </summary>
-    public abstract Response[] Responses { get; }
+    public abstract SwaggerResponse[] Responses { get; }
 
     /// <summary>
     /// Defines the Swagger documentation for the endpoint
