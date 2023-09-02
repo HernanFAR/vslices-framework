@@ -4,7 +4,7 @@ using VSlices.Core.Abstracts.Responses;
 namespace VSlices.Core.Abstracts.Sender;
 
 /// <summary>
-/// Sends a request through the VSlices pipeline to be handled by a single handler
+/// Sends a request to be handled by a single handler
 /// </summary>
 public interface ISender
 {

@@ -15,7 +15,7 @@ public static class ServiceCollectionExtensions
     /// <param name="lifetime">The lifetime of the <see cref="ISender"/> implemented</param>
     /// <returns>Service collection</returns>
     public static IServiceCollection AddSender<T>(this IServiceCollection services,
-        ServiceLifetime lifetime = ServiceLifetime.Scoped)
+        ServiceLifetime lifetime = ServiceLifetime.Singleton)
         where T : ISender
     {
         services.Add(new ServiceDescriptor(typeof(ISender), typeof(T), lifetime));

@@ -3,29 +3,40 @@
 namespace VSlices.Core.Abstracts.BusinessLogic;
 
 /// <summary>
-/// A non objetive-specific request that expects a <see cref="Response{TResponse}" />
+/// Represents the start point of any business logic
 /// </summary>
-/// <typeparam name="TResponse">The expected response of this request</typeparam>
-public interface IRequest<TResponse> { }
+/// <typeparam name="TResponse"></typeparam>
+public interface IBaseRequest<TResponse> {}
 
 /// <summary>
-/// A non objetive-specific request that expects a <see cref="Response{Success}" />
+/// Represents the start point of a use case, with a specific response type
+/// </summary>
+/// <typeparam name="TResponse">The expected response of this request</typeparam>
+public interface IRequest<TResponse> : IBaseRequest<TResponse> { }
+
+/// <summary>
+/// Represents the start point of a use case, with a success response
 /// </summary>
 public interface IRequest : IRequest<Success> { }
 
 /// <summary>
-/// A request that mutates state and expects a <see cref="Response{TResponse}" /> 
+/// Represents the start point of a use case that mutates state, with a specific response type
 /// </summary>
-/// <typeparam name="TResponse"></typeparam>
+/// <typeparam name="TResponse">The expected response of this request</typeparam>
 public interface ICommand<TResponse> : IRequest<TResponse> { }
 
 /// <summary>
-/// A request that mutates state and expects a <see cref="Response{Success}" />
+/// Represents the start point of a use case that mutates state, with a success response
 /// </summary>
 public interface ICommand : ICommand<Success> { }
 
 /// <summary>
-/// A request that queries data and expects a <see cref="Response{TResponse}" />
+/// Represents the start point of a use case that queries data, with a specific response type
 /// </summary>
-/// <typeparam name="TResponse"></typeparam>
+/// <typeparam name="TResponse">The expected response of this request</typeparam>
 public interface IQuery<TResponse> : IRequest<TResponse> { }
+
+/// <summary>
+/// Represents the start point of a side effect of a use case
+/// </summary>
+public interface IEvent : IBaseRequest<Success> { }
