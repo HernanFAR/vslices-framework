@@ -14,7 +14,7 @@ namespace VSlices.CrossCutting.Logging;
 /// <typeparam name="TRequest">The intercepted request to log about</typeparam>
 /// <typeparam name="TResponse">The expected successful response</typeparam>
 public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : IRequest<TResponse>
+    where TRequest : IBaseRequest<TResponse>
 {
     private readonly ILogger<TRequest> _logger;
     private readonly LoggingConfiguration _configuration;
