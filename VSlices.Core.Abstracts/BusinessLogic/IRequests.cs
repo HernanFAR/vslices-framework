@@ -39,4 +39,13 @@ public interface IQuery<TResponse> : IRequest<TResponse> { }
 /// <summary>
 /// Represents the start point of a side effect of a use case
 /// </summary>
-public interface IEvent : IBaseRequest<Success> { }
+public interface IEvent : IBaseRequest<Success>
+{
+    Guid Id { get; }
+}
+
+public record EventBase : IEvent
+{
+    /// <inheritdoc />
+    public virtual Guid Id { get; } = Guid.NewGuid();
+}

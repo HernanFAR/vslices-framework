@@ -5,6 +5,7 @@ namespace VSlices.Core.Abstracts.BusinessLogic;
 /// <summary>
 /// Defines a handler for a <see cref="IBaseRequest{TResponse}"/>
 /// </summary>
+/// <remarks>If idempotency is necessary, the handler it self must ensure it</remarks>
 /// <typeparam name="TRequest">The request to be handled</typeparam>
 /// <typeparam name="TResponse">The expected response of the handler</typeparam>
 public interface IHandler<in TRequest, TResponse>

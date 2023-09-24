@@ -1,4 +1,5 @@
 ﻿using VSlices.Core.Abstracts.BusinessLogic;
+using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.Core.Abstracts.Event;
 

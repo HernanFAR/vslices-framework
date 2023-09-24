@@ -6,7 +6,7 @@ using VSlices.Core.Abstracts.Sender;
 
 namespace VSlices.Core.Sender.Reflection.IntegTests;
 
-public class SenderTests
+public class ReflectionSenderTests
 {
     public class Acumulator
     {
@@ -78,7 +78,7 @@ public class SenderTests
         public ValueTask<Response<Success>> HandleAsync(RequestTwo request, CancellationToken cancellationToken = default)
         {
             Count += 1;
-            Acumulator.Str += "HandlerTwo_";
+            Acumulator.Str += "EventHandlerTwo_";
 
             return ValueTask.FromResult<Response<Success>>(Success.Value);
         }
@@ -96,7 +96,7 @@ public class SenderTests
         var provider = services.BuildServiceProvider();
         var sender = provider.GetRequiredService<ISender>();
 
-        var response = await sender.SendAsync(new RequestOne());
+        var response = await sender.SendAsync(new RequestOne(), default);
 
         response.IsSuccess.Should().BeTrue();
 
@@ -121,7 +121,7 @@ public class SenderTests
         var provider = services.BuildServiceProvider();
         var sender = provider.GetRequiredService<ISender>();
 
-        var response = await sender.SendAsync(new RequestOne());
+        var response = await sender.SendAsync(new RequestOne(), default);
 
         response.IsSuccess.Should().BeTrue();
 
@@ -149,7 +149,7 @@ public class SenderTests
         var provider = services.BuildServiceProvider();
         var sender = provider.GetRequiredService<ISender>();
 
-        var response = await sender.SendAsync(new RequestOne());
+        var response = await sender.SendAsync(new RequestOne(), default);
 
         response.IsSuccess.Should().BeTrue();
 
@@ -179,7 +179,7 @@ public class SenderTests
         var provider = services.BuildServiceProvider();
         var sender = provider.GetRequiredService<ISender>();
 
-        var response = await sender.SendAsync(new RequestOne());
+        var response = await sender.SendAsync(new RequestOne(), default);
 
         response.IsSuccess.Should().BeTrue();
 
@@ -210,7 +210,7 @@ public class SenderTests
         var provider = services.BuildServiceProvider();
         var sender = provider.GetRequiredService<ISender>();
 
-        var response = await sender.SendAsync(new RequestOne());
+        var response = await sender.SendAsync(new RequestOne(), default);
 
         response.IsSuccess.Should().BeTrue();
 
@@ -244,7 +244,7 @@ public class SenderTests
         var provider = services.BuildServiceProvider();
         var sender = provider.GetRequiredService<ISender>();
 
-        var response = await sender.SendAsync(new RequestTwo());
+        var response = await sender.SendAsync(new RequestTwo(), default);
 
         response.IsSuccess.Should().BeTrue();
 
@@ -252,7 +252,7 @@ public class SenderTests
         PipelineBehaviorTwo<RequestTwo, Success>.Count.Should().Be(expCount);
         ConcretePipelineBehaviorOne.Count.Should().Be(0);
         HandlerTwo.Count.Should().Be(expCount);
-        Acumulator.Str.Should().Be("OpenPipelineOne_OpenPipelineTwo_HandlerTwo_");
+        Acumulator.Str.Should().Be("OpenPipelineOne_OpenPipelineTwo_EventHandlerTwo_");
 
         PipelineBehaviorOne<RequestTwo, Success>.Count = 0;
         PipelineBehaviorTwo<RequestTwo, Success>.Count = 0;

@@ -18,7 +18,7 @@ public interface IEventQueueWriter
     /// <summary>
     /// The background provider of the queue
     /// </summary>
-    string BackgroundProvider { get; }
+    string BackgroundWriterProvider { get; }
 }
 
 /// <summary>
@@ -26,13 +26,6 @@ public interface IEventQueueWriter
 /// </summary>
 public interface IEventQueueReader
 {
-    /// <summary>
-    /// Asynchronously peek the next event from the queue
-    /// </summary>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The peek event from the queue</returns>
-    ValueTask<IEvent> PeekAsync(CancellationToken cancellationToken);
-
     /// <summary>
     /// Asynchronously dequeue the next event from the queue
     /// </summary>
@@ -43,7 +36,7 @@ public interface IEventQueueReader
     /// <summary>
     /// The background provider of the queue
     /// </summary>
-    string BackgroundProvider { get; }
+    string BackgroundReaderProvider { get; }
 }
 
 /// <summary>
