@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.Configurations;
 using System.Text.Json;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace VSlices.Core.Abstracts.Event;
 
@@ -12,34 +13,33 @@ namespace VSlices.Core.Abstracts.Event;
 public sealed class BackgroundEventListenerService : BackgroundService
 {
     private readonly ILogger<BackgroundEventListenerService> _logger;
-    private readonly IPublisher _publisher;
-    private readonly IEventQueue _eventQueue;
     private readonly BackgroundEventListenerConfiguration _config;
     private readonly Dictionary<Guid, int> _retries = new();
+    private readonly IEventQueue _eventQueue;
+    private readonly IPublisher _publisher;
+    private readonly IServiceScope _scoped;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BackgroundEventListenerService"/> class.
     /// </summary>
     /// <param name="logger">Logger</param>
-    /// <param name="publisher">Publisher</param>
-    /// <param name="eventQueue">EventQueueReader</param>
+    /// <param name="serviceProvider">Service provider</param>
     /// <param name="config">Configuration</param>
     public BackgroundEventListenerService(ILogger<BackgroundEventListenerService> logger,
-        IPublisher publisher,
-        IEventQueue eventQueue,
+        IServiceProvider serviceProvider,
         BackgroundEventListenerConfiguration config)
     {
         _logger = logger;
-        _publisher = publisher;
-        _eventQueue = eventQueue;
         _config = config;
+
+        _scoped = serviceProvider.CreateScope();
+        _eventQueue = _scoped.ServiceProvider.GetRequiredService<IEventQueue>();
+        _publisher = _scoped.ServiceProvider.GetRequiredService<IPublisher>();
     }
 
     /// <inheritdoc />
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("Background event listener service ({ReaderProvider}) is running.", _eventQueue.BackgroundReaderProvider);
-
         while (!stoppingToken.IsCancellationRequested)
         {
             await BackgroundProcessing(stoppingToken);
@@ -101,5 +101,13 @@ public sealed class BackgroundEventListenerService : BackgroundService
             default:
                 throw new ArgumentOutOfRangeException(nameof(_config.ActionInException));
         }
+    }
+
+    /// <inheritdoc />
+    public override void Dispose()
+    {
+        _scoped.Dispose();
+
+        base.Dispose();
     }
 }

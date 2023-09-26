@@ -1,6 +1,5 @@
 ﻿using Core;
-using FluentValidation;
-using VSlices.Core.Sender.Reflection;
+using VSlices.ShortCuts.Core.AspNetFVEFDistributedMonolith;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -8,12 +7,5 @@ namespace Microsoft.Extensions.DependencyInjection;
 public static class CoreDependencyInstaller
 {
     public static IServiceCollection AddCoreDependencies(this IServiceCollection services)
-    {
-        services.AddSender<ReflectionSender>()
-            .AddHandlersFromAssemblyContaining<Anchor>()
-            .AddEndpointDefinitionsFromAssemblyContaining<Anchor>()
-            .AddValidatorsFromAssemblyContaining<Anchor>();
-
-        return services;
-    }
+        => services.AddDistributedMonolithServicesAndHandlersFrom<Anchor>();
 }

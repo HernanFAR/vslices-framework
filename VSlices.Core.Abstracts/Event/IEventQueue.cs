@@ -13,7 +13,7 @@ public interface IEventQueueWriter
     /// <param name="event"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    ValueTask EnqueueAsync(IEvent @event, CancellationToken cancellationToken);
+    ValueTask EnqueueAsync(IEvent @event, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// The background provider of the queue

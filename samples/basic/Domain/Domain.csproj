@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\VSlices.Core.Abstracts\VSlices.Core.Abstracts.csproj" />
     <ProjectReference Include="..\..\..\VSlices.Domain\VSlices.Domain.csproj" />
   </ItemGroup>
 

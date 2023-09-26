@@ -43,6 +43,8 @@ public abstract class RemoveHandler<TRequest, TResponse, TEntity> : IHandler<TRe
             return dataAccessResult.BusinessFailure;
         }
 
+        await AfterRemoveAsync(entity, request, cancellationToken);
+
         return await GetResponseAsync(entity, request, cancellationToken);
     }
 
@@ -63,6 +65,9 @@ public abstract class RemoveHandler<TRequest, TResponse, TEntity> : IHandler<TRe
     /// <returns>A <see cref="ValueTask{T}"/> with a <typeparamref name="TEntity"/> in</returns>
     protected internal abstract ValueTask<TEntity> GetAndProcessEntityAsync(TRequest request,
         CancellationToken cancellationToken);
+
+    protected internal virtual ValueTask AfterRemoveAsync(TEntity entity, TRequest request,
+        CancellationToken cancellationToken) => ValueTask.CompletedTask;
 
     /// <summary>
     /// Creates the response to be returned
@@ -122,6 +127,8 @@ public abstract class EntityValidatedRemoveHandler<TRequest, TResponse, TEntity>
             return dataAccessResult.BusinessFailure;
         }
 
+        await AfterRemoveAsync(entity, request, cancellationToken);
+
         return await GetResponseAsync(entity, request, cancellationToken);
     }
 
@@ -151,6 +158,9 @@ public abstract class EntityValidatedRemoveHandler<TRequest, TResponse, TEntity>
     /// <returns>A <see cref="ValueTask{T}"/> holding a <see cref="Response{TRequest}"/> of <see cref="Success"/> that represents the result of the operation </returns>
     protected internal abstract ValueTask<Response<Success>> ValidateEntityAsync(TEntity entity,
         CancellationToken cancellationToken);
+
+    protected internal virtual ValueTask AfterRemoveAsync(TEntity entity, TRequest request,
+        CancellationToken cancellationToken) => ValueTask.CompletedTask;
 
     /// <summary>
     /// Creates the response to be returned

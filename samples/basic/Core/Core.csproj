@@ -13,10 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\VSlices.Core.BusinessLogic.FluentValidation\VSlices.Core.BusinessLogic.FluentValidation.csproj" />
-    <ProjectReference Include="..\..\..\VSlices.Core.DataAccess.EntityFramework\VSlices.Core.DataAccess.EntityFramework.csproj" />
-    <ProjectReference Include="..\..\..\VSlices.Core.Presentation.AspNetCore\VSlices.Core.Presentation.AspNetCore.csproj" />
-    <ProjectReference Include="..\..\..\VSlices.Core.Sender.Reflection\VSlices.Core.Sender.Reflection.csproj" />
+    <ProjectReference Include="..\..\..\VSlices.ShortCuts.Core.Distributed_EF_FV_Monolith\VSlices.ShortCuts.Core.AspNetFVEFDistributedMonolith.csproj" />
     <ProjectReference Include="..\CrossCutting\CrossCutting.csproj" />
   </ItemGroup>
 
