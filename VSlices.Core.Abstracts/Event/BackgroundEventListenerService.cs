@@ -10,14 +10,16 @@ namespace VSlices.Core.Abstracts.Event;
 /// <summary>
 /// Listens to a event queue and publishes the event to a event pipeline
 /// </summary>
+/// <remarks>
+/// A scope is created for each event to be published
+/// </remarks>
 public sealed class BackgroundEventListenerService : BackgroundService
 {
     private readonly ILogger<BackgroundEventListenerService> _logger;
+    private readonly IServiceProvider _serviceProvider;
     private readonly BackgroundEventListenerConfiguration _config;
     private readonly Dictionary<Guid, int> _retries = new();
     private readonly IEventQueue _eventQueue;
-    private readonly IPublisher _publisher;
-    private readonly IServiceScope _scoped;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BackgroundEventListenerService"/> class.
@@ -30,11 +32,9 @@ public sealed class BackgroundEventListenerService : BackgroundService
         BackgroundEventListenerConfiguration config)
     {
         _logger = logger;
+        _serviceProvider = serviceProvider;
         _config = config;
-
-        _scoped = serviceProvider.CreateScope();
-        _eventQueue = _scoped.ServiceProvider.GetRequiredService<IEventQueue>();
-        _publisher = _scoped.ServiceProvider.GetRequiredService<IPublisher>();
+        _eventQueue = serviceProvider.GetRequiredService<IEventQueue>();
     }
 
     /// <inheritdoc />
@@ -48,6 +48,10 @@ public sealed class BackgroundEventListenerService : BackgroundService
 
     private async Task BackgroundProcessing(CancellationToken stoppingToken)
     {
+        await using var scope = _serviceProvider.CreateAsyncScope();
+
+        var publisher = scope.ServiceProvider.GetRequiredService<IPublisher>();
+
         var workItem = await _eventQueue.DequeueAsync(stoppingToken);
         var retry = false;
 
@@ -55,7 +59,7 @@ public sealed class BackgroundEventListenerService : BackgroundService
         {
             try
             {
-                await _publisher.PublishAsync(workItem, stoppingToken);
+                await publisher.PublishAsync(workItem, stoppingToken);
 
                 _retries.Remove(workItem.Id);
             }
@@ -99,15 +103,7 @@ public sealed class BackgroundEventListenerService : BackgroundService
                 return true;
 
             default:
-                throw new ArgumentOutOfRangeException(nameof(_config.ActionInException));
+                throw new InvalidOperationException(nameof(_config.ActionInException));
         }
-    }
-
-    /// <inheritdoc />
-    public override void Dispose()
-    {
-        _scoped.Dispose();
-
-        base.Dispose();
     }
 }

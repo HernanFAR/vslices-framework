@@ -35,7 +35,7 @@ public class EventFlow
 
         public bool First { get; set; } = true;
 
-        public async ValueTask<Response<Success>> HandleAsync(FirstFailureThenSuccessEvent request, CancellationToken cancellationToken = default)
+        public ValueTask<Response<Success>> HandleAsync(FirstFailureThenSuccessEvent request, CancellationToken cancellationToken = default)
         {
             if (First)
             {
@@ -45,7 +45,7 @@ public class EventFlow
 
             HandledEvent.Set();
 
-            return ResponseDefaults.Success;
+            return ResponseDefaults.TaskSuccess;
         }
     }
 
@@ -59,7 +59,7 @@ public class EventFlow
 
         public bool Second { get; set; } = true;
 
-        public async ValueTask<Response<Success>> HandleAsync(FirstAndSecondFailureThenSuccessEvent request, CancellationToken cancellationToken = default)
+        public ValueTask<Response<Success>> HandleAsync(FirstAndSecondFailureThenSuccessEvent request, CancellationToken cancellationToken = default)
         {
             if (First)
             {
@@ -76,7 +76,7 @@ public class EventFlow
 
             HandledEvent.Set();
 
-            return ResponseDefaults.Success;
+            return ResponseDefaults.TaskSuccess;
         }
     }
 
@@ -84,7 +84,7 @@ public class EventFlow
 
     public class AlwaysFailureHandler : IHandler<AlwaysFailureEvent>
     {
-        public async ValueTask<Response<Success>> HandleAsync(AlwaysFailureEvent request, CancellationToken cancellationToken = default)
+        public ValueTask<Response<Success>> HandleAsync(AlwaysFailureEvent request, CancellationToken cancellationToken = default)
         {
             throw new Exception("Always failure");
         }
@@ -98,12 +98,12 @@ public class EventFlow
             .AddInMemoryEventQueue()
             .AddReflectionPublisher()
             .AddLogging()
-            .AddScoped<AlwaysSuccessHandler>()
+            .AddSingleton<AlwaysSuccessHandler>()
             .AddScoped<IHandler<AlwaysSuccessEvent, Success>>(s => s.GetRequiredService<AlwaysSuccessHandler>())
             .BuildServiceProvider();
 
-        var backgroundEventListener = provider.GetRequiredService<IHostedService>();
-        var eventQueue = provider.GetRequiredService<IEventQueueWriter>();
+        var backgroundEventListener = (BackgroundEventListenerService)provider.GetRequiredService<IHostedService>();
+        var eventQueue = (InMemoryEventQueue)provider.GetRequiredService<IEventQueueWriter>();
 
         var event1 = new AlwaysSuccessEvent();
 
@@ -123,12 +123,12 @@ public class EventFlow
             .AddInMemoryEventQueue()
             .AddReflectionPublisher()
             .AddLogging()
-            .AddScoped<AlwaysSuccessHandler>()
+            .AddSingleton<AlwaysSuccessHandler>()
             .AddScoped<IHandler<AlwaysSuccessEvent, Success>>(s => s.GetRequiredService<AlwaysSuccessHandler>())
             .BuildServiceProvider();
 
-        var backgroundEventListener = provider.GetRequiredService<IHostedService>();
-        var eventQueue = provider.GetRequiredService<IEventQueueWriter>();
+        var backgroundEventListener = (BackgroundEventListenerService)provider.GetRequiredService<IHostedService>();
+        var eventQueue = (InMemoryEventQueue)provider.GetRequiredService<IEventQueueWriter>();
 
         var event2 = new AlwaysSuccessEvent();
 
@@ -149,12 +149,12 @@ public class EventFlow
             .AddInMemoryEventQueue()
             .AddReflectionPublisher()
             .AddLogging()
-            .AddScoped<FirstFailureThenSuccessHandler>()
+            .AddSingleton<FirstFailureThenSuccessHandler>()
             .AddScoped<IHandler<FirstFailureThenSuccessEvent, Success>>(s => s.GetRequiredService<FirstFailureThenSuccessHandler>())
             .BuildServiceProvider();
 
-        var backgroundEventListener = provider.GetRequiredService<IHostedService>();
-        var eventQueue = provider.GetRequiredService<IEventQueueWriter>();
+        var backgroundEventListener = (BackgroundEventListenerService)provider.GetRequiredService<IHostedService>();
+        var eventQueue = (InMemoryEventQueue)provider.GetRequiredService<IEventQueueWriter>();
 
         var event2 = new FirstFailureThenSuccessEvent();
 
@@ -176,12 +176,12 @@ public class EventFlow
             .AddInMemoryEventQueue()
             .AddReflectionPublisher()
             .AddLogging()
-            .AddScoped<FirstAndSecondFailureThenSuccessHandler>()
+            .AddSingleton<FirstAndSecondFailureThenSuccessHandler>()
             .AddScoped<IHandler<FirstAndSecondFailureThenSuccessEvent, Success>>(s => s.GetRequiredService<FirstAndSecondFailureThenSuccessHandler>())
             .BuildServiceProvider();
 
-        var backgroundEventListener = provider.GetRequiredService<IHostedService>();
-        var eventQueue = provider.GetRequiredService<IEventQueueWriter>();
+        var backgroundEventListener = (BackgroundEventListenerService)provider.GetRequiredService<IHostedService>();
+        var eventQueue = (InMemoryEventQueue)provider.GetRequiredService<IEventQueueWriter>();
 
         var event2 = new FirstAndSecondFailureThenSuccessEvent();
 
@@ -206,12 +206,12 @@ public class EventFlow
             .AddInMemoryEventQueue()
             .AddReflectionPublisher()
             .AddScoped(_ => logger)
-            .AddScoped<AlwaysFailureHandler>()
+            .AddSingleton<AlwaysFailureHandler>()
             .AddScoped<IHandler<AlwaysFailureEvent, Success>>(s => s.GetRequiredService<AlwaysFailureHandler>())
             .BuildServiceProvider();
 
-        var backgroundEventListener = provider.GetRequiredService<IHostedService>();
-        var eventQueue = provider.GetRequiredService<IEventQueueWriter>();
+        var backgroundEventListener = (BackgroundEventListenerService)provider.GetRequiredService<IHostedService>();
+        var eventQueue = (InMemoryEventQueue)provider.GetRequiredService<IEventQueueWriter>();
 
         var event2 = new AlwaysFailureEvent();
 

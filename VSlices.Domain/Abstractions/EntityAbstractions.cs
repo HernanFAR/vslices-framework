@@ -1,6 +1,9 @@
 ﻿// ReSharper disable once CheckNamespace
 namespace VSlices.Domain;
 
+/// <summary>
+/// A static class that contains abstractions for classes that can't implement <see cref="Entity"/>.
+/// </summary>
 public static class EntityAbstractions
 {
     /// <summary>

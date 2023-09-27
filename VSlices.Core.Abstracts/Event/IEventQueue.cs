@@ -15,10 +15,6 @@ public interface IEventQueueWriter
     /// <returns></returns>
     ValueTask EnqueueAsync(IEvent @event, CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// The background provider of the queue
-    /// </summary>
-    string BackgroundWriterProvider { get; }
 }
 
 /// <summary>
@@ -31,12 +27,8 @@ public interface IEventQueueReader
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns>the dequeued event from the queue</returns>
-    ValueTask<IEvent> DequeueAsync(CancellationToken cancellationToken);
-
-    /// <summary>
-    /// The background provider of the queue
-    /// </summary>
-    string BackgroundReaderProvider { get; }
+    ValueTask<IEvent> DequeueAsync(CancellationToken cancellationToken = default);
+    
 }
 
 /// <summary>

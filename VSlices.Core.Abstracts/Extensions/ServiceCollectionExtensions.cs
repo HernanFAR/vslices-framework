@@ -7,7 +7,9 @@ using VSlices.Core.Abstracts.Sender;
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
 
+#pragma warning disable CS1591
 public static class ServiceCollectionExtensions
+#pragma warning restore CS1591
 {
     /// <summary>
     /// Adds a <see cref="ISender"/> implementation to the <see cref="IServiceCollection"/>
@@ -145,6 +147,7 @@ public static class ServiceCollectionExtensions
     /// Adds a hosted service that will listen for events in the background
     /// </summary>
     /// <param name="services">Service Collection</param>
+    /// <param name="configAct">Action to configure the service</param>
     /// <returns>Service Collection</returns>
     public static IServiceCollection AddBackgroundEventListenerService(this IServiceCollection services, Action<BackgroundEventListenerConfiguration>? configAct = null)
     {

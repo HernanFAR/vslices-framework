@@ -10,8 +10,6 @@ namespace VSlices.Core.Events.EventQueue.InMemory;
 /// </summary>
 public sealed class InMemoryEventQueue : IEventQueue
 {
-    internal readonly Guid Id = Guid.NewGuid();
-
     internal readonly Channel<IEvent> _channel;
 
     /// <summary>
@@ -37,14 +35,8 @@ public sealed class InMemoryEventQueue : IEventQueue
     }
 
     /// <inheritdoc />
-    public string BackgroundReaderProvider => "InMemory";
-
-    /// <inheritdoc />
     public async ValueTask EnqueueAsync(IEvent @event, CancellationToken cancellationToken)
     {
         await _channel.Writer.WriteAsync(@event, cancellationToken);
     }
-
-    /// <inheritdoc />
-    public string BackgroundWriterProvider => "InMemory";
 }

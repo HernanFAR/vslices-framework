@@ -1,7 +1,9 @@
 ﻿// ReSharper disable once CheckNamespace
 namespace VSlices.Core.Abstracts.Responses;
 
+#pragma warning disable CS1591
 public static class ValidationErrorArrayExtensions
+#pragma warning restore CS1591
 {
     /// <summary>
     /// Converts a <see cref="ValidationError"/> array to a dictionary

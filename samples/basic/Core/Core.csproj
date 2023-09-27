@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\VSlices.ShortCuts.Core.Distributed_EF_FV_Monolith\VSlices.ShortCuts.Core.AspNetFVEFDistributedMonolith.csproj" />
+    <ProjectReference Include="..\..\..\VSlices.ShortCuts.Core.Distributed_EF_FV_Monolith\VSlices.ShortCuts.Core.DistributedMonolith.AspNetFVEFReflection.csproj" />
     <ProjectReference Include="..\CrossCutting\CrossCutting.csproj" />
   </ItemGroup>
 

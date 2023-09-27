@@ -4,7 +4,9 @@ using VSlices.Core.Events.EventQueue.InMemory;
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
 
+#pragma warning disable CS1591
 public static class InMemoryEventQueueExtensions
+#pragma warning restore CS1591
 {
     /// <summary>
     /// Add a in memory <see cref="IEventQueue"/> implementation to the <see cref="IServiceCollection"/>.

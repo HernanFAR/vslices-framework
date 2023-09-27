@@ -6,7 +6,9 @@ using VSlices.Core.Presentation.AspNetCore;
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
 
+#pragma warning disable CS1591
 public static class ServiceCollectionExtensions
+#pragma warning restore CS1591
 {
     /// <summary>
     /// Adds an <see cref="ISimpleEndpointDefinition"/> to the service collection.

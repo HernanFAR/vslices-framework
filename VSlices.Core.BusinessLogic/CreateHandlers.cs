@@ -66,6 +66,13 @@ public abstract class CreateHandler<TRequest, TResponse, TEntity> : IHandler<TRe
     protected internal abstract ValueTask<TEntity> CreateEntityAsync(TRequest request,
         CancellationToken cancellationToken);
 
+    /// <summary>
+    /// Represents actions to be executed after the entity is created
+    /// </summary>
+    /// <param name="entity">Related Entity</param>
+    /// <param name="request">Related Request</param>
+    /// <param name="cancellationToken">CancellationToken</param>
+    /// <returns>A <see cref="ValueTask" /> representing the asynchronous operation</returns>
     protected internal virtual ValueTask AfterCreationAsync(TEntity entity, TRequest request,
         CancellationToken cancellationToken) => ValueTask.CompletedTask;
 
@@ -75,7 +82,9 @@ public abstract class CreateHandler<TRequest, TResponse, TEntity> : IHandler<TRe
     /// <param name="entity">The created entity</param>
     /// <param name="request">The handled request</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>A <typeparamref name="TResponse"/> </returns>
+    /// <returns>
+    /// A <see cref="ValueTask{TResponse}"/> with a <typeparamref name="TResponse"/> in representing the asynchronous operation
+    /// </returns>
     protected internal abstract ValueTask<TResponse> GetResponseAsync(TEntity entity, TRequest request,
         CancellationToken cancellationToken);
 }
@@ -159,6 +168,13 @@ public abstract class EntityValidatedCreateHandler<TRequest, TResponse, TEntity>
     protected internal abstract ValueTask<Response<Success>> ValidateEntityAsync(TEntity entity,
         CancellationToken cancellationToken);
 
+    /// <summary>
+    /// Represents actions to be executed after the entity is created
+    /// </summary>
+    /// <param name="entity">Related Entity</param>
+    /// <param name="request">Related Request</param>
+    /// <param name="cancellationToken">CancellationToken</param>
+    /// <returns>A <see cref="ValueTask" /> representing the asynchronous operation</returns>
     protected internal virtual ValueTask AfterCreationAsync(TEntity entity, TRequest request,
         CancellationToken cancellationToken) => ValueTask.CompletedTask;
 
@@ -168,7 +184,9 @@ public abstract class EntityValidatedCreateHandler<TRequest, TResponse, TEntity>
     /// <param name="entity">The created entity</param>
     /// <param name="request">The handled request</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>A <typeparamref name="TResponse"/>A <typeparamref name="TResponse"/> </returns>
+    /// <returns>
+    /// A <see cref="ValueTask{TResponse}"/> with a <typeparamref name="TResponse"/> in representing the asynchronous operation
+    /// </returns>
     protected internal abstract ValueTask<TResponse> GetResponseAsync(TEntity entity, TRequest request,
         CancellationToken cancellationToken);
 }

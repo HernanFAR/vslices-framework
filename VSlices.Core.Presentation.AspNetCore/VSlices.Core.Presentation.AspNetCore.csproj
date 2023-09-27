@@ -34,7 +34,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="4.0.0" />
+	  <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.3.0" />
 	</ItemGroup>
 
 	<ItemGroup>

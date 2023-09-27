@@ -105,14 +105,14 @@ public class CreateQuestionHandler : EntityFluentValidatedCreateHandler<CreateQu
     protected override ValueTask<Response<Success>> ValidateUseCaseRulesAsync(
         CreateQuestionCommand request, CancellationToken cancellationToken) => ResponseDefaults.TaskSuccess;
 
-    protected override async ValueTask<Question> CreateEntityAsync(
+    protected override ValueTask<Question> CreateEntityAsync(
         CreateQuestionCommand request, CancellationToken cancellationToken)
     {
         var id = Guid.NewGuid()
             .ToString()
             .Replace("-", "0");
 
-        return new Question(id, request.Title, request.Content);
+        return ValueTask.FromResult(new Question(id, request.Title, request.Content));
     }
 
     protected override async ValueTask AfterCreationAsync(Question entity, CreateQuestionCommand request, CancellationToken cancellationToken)

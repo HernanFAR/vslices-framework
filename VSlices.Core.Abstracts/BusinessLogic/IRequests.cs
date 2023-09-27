@@ -41,10 +41,16 @@ public interface IQuery<TResponse> : IRequest<TResponse> { }
 /// </summary>
 public interface IEvent : IBaseRequest<Success>
 {
+    /// <summary>
+    /// The unique identifier of this event
+    /// </summary>
     Guid Id { get; }
 }
 
-public record EventBase : IEvent
+/// <summary>
+/// Abstract base class for all events
+/// </summary>
+public abstract record EventBase : IEvent
 {
     /// <inheritdoc />
     public virtual Guid Id { get; } = Guid.NewGuid();

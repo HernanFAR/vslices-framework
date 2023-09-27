@@ -5,7 +5,9 @@ using VSlices.Core.Events.Publisher.Reflection.Strategies;
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
 
+#pragma warning disable CS1591
 public static class ReflectionPublisherExtensions
+#pragma warning restore CS1591
 {
     /// <summary>
     /// Add a reflection <see cref="IPublisher"/> implementation to the <see cref="IServiceCollection"/>.
