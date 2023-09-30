@@ -12,7 +12,7 @@
 	<Copyright>Hernán Fernando Álvarez Rubio</Copyright>
     <PackageProjectUrl>https://vslice-framework.readthedocs.io/es/latest/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/HernanFAR/vslice-framework</RepositoryUrl>
-    <PackageTags>vertical slices;mediator;cqrs;repository;request;handler;sender;functional;reflection;</PackageTags>
+    <PackageTags>vertical slices;mediator;cqrs;repository;request;handler;sender;event;publisher;functional;reflection;</PackageTags>
 	<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 	<PackageLicenseFile>LICENSE</PackageLicenseFile>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>

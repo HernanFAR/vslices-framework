@@ -3,12 +3,13 @@
 namespace VSlices.Core.Abstracts.BusinessLogic;
 
 /// <summary>
-/// Defines a handler for a <see cref="IRequest{TResponse}"/>
+/// Defines a handler for a <see cref="IBaseRequest{TResponse}"/>
 /// </summary>
+/// <remarks>If idempotency is necessary, the handler it self must ensure it</remarks>
 /// <typeparam name="TRequest">The request to be handled</typeparam>
 /// <typeparam name="TResponse">The expected response of the handler</typeparam>
 public interface IHandler<in TRequest, TResponse>
-    where TRequest : IRequest<TResponse>
+    where TRequest : IBaseRequest<TResponse>
 {
     /// <summary>
     /// Handles the request
@@ -24,7 +25,7 @@ public interface IHandler<in TRequest, TResponse>
 /// </summary>
 /// <typeparam name="TRequest">The request to be handled</typeparam>
 public interface IHandler<in TRequest> : IHandler<TRequest, Success>
-    where TRequest : IRequest<Success>
+    where TRequest : IBaseRequest<Success>
 { }
 
 /// <summary>
@@ -35,12 +36,12 @@ public interface IHandler<in TRequest> : IHandler<TRequest, Success>
 public delegate ValueTask<Response<TResponse>> RequestHandlerDelegate<TResponse>();
 
 /// <summary>
-/// A middleware behavior for a <see cref="IRequest{TResponse}"/>
+/// A middleware behavior for a <see cref="IBaseRequest{TResponse}"/>
 /// </summary>
 /// <typeparam name="TRequest">The request to intercept</typeparam>
 /// <typeparam name="TResponse">The expected response</typeparam>
 public interface IPipelineBehavior<in TRequest, TResponse>
-        where TRequest : IRequest<TResponse>
+    where TRequest : IBaseRequest<TResponse>
 {
     /// <summary>
     /// A method that intercepts the pipeline

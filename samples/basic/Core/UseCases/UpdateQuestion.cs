@@ -1,5 +1,6 @@
 ﻿using CrossCutting.EntityFramework;
 using Domain.Entities;
+using Domain.Events;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using System.Net.Mime;
 using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.DataAccess;
+using VSlices.Core.Abstracts.Event;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.Abstracts.Sender;
 using VSlices.Core.BusinessLogic.FluentValidation;
@@ -93,11 +95,14 @@ public class UpdateQuestionValidator : AbstractValidator<UpdateQuestionCommand>
 public class UpdateQuestionHandler : EntityFluentValidatedUpdateHandler<UpdateQuestionCommand, Question>
 {
     private readonly IUpdateQuestionRepository _repository;
+    private readonly IEventQueueWriter _eventWriter;
 
-    public UpdateQuestionHandler(IValidator<Question> entityValidator, IUpdateQuestionRepository repository)
+    public UpdateQuestionHandler(IValidator<Question> entityValidator, IUpdateQuestionRepository repository,
+        IEventQueueWriter eventWriter)
         : base(entityValidator, repository)
     {
         _repository = repository;
+        _eventWriter = eventWriter;
     }
 
     protected override async ValueTask<Response<Success>> ValidateUseCaseRulesAsync(
@@ -117,6 +122,13 @@ public class UpdateQuestionHandler : EntityFluentValidatedUpdateHandler<UpdateQu
         question.UpdateState(request.Title, request.Content);
 
         return question;
+    }
+
+    protected override async ValueTask AfterUpdateAsync(Question entity, UpdateQuestionCommand request, CancellationToken cancellationToken)
+    {
+        var @event = new QuestionModifiedEvent(ModificationType.Modification, entity.Id, entity.Title, entity.Content);
+
+        await _eventWriter.EnqueueAsync(@event, cancellationToken);
     }
 }
 

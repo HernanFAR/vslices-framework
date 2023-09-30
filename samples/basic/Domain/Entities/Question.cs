@@ -19,7 +19,7 @@ public class Question : Entity<string>
         Content = content;
     }
 
-    public class Database
+    internal class Database
     {
         public const string Name = "Questions";
     }

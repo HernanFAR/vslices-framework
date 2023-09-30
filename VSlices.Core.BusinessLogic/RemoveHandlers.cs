@@ -43,6 +43,8 @@ public abstract class RemoveHandler<TRequest, TResponse, TEntity> : IHandler<TRe
             return dataAccessResult.BusinessFailure;
         }
 
+        await AfterRemoveAsync(entity, request, cancellationToken);
+
         return await GetResponseAsync(entity, request, cancellationToken);
     }
 
@@ -65,12 +67,24 @@ public abstract class RemoveHandler<TRequest, TResponse, TEntity> : IHandler<TRe
         CancellationToken cancellationToken);
 
     /// <summary>
+    /// Represents actions to be executed after the entity is removed
+    /// </summary>
+    /// <param name="entity">Related Entity</param>
+    /// <param name="request">Related Request</param>
+    /// <param name="cancellationToken">CancellationToken</param>
+    /// <returns>A <see cref="ValueTask" /> representing the asynchronous operation</returns>
+    protected internal virtual ValueTask AfterRemoveAsync(TEntity entity, TRequest request,
+        CancellationToken cancellationToken) => ValueTask.CompletedTask;
+
+    /// <summary>
     /// Creates the response to be returned
     /// </summary>
     /// <param name="entity">The removed entity</param>
     /// <param name="request">The handled request</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>A <typeparamref name="TResponse"/> </returns>
+    /// <returns>
+    /// A <see cref="ValueTask{TResponse}"/> with a <typeparamref name="TResponse"/> in representing the asynchronous operation
+    /// </returns>
     protected internal abstract ValueTask<TResponse> GetResponseAsync(TEntity entity, TRequest request,
         CancellationToken cancellationToken);
 }
@@ -122,6 +136,8 @@ public abstract class EntityValidatedRemoveHandler<TRequest, TResponse, TEntity>
             return dataAccessResult.BusinessFailure;
         }
 
+        await AfterRemoveAsync(entity, request, cancellationToken);
+
         return await GetResponseAsync(entity, request, cancellationToken);
     }
 
@@ -153,12 +169,24 @@ public abstract class EntityValidatedRemoveHandler<TRequest, TResponse, TEntity>
         CancellationToken cancellationToken);
 
     /// <summary>
+    /// Represents actions to be executed after the entity is removed
+    /// </summary>
+    /// <param name="entity">Related Entity</param>
+    /// <param name="request">Related Request</param>
+    /// <param name="cancellationToken">CancellationToken</param>
+    /// <returns>A <see cref="ValueTask" /> representing the asynchronous operation</returns>
+    protected internal virtual ValueTask AfterRemoveAsync(TEntity entity, TRequest request,
+        CancellationToken cancellationToken) => ValueTask.CompletedTask;
+
+    /// <summary>
     /// Creates the response to be returned
     /// </summary>
     /// <param name="entity">The removed entity</param>
     /// <param name="request">The handled request</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>A <typeparamref name="TResponse"/> </returns>
+    /// <returns>
+    /// A <see cref="ValueTask{TResponse}"/> with a <typeparamref name="TResponse"/> in representing the asynchronous operation
+    /// </returns>
     protected internal abstract ValueTask<TResponse> GetResponseAsync(TEntity entity, TRequest request,
         CancellationToken cancellationToken);
 }

@@ -86,6 +86,8 @@ public class CreateHandler_ThreeGenerics
 
         _mockedHandler.Setup(e => e.HandleAsync(request, default))
             .CallBase();
+        _mockedHandler.Setup(e => e.AfterCreationAsync(domain, request, default))
+            .CallBase();
         _mockedHandler.Setup(e => e.ValidateUseCaseRulesAsync(request, default))
             .ReturnsAsync(success);
         _mockedHandler.Setup(e => e.CreateEntityAsync(request, default))
@@ -103,6 +105,7 @@ public class CreateHandler_ThreeGenerics
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.CreateEntityAsync(request, default), Times.Once);
+        _mockedHandler.Verify(e => e.AfterCreationAsync(domain, request, default), Times.Once);
         _mockedHandler.Verify(e => e.GetResponseAsync(domain, request, default), Times.Once);
         _mockedHandler.VerifyNoOtherCalls();
 

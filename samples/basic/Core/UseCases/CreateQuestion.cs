@@ -1,5 +1,6 @@
 ﻿using CrossCutting.EntityFramework;
 using Domain.Entities;
+using Domain.Events;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using System.Net.Mime;
 using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.DataAccess;
+using VSlices.Core.Abstracts.Event;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.Abstracts.Sender;
 using VSlices.Core.BusinessLogic.FluentValidation;
@@ -56,8 +58,6 @@ public class CreateQuestionEndpoint : AspNetCoreEndpointDefinition, IEndpointDef
     }
 }
 
-public record CreateQuestionCommand(string Title, string Content) : ICommand;
-
 public class CreateQuestionValidator : AbstractValidator<CreateQuestionCommand>
 {
     private readonly ICreateQuestionRepository _repository;
@@ -89,22 +89,37 @@ public class CreateQuestionValidator : AbstractValidator<CreateQuestionCommand>
         => await _repository.NotExistTitleAsync(title, cancellationToken);
 }
 
+public record CreateQuestionCommand(string Title, string Content) : ICommand;
+
 public class CreateQuestionHandler : EntityFluentValidatedCreateHandler<CreateQuestionCommand, Question>
 {
-    public CreateQuestionHandler(IValidator<Question> entityValidator, ICreateQuestionRepository repository)
-        : base(entityValidator, repository) { }
+    private readonly IEventQueueWriter _eventWriter;
+
+    public CreateQuestionHandler(IValidator<Question> entityValidator, ICreateQuestionRepository repository,
+        IEventQueueWriter eventWriter)
+        : base(entityValidator, repository)
+    {
+        _eventWriter = eventWriter;
+    }
 
     protected override ValueTask<Response<Success>> ValidateUseCaseRulesAsync(
         CreateQuestionCommand request, CancellationToken cancellationToken) => ResponseDefaults.TaskSuccess;
 
-    protected override async ValueTask<Question> CreateEntityAsync(
+    protected override ValueTask<Question> CreateEntityAsync(
         CreateQuestionCommand request, CancellationToken cancellationToken)
     {
         var id = Guid.NewGuid()
             .ToString()
             .Replace("-", "0");
 
-        return new Question(id, request.Title, request.Content);
+        return ValueTask.FromResult(new Question(id, request.Title, request.Content));
+    }
+
+    protected override async ValueTask AfterCreationAsync(Question entity, CreateQuestionCommand request, CancellationToken cancellationToken)
+    {
+        var @event = new QuestionModifiedEvent(ModificationType.Creation, entity.Id, entity.Title, entity.Content);
+
+        await _eventWriter.EnqueueAsync(@event, cancellationToken);
     }
 }
 

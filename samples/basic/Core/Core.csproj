@@ -9,14 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.6.0" />
+    <PackageReference Include="FluentValidation" Version="11.0.0" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\VSlices.Core.BusinessLogic.FluentValidation\VSlices.Core.BusinessLogic.FluentValidation.csproj" />
-    <ProjectReference Include="..\..\..\VSlices.Core.DataAccess.EntityFramework\VSlices.Core.DataAccess.EntityFramework.csproj" />
-    <ProjectReference Include="..\..\..\VSlices.Core.Presentation.AspNetCore\VSlices.Core.Presentation.AspNetCore.csproj" />
-    <ProjectReference Include="..\..\..\VSlices.Core.Sender.Reflection\VSlices.Core.Sender.Reflection.csproj" />
+    <ProjectReference Include="..\..\..\VSlices.ShortCuts.Core.Distributed_EF_FV_Monolith\VSlices.ShortCuts.Core.DistributedMonolith.AspNetFVEFReflection.csproj" />
     <ProjectReference Include="..\CrossCutting\CrossCutting.csproj" />
   </ItemGroup>
 

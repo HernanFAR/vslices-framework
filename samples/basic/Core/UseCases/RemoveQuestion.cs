@@ -1,5 +1,6 @@
 ﻿using CrossCutting.EntityFramework;
 using Domain.Entities;
+using Domain.Events;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.DataAccess;
+using VSlices.Core.Abstracts.Event;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.Abstracts.Sender;
 using VSlices.Core.BusinessLogic.FluentValidation;
@@ -58,11 +60,14 @@ public record RemoveQuestionCommand(string Id) : ICommand;
 public class RemoveQuestionHandler : EntityFluentValidatedRemoveHandler<RemoveQuestionCommand, Question>
 {
     private readonly IRemoveQuestionRepository _repository;
+    private readonly IEventQueueWriter _eventWriter;
 
-    public RemoveQuestionHandler(IValidator<Question> entityValidator, IRemoveQuestionRepository repository)
+    public RemoveQuestionHandler(IValidator<Question> entityValidator, IRemoveQuestionRepository repository,
+        IEventQueueWriter eventWriter)
         : base(entityValidator, repository)
     {
         _repository = repository;
+        _eventWriter = eventWriter;
     }
 
     protected override async ValueTask<Response<Success>> ValidateUseCaseRulesAsync(
@@ -80,6 +85,13 @@ public class RemoveQuestionHandler : EntityFluentValidatedRemoveHandler<RemoveQu
         var question = await _repository.GetQuestionAsync(request.Id, cancellationToken);
 
         return question;
+    }
+
+    protected override async ValueTask AfterRemoveAsync(Question entity, RemoveQuestionCommand request, CancellationToken cancellationToken)
+    {
+        var @event = new QuestionModifiedEvent(ModificationType.Deletion, entity.Id, entity.Title, entity.Content);
+
+        await _eventWriter.EnqueueAsync(@event, cancellationToken);
     }
 }
 

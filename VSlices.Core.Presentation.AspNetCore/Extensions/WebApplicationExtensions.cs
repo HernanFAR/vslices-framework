@@ -5,7 +5,9 @@ using VSlices.Core.Presentation.AspNetCore;
 // ReSharper disable once CheckNamespace
 namespace Microsoft.AspNetCore.Builder;
 
+#pragma warning disable CS1591
 public static class WebApplicationExtensions
+#pragma warning restore CS1591
 {
     /// <summary>
     /// Uses the endpoint definitions to define the endpoints of the application.

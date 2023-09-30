@@ -9,10 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.6.0" />
+    <PackageReference Include="FluentValidation" Version="11.0.0" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\VSlices.Core.Abstracts\VSlices.Core.Abstracts.csproj" />
     <ProjectReference Include="..\..\..\VSlices.Domain\VSlices.Domain.csproj" />
   </ItemGroup>
 

@@ -49,8 +49,12 @@ public readonly struct Response<TResponse>
         _businessFailure = businessFailure;
     }
 
+#pragma warning disable CS1591
     public static implicit operator Response<TResponse>(BusinessFailure businessFailure) => new(businessFailure);
+#pragma warning restore CS1591
+#pragma warning disable CS1591
     public static implicit operator Response<TResponse>(TResponse businessFailure) => new(businessFailure);
+#pragma warning restore CS1591
 }
 
 /// <summary>

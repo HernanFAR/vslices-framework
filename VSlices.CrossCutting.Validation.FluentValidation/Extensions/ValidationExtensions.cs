@@ -3,7 +3,9 @@
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
 
+#pragma warning disable CS1591
 public static class ValidationExtensions
+#pragma warning restore CS1591
 {
     /// <summary>
     /// Adds the FluentValidationBehavior to the pipeline.

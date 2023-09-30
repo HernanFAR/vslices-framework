@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 // ReSharper disable once CheckNamespace
 namespace VSlices.Core.Abstracts.Responses;
 
+#pragma warning disable CS1591
 public static class ResponseExtensions
+#pragma warning restore CS1591
 {
     /// <summary>
     /// Maps a <see cref="Response{TSuccess}"/> to a <see cref="IResult"/>, using the provided function in success case.

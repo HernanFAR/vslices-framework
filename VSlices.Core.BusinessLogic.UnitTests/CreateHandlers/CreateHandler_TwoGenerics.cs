@@ -85,6 +85,8 @@ public class CreateHandler_TwoGenerics
 
         _mockedHandler.Setup(e => e.HandleAsync(request, default))
             .CallBase();
+        _mockedHandler.Setup(e => e.AfterCreationAsync(domain, request, default))
+            .CallBase();
         _mockedHandler.Setup(e => e.ValidateUseCaseRulesAsync(request, default))
             .ReturnsAsync(success);
         _mockedHandler.Setup(e => e.CreateEntityAsync(request, default))
@@ -102,6 +104,7 @@ public class CreateHandler_TwoGenerics
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.CreateEntityAsync(request, default), Times.Once);
+        _mockedHandler.Verify(e => e.AfterCreationAsync(domain, request, default), Times.Once);
         _mockedHandler.Protected().Verify("GetResponseAsync", Times.Once(), domain, request, default(CancellationToken));
         _mockedHandler.VerifyNoOtherCalls();
 

@@ -4,7 +4,9 @@ using VSlices.CrossCutting.Logging.Configurations;
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
 
+#pragma warning disable CS1591
 public static class LoggingExtensions
+#pragma warning restore CS1591
 {
     /// <summary>
     /// Add the default logging behavior to the <see cref="IServiceCollection"/>.

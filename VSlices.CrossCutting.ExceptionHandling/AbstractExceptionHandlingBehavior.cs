@@ -9,7 +9,7 @@ namespace VSlices.CrossCutting.ExceptionHandling;
 /// <typeparam name="TRequest">The intercepted request to handle</typeparam>
 /// <typeparam name="TResponse">The expected successful response</typeparam>
 public abstract class AbstractExceptionHandlingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : IRequest<TResponse>
+    where TRequest : IBaseRequest<TResponse>
 {
     /// <inheritdoc/>
     public async ValueTask<Response<TResponse>> HandleAsync(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken = default)
