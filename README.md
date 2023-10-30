@@ -26,7 +26,8 @@ Desarrollos propuestos para VSlices
   - En base al diagrama de caso de uso, hacer una herramienta que genere codigo automaticamente.
   - Compatiblidad con Node.js [node-dot-net](https://github.com/microsoft/node-api-dotnet)
 - Servicios a ofrecer
-  - Ofrecer un modelo de apoyo a desarrolladores (inspirado en [nest.js](https://enterprise.nestjs.com/))
+  - Ofrecer un modelo de apoyo a desarrolladores (inspirado en [nest.js](https://enterprise.nestjs.com/)).
+  - Ofrecer una CLI para autogeneración de codigo.
 
 ### Apoyar el desarrollo de VSlices
 
