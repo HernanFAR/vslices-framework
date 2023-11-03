@@ -139,8 +139,8 @@ public class ReflectionPublisherTests
     }
 
     [Theory]
-    [InlineData(typeof(AwaitForEachStrategy), 3000)]
-    [InlineData(typeof(AwaitInParallelStrategy), 2000)]
+    [InlineData(typeof(AwaitForEachStrategy), 2999)]
+    [InlineData(typeof(AwaitInParallelStrategy), 1999)]
     public async Task Publisher_Should_CallManyHandler(Type strategyType, int time)
     {
         ReflectionPublisher.RequestHandlers.Clear();

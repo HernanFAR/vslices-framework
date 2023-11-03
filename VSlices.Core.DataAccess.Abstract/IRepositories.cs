@@ -1,6 +1,6 @@
 ﻿using VSlices.Core.Abstracts.Responses;
 
-namespace VSlices.Core.Abstracts.DataAccess;
+namespace VSlices.Core.DataAccess.Abstracts;
 
 /// <summary>
 /// Defines a repository that can create <typeparamref name="TEntity"/> entities

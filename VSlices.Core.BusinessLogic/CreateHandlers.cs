@@ -1,6 +1,6 @@
 ﻿using VSlices.Core.Abstracts.BusinessLogic;
-using VSlices.Core.Abstracts.DataAccess;
 using VSlices.Core.Abstracts.Responses;
+using VSlices.Core.DataAccess.Abstracts;
 
 namespace VSlices.Core.BusinessLogic;
 
@@ -205,7 +205,7 @@ public abstract class CreateHandler<TRequest, TEntity> : CreateHandler<TRequest,
     { }
 
     /// <inheritdoc />
-    protected internal override ValueTask<Success> GetResponseAsync(TEntity _, TRequest r, CancellationToken c) 
+    protected internal override ValueTask<Success> GetResponseAsync(TEntity _, TRequest r, CancellationToken c)
         => Success.TaskValue;
 }
 
@@ -223,6 +223,6 @@ public abstract class EntityValidatedCreateHandler<TRequest, TEntity> : EntityVa
     { }
 
     /// <inheritdoc />
-    protected internal override ValueTask<Success> GetResponseAsync(TEntity _, TRequest r, CancellationToken c) 
+    protected internal override ValueTask<Success> GetResponseAsync(TEntity _, TRequest r, CancellationToken c)
         => Success.TaskValue;
 }

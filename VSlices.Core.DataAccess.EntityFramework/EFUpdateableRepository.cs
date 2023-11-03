@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
-using VSlices.Core.Abstracts.DataAccess;
+using VSlices.Core.DataAccess.Abstracts;
 using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.Core.DataAccess.EntityFramework;
