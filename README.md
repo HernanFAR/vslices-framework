@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="icons/icon hq.png" alt="icon" width="192px">
+</p>
 <p align="center">A high-level, develop in C#, modular framework  that aims to a faster but clean and pragmatic software developtment</p>
 <p align="center">
   <a href="https://www.nuget.org/packages/VSlices.Core.Abstracts">
