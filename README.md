@@ -1,5 +1,21 @@
-# VSlices
-VSlices is a high-level, develop in C#, modular framework  that aims to a faster but clean and pragmatic software developtment. Is heavy inspired in the vertical slices architecture and the functional programming. Is also Domain Driven Development friendly.
+<p align="center">A high-level, develop in C#, modular framework  that aims to a faster but clean and pragmatic software developtment</p>
+<p align="center">
+  <a href="https://www.nuget.org/packages/VSlices.Core.Abstracts">
+    <img src="https://buildstats.info/nuget/vslices.core.abstracts" alt="VSlices.Core.Abstract release package info" />
+  </a>
+  <a href="https://github.com/HernanFAR/vslice-framework/actions/workflows/master-test.yml">
+    <img src="https://github.com/HernanFAR/vslice-framework/actions/workflows/master-test.yml/badge.svg" alt="master-test.yml" />
+  </a>
+  <a href="https://github.com/HernanFAR/vslice-framework/blob/master/LICENSE">
+    <img src="https://img.shields.io/badge/license-MIT-purple" alt="VSlices license" />
+  </a>
+  <a href="https://paypal.me/enyu20">
+    <img src="https://img.shields.io/badge/donate-paypal-red" alt="VSlices paypal donation link" />
+  </a>
+</p>
+
+# About
+VSlices is a high-level, develop in C#, modular framework  that aims to a faster but clean and pragmatic software developtment Is heavy inspired in the vertical slices architecture and the functional programming. Is also Domain Driven Development friendly.
 
 The documentation of the software is in [link](https://vslice-framework.readthedocs.io/en/latest/), there you can start to use it and learn the functionalities that the framework brings. It also has and explication of the implementation of the proposed architecture and the way of work
 
