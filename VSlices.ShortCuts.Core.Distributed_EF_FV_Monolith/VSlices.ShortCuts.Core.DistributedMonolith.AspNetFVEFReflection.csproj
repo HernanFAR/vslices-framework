@@ -19,6 +19,7 @@
 	<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 	<PackageLicenseFile>LICENSE</PackageLicenseFile>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageIcon>icon lq.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,6 +35,10 @@
 		<PackagePath>\</PackagePath>
 	</None>
 	<None Include="..\README.md">
+		<Pack>True</Pack>
+		<PackagePath>\</PackagePath>
+	</None>
+	<None Include="..\icons\icon lq.png">
 		<Pack>True</Pack>
 		<PackagePath>\</PackagePath>
 	</None>
