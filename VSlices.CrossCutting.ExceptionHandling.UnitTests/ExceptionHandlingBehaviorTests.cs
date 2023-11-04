@@ -5,7 +5,7 @@ using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.CrossCutting.ExceptionHandling.UnitTests;
 
-public class AbstractExceptionHandlingBehaviorTests
+public class ExceptionHandlingBehaviorTests
 {
     public record Request : IRequest;
 
@@ -14,7 +14,7 @@ public class AbstractExceptionHandlingBehaviorTests
     {
         var request = new Request();
 
-        var pipelineMock = new Mock<AbstractExceptionHandlingBehavior<Request, Success>>
+        var pipelineMock = new Mock<ExceptionHandlingBehavior<Request, Success>>
         {
             CallBase = true
         };
@@ -32,14 +32,14 @@ public class AbstractExceptionHandlingBehaviorTests
     {
         var request = new Request();
 
-        var pipelineMock = new Mock<AbstractExceptionHandlingBehavior<Request, Success>>
+        var pipelineMock = new Mock<ExceptionHandlingBehavior<Request, Success>>
         {
             CallBase = true
         };
         var pipeline = pipelineMock.Object;
         var ex = new Exception();
 
-        pipelineMock.Setup(e => e.ProcessExceptionAsync(ex))
+        pipelineMock.Setup(e => e.ProcessExceptionAsync(ex, request))
             .Verifiable();
 
         RequestHandlerDelegate<Success> handler = () => throw ex;

@@ -8,7 +8,7 @@ namespace VSlices.CrossCutting.ExceptionHandling;
 /// </summary>
 /// <typeparam name="TRequest">The intercepted request to handle</typeparam>
 /// <typeparam name="TResponse">The expected successful response</typeparam>
-public abstract class AbstractExceptionHandlingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public abstract class ExceptionHandlingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IBaseRequest<TResponse>
 {
     /// <inheritdoc/>
@@ -20,7 +20,7 @@ public abstract class AbstractExceptionHandlingBehavior<TRequest, TResponse> : I
         }
         catch (Exception ex)
         {
-            await ProcessExceptionAsync(ex);
+            await ProcessExceptionAsync(ex, request);
 
             return BusinessFailure.Of.UnhandledException();
         }
@@ -31,7 +31,8 @@ public abstract class AbstractExceptionHandlingBehavior<TRequest, TResponse> : I
     /// </summary>
     /// <remarks>You can add more specific logging, email sending, etc. here</remarks>
     /// <param name="ex">The throw exception</param>
+    /// <param name="request">The related request information</param>
     /// <returns>A <see cref="ValueTask"/> representing the processing of the exception</returns>
-    protected internal abstract ValueTask ProcessExceptionAsync(Exception ex);
+    protected internal abstract ValueTask ProcessExceptionAsync(Exception ex, TRequest request);
     
 }
