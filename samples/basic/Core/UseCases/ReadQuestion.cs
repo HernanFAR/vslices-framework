@@ -60,7 +60,7 @@ public class ReadQuestionHandler : BasicReadHandler<ReadQuestionQuery, ReadQuest
 {
     public ReadQuestionHandler(IReadQuestionRepository repository) : base(repository) { }
 
-    protected override ValueTask<Response<Success>> ValidateUseCaseRulesAsync(
+    protected override ValueTask<Response<Success>> ValidateFeatureRulesAsync(
         ReadQuestionQuery request, CancellationToken cancellationToken)
         => ResponseDefaults.TaskSuccess;
 }

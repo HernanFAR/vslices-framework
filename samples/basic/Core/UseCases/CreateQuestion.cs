@@ -102,7 +102,7 @@ public class CreateQuestionHandler : EntityFluentValidatedCreateHandler<CreateQu
         _eventWriter = eventWriter;
     }
 
-    protected override ValueTask<Response<Success>> ValidateUseCaseRulesAsync(
+    protected override ValueTask<Response<Success>> ValidateFeatureRulesAsync(
         CreateQuestionCommand request, CancellationToken cancellationToken) => ResponseDefaults.TaskSuccess;
 
     protected override ValueTask<Question> CreateEntityAsync(
