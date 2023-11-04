@@ -1,4 +1,4 @@
-﻿using VSlices.Core.Abstracts.Event;
+﻿using VSlices.Core.Abstracts.Events;
 using VSlices.Core.Events.Publisher.Reflection;
 using VSlices.Core.Events.Publisher.Reflection.Strategies;
 

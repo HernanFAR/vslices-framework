@@ -3,7 +3,7 @@ using System.Text.Json;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using VSlices.Core.Abstracts.BusinessLogic;
+using VSlices.Core.Abstracts.Requests;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.CrossCutting.Logging.Attributes;
 using VSlices.CrossCutting.Logging.Configurations;

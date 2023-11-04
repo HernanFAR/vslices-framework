@@ -7,9 +7,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E846D8C9-E92
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.Abstracts", "VSlices.Core.Abstracts\VSlices.Core.Abstracts.csproj", "{1CFAE6A3-7928-439E-B090-78924A0FCA58}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.BusinessLogic", "VSlices.Core.BusinessLogic\VSlices.Core.BusinessLogic.csproj", "{34A5731E-BA8A-453D-991B-743EA7AF233B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.Handlers", "VSlices.Core.Handlers\VSlices.Core.Handlers.csproj", "{34A5731E-BA8A-453D-991B-743EA7AF233B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.BusinessLogic.FluentValidation", "VSlices.Core.BusinessLogic.FluentValidation\VSlices.Core.BusinessLogic.FluentValidation.csproj", "{7E3C3A6D-E865-48F6-BEF9-8D8695952245}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.Handlers.FluentValidation", "VSlices.Core.Handlers.FluentValidation\VSlices.Core.Handlers.FluentValidation.csproj", "{7E3C3A6D-E865-48F6-BEF9-8D8695952245}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.DataAccess.EntityFramework", "VSlices.Core.DataAccess.EntityFramework\VSlices.Core.DataAccess.EntityFramework.csproj", "{B5BB0444-673D-4D62-93BA-5B66242C8AAD}"
 EndProject
@@ -17,9 +17,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{6F484706
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.Abstracts.UnitTests", "VSlices.Core.Abstracts.UnitTests\VSlices.Core.Abstracts.UnitTests.csproj", "{89F57C6A-A1C1-4907-9982-AE4E731198DA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.BusinessLogic.UnitTests", "VSlices.Core.BusinessLogic.UnitTests\VSlices.Core.BusinessLogic.UnitTests.csproj", "{DFDFAD02-CBFE-4EE1-9B26-8D5823E9EB41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.Handlers.UnitTests", "VSlices.Core.Handlers.UnitTests\VSlices.Core.Handlers.UnitTests.csproj", "{DFDFAD02-CBFE-4EE1-9B26-8D5823E9EB41}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.BusinessLogic.FluentValidation.UnitTests", "VSlices.Core.BusinessLogic.FluentValidation.UnitTests\VSlices.Core.BusinessLogic.FluentValidation.UnitTests.csproj", "{1E88D830-F603-402A-9152-DA9DE54D0576}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.Handlers.FluentValidation.UnitTests", "VSlices.Core.Handlers.FluentValidation.UnitTests\VSlices.Core.Handlers.FluentValidation.UnitTests.csproj", "{1E88D830-F603-402A-9152-DA9DE54D0576}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.DataAccess.EntityFramework.UnitTests", "VSlices.Core.DataAccess.EntityFramework.UnitTests\VSlices.Core.DataAccess.EntityFramework.UnitTests.csproj", "{F344E240-D8F8-4528-B034-98ABCD406DCA}"
 EndProject
@@ -43,9 +43,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{45B6CAFB-D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CrossCutting", "CrossCutting", "{671D1A3F-CE83-4CA1-90CD-F42C1F124E28}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BusinessLogic", "BusinessLogic", "{A204570A-C4BD-4F8D-9368-A6618A7F3A7F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Handlers", "Handlers", "{A204570A-C4BD-4F8D-9368-A6618A7F3A7F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BusinessLogic", "BusinessLogic", "{C9B0D647-20C1-4D71-997D-5DE29813E28A}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Handlers", "Handlers", "{C9B0D647-20C1-4D71-997D-5DE29813E28A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.Presentation.AspNetCore", "VSlices.Core.Presentation.AspNetCore\VSlices.Core.Presentation.AspNetCore.csproj", "{4C852170-F4F2-4C8D-888E-EA2090E752F5}"
 EndProject
@@ -89,17 +89,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.InMemoryQueue.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.Events.EventQueue.InMemory.UnitTests", "VSlices.Core.Events.EventQueue.Inmemory.UnitTests\VSlices.Core.Events.EventQueue.InMemory.UnitTests.csproj", "{8BD16D7B-AE82-404A-99F9-A4595B7D018E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShortCuts", "ShortCuts", "{5015E7C6-F2BB-4DB2-B995-4079ED14F6F9}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.ShortCuts.Core.DistributedMonolith.AspNetFVEFReflection", "VSlices.ShortCuts.Core.Distributed_EF_FV_Monolith\VSlices.ShortCuts.Core.DistributedMonolith.AspNetFVEFReflection.csproj", "{B0736C8E-7C30-48EB-B516-7184E7EB2992}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShortCuts", "ShortCuts", "{59B7D191-B91E-436F-B6F7-9D40591ABF0B}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.ShortCuts.Core.DistributedMonolith.AspNetFVEFReflection.UnitTests", "VSlices.ShortCuts.Core.DistributedMonolith.AspNetFVEFReflection.UnitTests\VSlices.ShortCuts.Core.DistributedMonolith.AspNetFVEFReflection.UnitTests.csproj", "{A0CA3C6E-8148-41CA-83D0-2AE8AA081936}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSlices.Core.DataAccess.Abstracts", "VSlices.Core.DataAccess.Abstract\VSlices.Core.DataAccess.Abstracts.csproj", "{A03FB874-66B5-4F68-B997-1B2257D04A03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSlices.Core.DataAccess.Abstracts", "VSlices.Core.DataAccess.Abstract\VSlices.Core.DataAccess.Abstracts.csproj", "{A03FB874-66B5-4F68-B997-1B2257D04A03}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataAccess", "DataAccess", "{605B8FC2-30B0-436C-8AD4-436E114D61F9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Events", "Events", "{99ECD5AC-9483-430C-9629-F52A314CB83A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Events", "Events", "{FDF8A72C-38B8-4236-9738-CBCDD9B8AA20}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration", "Integration", "{7DC540DB-C61E-4D91-BB0C-53457C9CC215}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSlices.Integration.AspNetCore", "VSlices.Integration.AspNetCore\VSlices.Integration.AspNetCore.csproj", "{D63FCEC9-B074-4348-8DA1-0236FEEE4AE3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration", "Integration", "{46DD6F46-19EA-4B56-84A1-90E3B4CF763A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSlices.Integration.AspNetCore.IntegTests", "VSlices.Integration.AspNetCore.IntegTests\VSlices.Integration.AspNetCore.IntegTests.csproj", "{8DE485C0-1909-496F-B821-5B9C7170F5B7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -231,18 +235,18 @@ Global
 		{8BD16D7B-AE82-404A-99F9-A4595B7D018E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8BD16D7B-AE82-404A-99F9-A4595B7D018E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8BD16D7B-AE82-404A-99F9-A4595B7D018E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B0736C8E-7C30-48EB-B516-7184E7EB2992}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B0736C8E-7C30-48EB-B516-7184E7EB2992}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B0736C8E-7C30-48EB-B516-7184E7EB2992}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B0736C8E-7C30-48EB-B516-7184E7EB2992}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A0CA3C6E-8148-41CA-83D0-2AE8AA081936}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A0CA3C6E-8148-41CA-83D0-2AE8AA081936}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A0CA3C6E-8148-41CA-83D0-2AE8AA081936}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A0CA3C6E-8148-41CA-83D0-2AE8AA081936}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A03FB874-66B5-4F68-B997-1B2257D04A03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A03FB874-66B5-4F68-B997-1B2257D04A03}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A03FB874-66B5-4F68-B997-1B2257D04A03}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A03FB874-66B5-4F68-B997-1B2257D04A03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D63FCEC9-B074-4348-8DA1-0236FEEE4AE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D63FCEC9-B074-4348-8DA1-0236FEEE4AE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D63FCEC9-B074-4348-8DA1-0236FEEE4AE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D63FCEC9-B074-4348-8DA1-0236FEEE4AE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DE485C0-1909-496F-B821-5B9C7170F5B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DE485C0-1909-496F-B821-5B9C7170F5B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DE485C0-1909-496F-B821-5B9C7170F5B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DE485C0-1909-496F-B821-5B9C7170F5B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -283,17 +287,19 @@ Global
 		{3856C64A-FBEE-4370-862B-83C09565B561} = {E68194E7-5DFD-4012-947E-B5702073AA4F}
 		{92F8E539-3C7D-4F13-9AF3-C058FC5BDE3F} = {E68194E7-5DFD-4012-947E-B5702073AA4F}
 		{01EB9DA7-A94D-4950-B8AE-6F1FF5A6BA3A} = {E68194E7-5DFD-4012-947E-B5702073AA4F}
-		{4192FE7E-17CB-4E15-8EF2-C0F49EEA4DC7} = {0D8209DB-7023-48E6-85ED-028BF82BA802}
-		{B55B2A08-057C-4D30-B784-7A47F9147681} = {0D8209DB-7023-48E6-85ED-028BF82BA802}
-		{9C09AA61-385E-466A-87BA-6E14BE906035} = {45B6CAFB-D06E-4530-8546-F9C7BAE95D96}
+		{4192FE7E-17CB-4E15-8EF2-C0F49EEA4DC7} = {99ECD5AC-9483-430C-9629-F52A314CB83A}
+		{B55B2A08-057C-4D30-B784-7A47F9147681} = {99ECD5AC-9483-430C-9629-F52A314CB83A}
+		{9C09AA61-385E-466A-87BA-6E14BE906035} = {FDF8A72C-38B8-4236-9738-CBCDD9B8AA20}
 		{4343D8FE-D581-40A5-A090-354E5F7DCF6D} = {45B6CAFB-D06E-4530-8546-F9C7BAE95D96}
-		{8BD16D7B-AE82-404A-99F9-A4595B7D018E} = {45B6CAFB-D06E-4530-8546-F9C7BAE95D96}
-		{5015E7C6-F2BB-4DB2-B995-4079ED14F6F9} = {E846D8C9-E927-43E8-8B46-CEA3ADB50F6F}
-		{B0736C8E-7C30-48EB-B516-7184E7EB2992} = {5015E7C6-F2BB-4DB2-B995-4079ED14F6F9}
-		{59B7D191-B91E-436F-B6F7-9D40591ABF0B} = {6F484706-EDFC-49EF-A419-D3F6943C2E36}
-		{A0CA3C6E-8148-41CA-83D0-2AE8AA081936} = {59B7D191-B91E-436F-B6F7-9D40591ABF0B}
+		{8BD16D7B-AE82-404A-99F9-A4595B7D018E} = {FDF8A72C-38B8-4236-9738-CBCDD9B8AA20}
 		{A03FB874-66B5-4F68-B997-1B2257D04A03} = {605B8FC2-30B0-436C-8AD4-436E114D61F9}
 		{605B8FC2-30B0-436C-8AD4-436E114D61F9} = {0D8209DB-7023-48E6-85ED-028BF82BA802}
+		{99ECD5AC-9483-430C-9629-F52A314CB83A} = {0D8209DB-7023-48E6-85ED-028BF82BA802}
+		{FDF8A72C-38B8-4236-9738-CBCDD9B8AA20} = {45B6CAFB-D06E-4530-8546-F9C7BAE95D96}
+		{7DC540DB-C61E-4D91-BB0C-53457C9CC215} = {E846D8C9-E927-43E8-8B46-CEA3ADB50F6F}
+		{D63FCEC9-B074-4348-8DA1-0236FEEE4AE3} = {7DC540DB-C61E-4D91-BB0C-53457C9CC215}
+		{46DD6F46-19EA-4B56-84A1-90E3B4CF763A} = {6F484706-EDFC-49EF-A419-D3F6943C2E36}
+		{8DE485C0-1909-496F-B821-5B9C7170F5B7} = {46DD6F46-19EA-4B56-84A1-90E3B4CF763A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {653AE7A1-A4C4-42F2-9804-FE7E032C3E8C}
