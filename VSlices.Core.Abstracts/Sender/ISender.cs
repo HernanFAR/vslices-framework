@@ -1,4 +1,4 @@
-﻿using VSlices.Core.Abstracts.BusinessLogic;
+﻿using VSlices.Core.Abstracts.Requests;
 using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.Core.Abstracts.Sender;

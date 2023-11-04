@@ -1,6 +1,7 @@
-﻿using VSlices.Core.Abstracts.Responses;
+﻿using VSlices.Core.Abstracts.Requests;
+using VSlices.Core.Abstracts.Responses;
 
-namespace VSlices.Core.Abstracts.BusinessLogic;
+namespace VSlices.Core.Abstracts.Handlers;
 
 /// <summary>
 /// Defines a handler for a <see cref="IBaseRequest{TResponse}"/>

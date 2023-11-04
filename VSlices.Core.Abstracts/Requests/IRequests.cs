@@ -1,12 +1,12 @@
 ﻿using VSlices.Core.Abstracts.Responses;
 
-namespace VSlices.Core.Abstracts.BusinessLogic;
+namespace VSlices.Core.Abstracts.Requests;
 
 /// <summary>
 /// Represents the start point of any business logic
 /// </summary>
 /// <typeparam name="TResponse"></typeparam>
-public interface IBaseRequest<TResponse> {}
+public interface IBaseRequest<TResponse> { }
 
 /// <summary>
 /// Represents the start point of a use case, with a specific response type

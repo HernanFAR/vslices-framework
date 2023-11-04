@@ -1,9 +1,9 @@
 using FluentAssertions;
 using Moq;
 using Moq.Protected;
-using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.DataAccess.Abstracts;
 using VSlices.Core.Abstracts.Responses;
+using VSlices.Core.Abstracts.Requests;
 
 namespace VSlices.Core.BusinessLogic.UnitTests.CreateHandlers;
 

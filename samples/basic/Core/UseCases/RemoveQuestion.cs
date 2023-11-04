@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.DataAccess.Abstracts;
 using VSlices.Core.Abstracts.Event;
 using VSlices.Core.Abstracts.Responses;
@@ -15,6 +14,7 @@ using VSlices.Core.Abstracts.Sender;
 using VSlices.Core.BusinessLogic.FluentValidation;
 using VSlices.Core.DataAccess.EntityFramework;
 using VSlices.Core.Presentation.AspNetCore;
+using VSlices.Core.Abstracts.Requests;
 
 // ReSharper disable once CheckNamespace
 namespace Core.UseCases.RemoveQuestion;
