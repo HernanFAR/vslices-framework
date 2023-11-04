@@ -36,6 +36,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\VSlices.Core.Abstracts\VSlices.Core.Abstracts.csproj" />
+    <ProjectReference Include="..\VSlices.Core.DataAccess.Abstract\VSlices.Core.DataAccess.Abstracts.csproj" />
   </ItemGroup>
 
 </Project>

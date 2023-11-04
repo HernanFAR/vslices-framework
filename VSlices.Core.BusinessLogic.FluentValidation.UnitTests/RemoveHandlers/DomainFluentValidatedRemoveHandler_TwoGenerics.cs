@@ -3,7 +3,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using Moq;
 using VSlices.Core.Abstracts.BusinessLogic;
-using VSlices.Core.Abstracts.DataAccess;
+using VSlices.Core.DataAccess.Abstracts;
 using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.Core.BusinessLogic.FluentValidation.UnitTests.RemoveHandlers;
