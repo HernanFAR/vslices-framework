@@ -6,8 +6,8 @@
   <a href="https://www.nuget.org/packages/VSlices.Core.Abstracts">
     <img src="https://buildstats.info/nuget/vslices.core.abstracts" alt="VSlices.Core.Abstract release package info" />
   </a>
-  <a href="https://github.com/HernanFAR/vslices-framework/actions/workflows/master-test.yml">
-    <img src="https://github.com/HernanFAR/vslice-framework/actions/workflows/master-test.yml/badge.svg" alt="master-test.yml" />
+  <a href="https://github.com/HernanFAR/vslices-framework/actions/workflows/test.yml">
+    <img src="https://github.com/HernanFAR/vslice-framework/actions/workflows/test.yml/badge.svg" alt="master-test.yml" />
   </a>
   <a href="https://github.com/HernanFAR/vslices-framework/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-purple" alt="VSlices license" />
