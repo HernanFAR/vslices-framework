@@ -32,7 +32,7 @@ For commits, the templates are like this: "[Commit type]([Related issue number])
 - docs(#17): Adding branch nameing and commit messages conventions in readme.md
 - tools(#10): Adding MinIO support
 
-For branches, the templates are like this: "[Branch type]/[Branch name]": Like this
+For branches, the templates are like this: "v[Version number]/[Branch type]/[Branch name]": Like this
 - tools/readme.md-update
 - tools/mailtrap-implementation
 - fix/sharepoint-access-policy
