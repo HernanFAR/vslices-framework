@@ -18,7 +18,7 @@ public class DomainFluentValidatedUpdateHandler_TwoGenerics
     {
         public EntityFluentValidatedCreateHandler(IValidator<Domain> requestValidator, ICreateRepository<Domain> repository) : base(requestValidator, repository) { }
 
-        protected override ValueTask<Response<Success>> ValidateUseCaseRulesAsync(Request request, CancellationToken cancellationToken = default)
+        protected override ValueTask<Response<Success>> ValidateFeatureRulesAsync(Request request, CancellationToken cancellationToken = default)
             => ValueTask.FromResult<Response<Success>>(Success.Value);
 
         protected override ValueTask<Domain> CreateEntityAsync(Request request, CancellationToken cancellationToken = default)

@@ -28,7 +28,7 @@ public class ReadHandler_TwoGenerics
 
         _mockedHandler.Setup(e => e.HandleAsync(request, default))
             .CallBase();
-        _mockedHandler.Setup(e => e.ValidateUseCaseRulesAsync(request, default))
+        _mockedHandler.Setup(e => e.ValidateFeatureRulesAsync(request, default))
             .ReturnsAsync(businessFailure);
 
         var handlerResponse = await _mockedHandler.Object.HandleAsync(request, default);
@@ -36,7 +36,7 @@ public class ReadHandler_TwoGenerics
         handlerResponse.BusinessFailure.Should().Be(businessFailure);
 
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
-        _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
+        _mockedHandler.Verify(e => e.ValidateFeatureRulesAsync(request, default), Times.Once);
         _mockedHandler.VerifyNoOtherCalls();
 
         _mockedRepository.VerifyNoOtherCalls();
@@ -51,7 +51,7 @@ public class ReadHandler_TwoGenerics
 
         _mockedHandler.Setup(e => e.HandleAsync(request, default))
             .CallBase();
-        _mockedHandler.Setup(e => e.ValidateUseCaseRulesAsync(request, default))
+        _mockedHandler.Setup(e => e.ValidateFeatureRulesAsync(request, default))
             .ReturnsAsync(success);
 
         _mockedRepository.Setup(e => e.ReadAsync(request, default))
@@ -62,7 +62,7 @@ public class ReadHandler_TwoGenerics
         handlerResponse.BusinessFailure.Should().Be(businessFailure);
 
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
-        _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
+        _mockedHandler.Verify(e => e.ValidateFeatureRulesAsync(request, default), Times.Once);
         _mockedHandler.VerifyNoOtherCalls();
 
         _mockedRepository.Verify(e => e.ReadAsync(request, default));
@@ -78,7 +78,7 @@ public class ReadHandler_TwoGenerics
 
         _mockedHandler.Setup(e => e.HandleAsync(request, default))
             .CallBase();
-        _mockedHandler.Setup(e => e.ValidateUseCaseRulesAsync(request, default))
+        _mockedHandler.Setup(e => e.ValidateFeatureRulesAsync(request, default))
             .ReturnsAsync(success);
 
         _mockedRepository.Setup(e => e.ReadAsync(request, default))
@@ -89,7 +89,7 @@ public class ReadHandler_TwoGenerics
         handlerResponse.SuccessValue.Should().Be(response);
 
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
-        _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
+        _mockedHandler.Verify(e => e.ValidateFeatureRulesAsync(request, default), Times.Once);
         _mockedHandler.VerifyNoOtherCalls();
 
         _mockedRepository.Verify(e => e.ReadAsync(request, default));

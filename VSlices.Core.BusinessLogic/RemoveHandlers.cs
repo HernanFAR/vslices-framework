@@ -27,11 +27,11 @@ public abstract class RemoveHandler<TRequest, TResponse, TEntity> : IHandler<TRe
     /// <inheritdoc />
     public virtual async ValueTask<Response<TResponse>> HandleAsync(TRequest request, CancellationToken cancellationToken)
     {
-        var useCaseValidationResult = await ValidateUseCaseRulesAsync(request, cancellationToken);
+        var featureValidationResult = await ValidateFeatureRulesAsync(request, cancellationToken);
 
-        if (useCaseValidationResult.IsFailure)
+        if (featureValidationResult.IsFailure)
         {
-            return useCaseValidationResult.BusinessFailure;
+            return featureValidationResult.BusinessFailure;
         }
 
         var entity = await GetAndProcessEntityAsync(request, cancellationToken);
@@ -54,7 +54,7 @@ public abstract class RemoveHandler<TRequest, TResponse, TEntity> : IHandler<TRe
     /// <param name="request">The request to validate</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A <see cref="ValueTask{T}"/> holding a <see cref="Response{TRequest}"/> of <see cref="Success"/> that represents the result of the operation </returns>
-    protected internal abstract ValueTask<Response<Success>> ValidateUseCaseRulesAsync(TRequest request,
+    protected internal abstract ValueTask<Response<Success>> ValidateFeatureRulesAsync(TRequest request,
         CancellationToken cancellationToken);
 
     /// <summary>
@@ -113,11 +113,11 @@ public abstract class EntityValidatedRemoveHandler<TRequest, TResponse, TEntity>
     /// <inheritdoc />
     public virtual async ValueTask<Response<TResponse>> HandleAsync(TRequest request, CancellationToken cancellationToken)
     {
-        var useCaseValidationResult = await ValidateUseCaseRulesAsync(request, cancellationToken);
+        var featureValidationResult = await ValidateFeatureRulesAsync(request, cancellationToken);
 
-        if (useCaseValidationResult.IsFailure)
+        if (featureValidationResult.IsFailure)
         {
-            return useCaseValidationResult.BusinessFailure;
+            return featureValidationResult.BusinessFailure;
         }
 
         var entity = await GetAndProcessEntityAsync(request, cancellationToken);
@@ -147,7 +147,7 @@ public abstract class EntityValidatedRemoveHandler<TRequest, TResponse, TEntity>
     /// <param name="request">The request to validate</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A <see cref="ValueTask{T}"/> holding a <see cref="Response{TRequest}"/> of <see cref="Success"/> that represents the result of the operation </returns>
-    protected internal abstract ValueTask<Response<Success>> ValidateUseCaseRulesAsync(TRequest request,
+    protected internal abstract ValueTask<Response<Success>> ValidateFeatureRulesAsync(TRequest request,
         CancellationToken cancellationToken);
 
     /// <summary>

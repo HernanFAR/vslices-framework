@@ -70,7 +70,7 @@ public class RemoveQuestionHandler : EntityFluentValidatedRemoveHandler<RemoveQu
         _eventWriter = eventWriter;
     }
 
-    protected override async ValueTask<Response<Success>> ValidateUseCaseRulesAsync(
+    protected override async ValueTask<Response<Success>> ValidateFeatureRulesAsync(
         RemoveQuestionCommand request, CancellationToken cancellationToken)
     {
         var exist = await _repository.ExistQuestionAsync(request.Id, cancellationToken);
