@@ -45,7 +45,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\VSlices.Core.BusinessLogic.FluentValidation\VSlices.Core.BusinessLogic.FluentValidation.csproj" />
+    <ProjectReference Include="..\VSlices.Core.Handlers.FluentValidation\VSlices.Core.Handlers.FluentValidation.csproj" />
     <ProjectReference Include="..\VSlices.Core.DataAccess.EntityFramework\VSlices.Core.DataAccess.EntityFramework.csproj" />
     <ProjectReference Include="..\VSlices.Core.Events.EventQueue.InMemory\VSlices.Core.Events.EventQueue.InMemory.csproj" />
     <ProjectReference Include="..\VSlices.Core.Events.Publisher.Reflection\VSlices.Core.Events.Publisher.Reflection.csproj" />

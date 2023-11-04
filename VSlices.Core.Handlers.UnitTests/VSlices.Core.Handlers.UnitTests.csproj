@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\VSlices.Core.BusinessLogic\VSlices.Core.BusinessLogic.csproj" />
+    <ProjectReference Include="..\VSlices.Core.Handlers\VSlices.Core.Handlers.csproj" />
   </ItemGroup>
 
 </Project>

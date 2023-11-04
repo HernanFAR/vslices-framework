@@ -26,7 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\VSlices.Core.Abstracts\VSlices.Core.Abstracts.csproj" />
-    <ProjectReference Include="..\VSlices.Core.BusinessLogic.FluentValidation\VSlices.Core.BusinessLogic.FluentValidation.csproj" />
+    <ProjectReference Include="..\VSlices.Core.Handlers.FluentValidation\VSlices.Core.Handlers.FluentValidation.csproj" />
   </ItemGroup>
 
 </Project>
