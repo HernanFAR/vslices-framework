@@ -2,9 +2,11 @@ on:
   push:
     branches:
     - master
+    - v**/master
   pull_request:
     branches:
     - master
+    - v**/master
 jobs:
   build:
     runs-on: ubuntu-latest
