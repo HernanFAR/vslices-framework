@@ -27,11 +27,11 @@ public abstract class ReadHandler<TRequest, TSearchOptions, TResponse> : IHandle
     /// <inheritdoc />
     public virtual async ValueTask<Response<TResponse>> HandleAsync(TRequest request, CancellationToken cancellationToken)
     {
-        var useCaseValidationResult = await ValidateUseCaseRulesAsync(request, cancellationToken);
+        var featureValidationResult = await ValidateFeatureRulesAsync(request, cancellationToken);
 
-        if (useCaseValidationResult.IsFailure)
+        if (featureValidationResult.IsFailure)
         {
-            return useCaseValidationResult.BusinessFailure;
+            return featureValidationResult.BusinessFailure;
         }
 
         var options = await RequestToSearchOptionsAsync(request, cancellationToken);
@@ -45,7 +45,7 @@ public abstract class ReadHandler<TRequest, TSearchOptions, TResponse> : IHandle
     /// <param name="request">The request to validate</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A <see cref="ValueTask{T}"/> holding a <see cref="Response{TRequest}"/> of <see cref="Success"/> that represents the result of the operation </returns>
-    protected internal abstract ValueTask<Response<Success>> ValidateUseCaseRulesAsync(TRequest request, CancellationToken cancellationToken);
+    protected internal abstract ValueTask<Response<Success>> ValidateFeatureRulesAsync(TRequest request, CancellationToken cancellationToken);
 
     /// <summary>
     /// Converts the <typeparamref name="TRequest"/> to <typeparamref name="TSearchOptions"/>
@@ -79,11 +79,11 @@ public abstract class ReadHandler<TRequest, TResponse> : IHandler<TRequest, TRes
     /// <inheritdoc />
     public virtual async ValueTask<Response<TResponse>> HandleAsync(TRequest request, CancellationToken cancellationToken)
     {
-        var useCaseValidationResult = await ValidateUseCaseRulesAsync(request, cancellationToken);
+        var featureValidationResult = await ValidateFeatureRulesAsync(request, cancellationToken);
 
-        if (useCaseValidationResult.IsFailure)
+        if (featureValidationResult.IsFailure)
         {
-            return useCaseValidationResult.BusinessFailure;
+            return featureValidationResult.BusinessFailure;
         }
 
         return await _repository.ReadAsync(request, cancellationToken);
@@ -95,7 +95,7 @@ public abstract class ReadHandler<TRequest, TResponse> : IHandler<TRequest, TRes
     /// <param name="request">The request to validate</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A <see cref="ValueTask{T}"/> holding a <see cref="Response{TRequest}"/> of <see cref="Success"/> that represents the result of the operation </returns>>
-    protected internal abstract ValueTask<Response<Success>> ValidateUseCaseRulesAsync(TRequest request, CancellationToken cancellationToken = default);
+    protected internal abstract ValueTask<Response<Success>> ValidateFeatureRulesAsync(TRequest request, CancellationToken cancellationToken = default);
 }
 
 /// <summary>
@@ -120,7 +120,7 @@ public abstract class BasicReadHandler<TRequest, TResponse> : IHandler<TRequest,
     /// <inheritdoc />
     public virtual async ValueTask<Response<TResponse>> HandleAsync(TRequest request, CancellationToken cancellationToken)
     {
-        var useCaseValidationResult = await ValidateUseCaseRulesAsync(request, cancellationToken);
+        var useCaseValidationResult = await ValidateFeatureRulesAsync(request, cancellationToken);
 
         if (useCaseValidationResult.IsFailure)
         {
@@ -136,5 +136,5 @@ public abstract class BasicReadHandler<TRequest, TResponse> : IHandler<TRequest,
     /// <param name="request">The request to validate</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>A <see cref="ValueTask{T}"/> holding a <see cref="Response{TRequest}"/> of <see cref="Success"/> that represents the result of the operation </returns>
-    protected internal abstract ValueTask<Response<Success>> ValidateUseCaseRulesAsync(TRequest request, CancellationToken cancellationToken);
+    protected internal abstract ValueTask<Response<Success>> ValidateFeatureRulesAsync(TRequest request, CancellationToken cancellationToken);
 }

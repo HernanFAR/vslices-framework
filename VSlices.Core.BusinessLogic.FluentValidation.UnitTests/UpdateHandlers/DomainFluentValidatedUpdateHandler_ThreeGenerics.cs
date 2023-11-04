@@ -19,7 +19,7 @@ public class DomainFluentValidatedRemoveHandler_ThreeGenerics
     {
         public EntityFluentValidatedUpdateHandler(IValidator<Domain> requestValidator, IUpdateRepository<Domain> repository) : base(requestValidator, repository) { }
 
-        protected override ValueTask<Response<Success>> ValidateUseCaseRulesAsync(Request request, CancellationToken cancellationToken = default)
+        protected override ValueTask<Response<Success>> ValidateFeatureRulesAsync(Request request, CancellationToken cancellationToken = default)
             => ValueTask.FromResult<Response<Success>>(Success.Value);
 
         protected override ValueTask<Domain> GetAndProcessEntityAsync(Request request, CancellationToken cancellationToken = default)

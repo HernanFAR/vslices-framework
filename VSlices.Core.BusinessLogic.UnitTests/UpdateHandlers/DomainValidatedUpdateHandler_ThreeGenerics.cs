@@ -29,7 +29,7 @@ public class DomainValidatedUpdateHandler_ThreeGenerics
 
         _mockedHandler.Setup(e => e.HandleAsync(request, default))
             .CallBase();
-        _mockedHandler.Setup(e => e.ValidateUseCaseRulesAsync(request, default))
+        _mockedHandler.Setup(e => e.ValidateFeatureRulesAsync(request, default))
             .ReturnsAsync(businessFailure);
 
         var handlerResponse = await _mockedHandler.Object.HandleAsync(request, default);
@@ -37,7 +37,7 @@ public class DomainValidatedUpdateHandler_ThreeGenerics
         handlerResponse.BusinessFailure.Should().Be(businessFailure);
 
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
-        _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
+        _mockedHandler.Verify(e => e.ValidateFeatureRulesAsync(request, default), Times.Once);
         _mockedHandler.VerifyNoOtherCalls();
 
         _mockedRepository.VerifyNoOtherCalls();
@@ -54,7 +54,7 @@ public class DomainValidatedUpdateHandler_ThreeGenerics
 
         _mockedHandler.Setup(e => e.HandleAsync(request, default))
             .CallBase();
-        _mockedHandler.Setup(e => e.ValidateUseCaseRulesAsync(request, default))
+        _mockedHandler.Setup(e => e.ValidateFeatureRulesAsync(request, default))
             .ReturnsAsync(success);
         _mockedHandler.Setup(e => e.GetAndProcessEntityAsync(request, default))
             .ReturnsAsync(domain);
@@ -66,7 +66,7 @@ public class DomainValidatedUpdateHandler_ThreeGenerics
         handlerResponse.BusinessFailure.Should().Be(businessFailure);
 
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
-        _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
+        _mockedHandler.Verify(e => e.ValidateFeatureRulesAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.GetAndProcessEntityAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateEntityAsync(domain, default), Times.Once);
         _mockedHandler.VerifyNoOtherCalls();
@@ -85,7 +85,7 @@ public class DomainValidatedUpdateHandler_ThreeGenerics
 
         _mockedHandler.Setup(e => e.HandleAsync(request, default))
             .CallBase();
-        _mockedHandler.Setup(e => e.ValidateUseCaseRulesAsync(request, default))
+        _mockedHandler.Setup(e => e.ValidateFeatureRulesAsync(request, default))
             .ReturnsAsync(success);
         _mockedHandler.Setup(e => e.GetAndProcessEntityAsync(request, default))
             .ReturnsAsync(domain);
@@ -100,7 +100,7 @@ public class DomainValidatedUpdateHandler_ThreeGenerics
         handlerResponse.BusinessFailure.Should().Be(businessFailure);
 
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
-        _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
+        _mockedHandler.Verify(e => e.ValidateFeatureRulesAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.GetAndProcessEntityAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateEntityAsync(domain, default), Times.Once);
         _mockedHandler.VerifyNoOtherCalls();
@@ -120,7 +120,7 @@ public class DomainValidatedUpdateHandler_ThreeGenerics
 
         _mockedHandler.Setup(e => e.HandleAsync(request, default))
             .CallBase();
-        _mockedHandler.Setup(e => e.ValidateUseCaseRulesAsync(request, default))
+        _mockedHandler.Setup(e => e.ValidateFeatureRulesAsync(request, default))
             .ReturnsAsync(success);
         _mockedHandler.Setup(e => e.GetAndProcessEntityAsync(request, default))
             .ReturnsAsync(domain);
@@ -137,7 +137,7 @@ public class DomainValidatedUpdateHandler_ThreeGenerics
         handlerResponse.SuccessValue.Should().Be(response);
 
         _mockedHandler.Verify(e => e.HandleAsync(request, default), Times.Once);
-        _mockedHandler.Verify(e => e.ValidateUseCaseRulesAsync(request, default), Times.Once);
+        _mockedHandler.Verify(e => e.ValidateFeatureRulesAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.GetAndProcessEntityAsync(request, default), Times.Once);
         _mockedHandler.Verify(e => e.ValidateEntityAsync(domain, default), Times.Once);
         _mockedHandler.Verify(e => e.AfterUpdateAsync(domain, request, default), Times.Once);
