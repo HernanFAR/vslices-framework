@@ -1,6 +1,6 @@
 ﻿using VSlices.Core.Abstracts.Requests;
 
-namespace VSlices.Core.Abstracts.Event;
+namespace VSlices.Core.Abstracts.Events;
 
 /// <summary>
 /// Represents a queue writer of events

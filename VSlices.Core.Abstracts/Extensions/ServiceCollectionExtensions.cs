@@ -1,5 +1,5 @@
 ﻿using VSlices.Core.Abstracts.Configurations;
-using VSlices.Core.Abstracts.Event;
+using VSlices.Core.Abstracts.Events;
 using VSlices.Core.Abstracts.Handlers;
 using VSlices.Core.Abstracts.Presentation;
 using VSlices.Core.Abstracts.Sender;

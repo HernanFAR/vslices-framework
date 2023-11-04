@@ -5,7 +5,7 @@ using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using VSlices.Core.Abstracts.Requests;
 
-namespace VSlices.Core.Abstracts.Event;
+namespace VSlices.Core.Abstracts.Events;
 
 /// <summary>
 /// Listens to a event queue and publishes the event to a event pipeline
