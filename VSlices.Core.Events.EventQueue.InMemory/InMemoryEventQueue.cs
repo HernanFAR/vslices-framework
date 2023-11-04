@@ -1,5 +1,5 @@
 ﻿using System.Threading.Channels;
-using VSlices.Core.Abstracts.Event;
+using VSlices.Core.Abstracts.Events;
 using VSlices.Core.Abstracts.Requests;
 
 namespace VSlices.Core.Events.EventQueue.InMemory;

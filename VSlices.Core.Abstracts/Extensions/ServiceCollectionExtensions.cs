@@ -1,5 +1,5 @@
 ﻿using VSlices.Core.Abstracts.Configurations;
-using VSlices.Core.Abstracts.Event;
+using VSlices.Core.Abstracts.Events;
 using VSlices.Core.Abstracts.Handlers;
 using VSlices.Core.Abstracts.Presentation;
 using VSlices.Core.Abstracts.Sender;
@@ -91,25 +91,25 @@ public static class ServiceCollectionExtensions
     }
 
     /// <summary>
-    /// Adds the dependencies defined in the <see cref="IUseCaseDependencyDefinition"/> implementations
+    /// Adds the dependencies defined in the <see cref="IFeatureDependencyDefinition"/> implementations
     /// </summary>
     /// <typeparam name="TAnchor"></typeparam>
     /// <param name="services">Service collection</param>
     /// <returns>Service collection</returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public static IServiceCollection AddCoreDependenciesFromAssemblyContaining<TAnchor>(this IServiceCollection services)
+    public static IServiceCollection AddFeatureDependenciesFromAssemblyContaining<TAnchor>(this IServiceCollection services)
     {
         var definerTypes = typeof(TAnchor).Assembly.ExportedTypes
-            .Where(e => typeof(IUseCaseDependencyDefinition).IsAssignableFrom(e))
+            .Where(e => typeof(IFeatureDependencyDefinition).IsAssignableFrom(e))
             .Where(e => e is { IsAbstract: false, IsInterface: false });
 
         foreach (var definerType in definerTypes)
         {
-            var defineDependenciesMethod = definerType.GetMethod(nameof(IUseCaseDependencyDefinition.DefineDependencies));
+            var defineDependenciesMethod = definerType.GetMethod(nameof(IFeatureDependencyDefinition.DefineDependencies));
 
             if (defineDependenciesMethod is null)
             {
-                throw new InvalidOperationException($"{definerType.FullName} does not implement {nameof(IUseCaseDependencyDefinition)}");
+                throw new InvalidOperationException($"{definerType.FullName} does not implement {nameof(IFeatureDependencyDefinition)}");
             }
 
             defineDependenciesMethod.Invoke(null, new object?[] { services });

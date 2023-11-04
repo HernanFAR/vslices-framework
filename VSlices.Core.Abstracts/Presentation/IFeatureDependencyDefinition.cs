@@ -5,7 +5,7 @@ namespace VSlices.Core.Abstracts.Presentation;
 /// <summary>
 /// Specifies dependencies in a given use case
 /// </summary>
-public interface IUseCaseDependencyDefinition
+public interface IFeatureDependencyDefinition
 {
     /// <summary>
     /// Defines the dependencies for the use case

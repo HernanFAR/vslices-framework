@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\VSlices.ShortCuts.Core.Distributed_EF_FV_Monolith\VSlices.ShortCuts.Core.DistributedMonolith.AspNetFVEFReflection.csproj" />
+    <ProjectReference Include="..\VSlices.Integration.AspNetCore\VSlices.Integration.AspNetCore.csproj" />
   </ItemGroup>
 
 </Project>

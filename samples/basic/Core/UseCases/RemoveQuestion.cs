@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using VSlices.Core.DataAccess.Abstracts;
-using VSlices.Core.Abstracts.Event;
+using VSlices.Core.Abstracts.Events;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.Abstracts.Sender;
 using VSlices.Core.Handlers.FluentValidation;

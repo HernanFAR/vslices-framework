@@ -8,14 +8,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Net.Mime;
-using VSlices.Core.DataAccess.Abstracts;
-using VSlices.Core.Abstracts.Event;
+using VSlices.Core.Abstracts.Events;
+using VSlices.Core.Abstracts.Requests;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.Abstracts.Sender;
-using VSlices.Core.Handlers.FluentValidation;
+using VSlices.Core.DataAccess.Abstracts;
 using VSlices.Core.DataAccess.EntityFramework;
+using VSlices.Core.Handlers.FluentValidation;
 using VSlices.Core.Presentation.AspNetCore;
-using VSlices.Core.Abstracts.Requests;
 
 // ReSharper disable once CheckNamespace
 namespace Core.UseCases.CreateQuestion;

@@ -6,7 +6,7 @@ using VSlices.Core.Presentation.AspNetCore;
 namespace Microsoft.AspNetCore.Builder;
 
 #pragma warning disable CS1591
-public static class WebApplicationExtensions
+public static class VSlicesIntegrationAspNetCoreERBExtensions
 #pragma warning restore CS1591
 {
     /// <summary>

@@ -1,7 +1,7 @@
 ﻿using VSlices.Core.Abstracts.Requests;
 using VSlices.Core.Abstracts.Responses;
 
-namespace VSlices.Core.Abstracts.Event;
+namespace VSlices.Core.Abstracts.Events;
 
 /// <summary>
 /// Publishes a event through a event pipeline to be handled by many handlers

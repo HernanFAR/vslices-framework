@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using VSlices.Core.Abstracts.Configurations;
-using VSlices.Core.Abstracts.Event;
+using VSlices.Core.Abstracts.Events;
 using VSlices.Core.Abstracts.Handlers;
 using VSlices.Core.Abstracts.Presentation;
 using VSlices.Core.Abstracts.Requests;
@@ -37,7 +37,7 @@ public class ServiceCollectionExtensionsTests
         }
     }
 
-    public class DependencyDefinition1 : IUseCaseDependencyDefinition
+    public class DependencyDefinition1 : IFeatureDependencyDefinition
     {
         public class A { }
         public class B { }
@@ -49,7 +49,7 @@ public class ServiceCollectionExtensionsTests
         }
     }
 
-    public class DependencyDefinition2 : IUseCaseDependencyDefinition
+    public class DependencyDefinition2 : IFeatureDependencyDefinition
     {
         public class C { }
 
@@ -160,7 +160,7 @@ public class ServiceCollectionExtensionsTests
     {
         var services = new ServiceCollection();
 
-        services.AddCoreDependenciesFromAssemblyContaining<Anchor>();
+        services.AddFeatureDependenciesFromAssemblyContaining<Anchor>();
 
         services.Any(e => e.ImplementationType == typeof(DependencyDefinition1.A))
             .Should().BeTrue();
