@@ -15,8 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\VSlices.Core.Abstracts\VSlices.Core.Abstracts.csproj" />
-    <ProjectReference Include="..\..\..\VSlices.Domain\VSlices.Domain.csproj" />
+    <ProjectReference Include="..\..\..\src\VSlices.Core.Abstracts\VSlices.Core.Abstracts.csproj" />
+    <ProjectReference Include="..\..\..\src\VSlices.Domain\VSlices.Domain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -16,9 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\VSlices.CrossCutting.ExceptionHandling\VSlices.CrossCutting.ExceptionHandling.csproj" />
-    <ProjectReference Include="..\..\..\VSlices.CrossCutting.Logging\VSlices.CrossCutting.Logging.csproj" />
-    <ProjectReference Include="..\..\..\VSlices.CrossCutting.Validation.FluentValidation\VSlices.CrossCutting.Validation.FluentValidation.csproj" />
+    <ProjectReference Include="..\..\..\src\VSlices.CrossCutting.ExceptionHandling\VSlices.CrossCutting.ExceptionHandling.csproj" />
+    <ProjectReference Include="..\..\..\src\VSlices.CrossCutting.Logging\VSlices.CrossCutting.Logging.csproj" />
+    <ProjectReference Include="..\..\..\src\VSlices.CrossCutting.Validation.FluentValidation\VSlices.CrossCutting.Validation.FluentValidation.csproj" />
     <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 

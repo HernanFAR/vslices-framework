@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\VSlices.Integration.AspNetCore\VSlices.Integration.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\..\src\VSlices.Integration.AspNetCore\VSlices.Integration.AspNetCore.csproj" />
     <ProjectReference Include="..\Core\Core.csproj" />
   </ItemGroup>
 
