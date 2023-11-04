@@ -1,4 +1,4 @@
-﻿using VSlices.Core.Abstracts.Handlers;
+﻿using VSlices.Core.Abstracts.BusinessLogic;
 
 namespace VSlices.Core.Events.Publisher.Reflection.Strategies;
 

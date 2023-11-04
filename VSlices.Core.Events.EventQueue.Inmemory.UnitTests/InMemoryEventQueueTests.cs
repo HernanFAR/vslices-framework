@@ -1,6 +1,6 @@
 using FluentAssertions;
 using Moq;
-using VSlices.Core.Abstracts.Requests;
+using VSlices.Core.Abstracts.BusinessLogic;
 
 namespace VSlices.Core.Events.EventQueue.InMemory.UnitTests;
 

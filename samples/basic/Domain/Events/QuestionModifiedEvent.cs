@@ -1,4 +1,4 @@
-﻿using VSlices.Core.Abstracts.Requests;
+﻿using VSlices.Core.Abstracts.BusinessLogic;
 
 namespace Domain.Events;
 

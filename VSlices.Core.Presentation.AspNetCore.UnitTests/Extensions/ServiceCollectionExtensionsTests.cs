@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using VSlices.Core.Abstracts.BusinessLogic;
+using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.Core.Presentation.AspNetCore.UnitTests.Extensions;
 
@@ -26,7 +28,7 @@ public class ServiceCollectionExtensionsTests
             services.AddScoped<Dependency>();
         }
     }
-
+    
     public class Endpoint2 : IEndpointDefinition
     {
         public void DefineEndpoint(IEndpointRouteBuilder builder)
@@ -69,7 +71,7 @@ public class ServiceCollectionExtensionsTests
         var services = new ServiceCollection();
 
         services.AddSimpleEndpointDefinition<Endpoint>();
-
+        
         services
             .Where(e => e.ServiceType == typeof(ISimpleEndpointDefinition))
             .Where(e => e.ImplementationType == typeof(Endpoint))
@@ -87,7 +89,7 @@ public class ServiceCollectionExtensionsTests
         var services = new ServiceCollection();
 
         services.AddEndpointDefinitionsFromAssemblyContaining<Endpoint>();
-
+        
         services
             .Where(e => e.ServiceType == typeof(ISimpleEndpointDefinition))
             .Where(e => e.ImplementationType == typeof(Endpoint))

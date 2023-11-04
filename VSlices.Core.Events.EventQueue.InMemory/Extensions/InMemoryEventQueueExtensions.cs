@@ -1,4 +1,4 @@
-﻿using VSlices.Core.Abstracts.Events;
+﻿using VSlices.Core.Abstracts.Event;
 using VSlices.Core.Events.EventQueue.InMemory;
 
 // ReSharper disable once CheckNamespace

@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using VSlices.Core.Abstracts.Events;
+using VSlices.Core.Abstracts.Event;
 
 namespace VSlices.Core.Events.EventQueue.InMemory.UnitTests.Extensions;
 

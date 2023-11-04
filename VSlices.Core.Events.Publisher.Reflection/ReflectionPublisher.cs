@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
-using VSlices.Core.Abstracts.Events;
-using VSlices.Core.Abstracts.Requests;
+using VSlices.Core.Abstracts.BusinessLogic;
+using VSlices.Core.Abstracts.Event;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.Events.Publisher.Reflection.Internals;
 using VSlices.Core.Events.Publisher.Reflection.Strategies;
