@@ -4,7 +4,24 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	<Description>Implementation package of VSlices, it holds a bunch of extensions to consume IEndpointDefinitions using Asp.Net Core.</Description>
+	<PackageTags>vertical slices;mediator;cqrs;repository;request;handler;sender;event;publisher;functional;</PackageTags>
   </PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\icons\icon lq.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\VSlices.Core.Presentation.AspNetCore\VSlices.Core.Presentation.AspNetCore.csproj" />
