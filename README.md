@@ -24,27 +24,19 @@ The documentation of the software is in [link](https://vslice-framework.readthed
 
 If you find a problem with the documentation, have a improvement or clarification proposal, you can generate a ticket here: [link](https://github.com/HernanFAR/vslice-framework/issues)
 
-## Branch naming and commit messages conventions
-We use the following classification to name branches and write commits. They are based on [convencional commits v1](https://www.conventionalcommits.org/en/v1.0.0/).
+## Versioning
+We use [Semantic Versioning v2.0.0](https://semver.org/spec/v2.0.0.html) for production-ready releases:
+- We increment Major (the X in X.Y.Z) versions when we make a change that breaks backward compatibility. The current major version is 5.
+- We increment Minor (the Y in X.Y.Z) versions when we add backward compatible features.
+- We increment Patch (the Z in X.Y.Z) versions when we make backward compatible bug fixes or improvements in the documentation.
+- We increment Pre-releases (the W in X.Y.Z-pre.W) versions, when we make a pull request to the related release.
 
-For commits, the templates are like this: "[Commit type]([Related issue number]): [Commit message]". Like this:
-- fix(#10): Solved SharepointAccess policy in SharepointConnectionclass
-- docs(#17): Adding branch nameing and commit messages conventions in readme.md
-- tools(#10): Adding MinIO support
+Also, the framework's packages will be updated **at the same version, at the same time**, that implies that if VSlices.Core.Abstracts gets updated to the v6, **all the nugets will be updated to the v6**.
 
-For branches, the templates are like this: "v[Version number]/[Branch type]/[Branch name]": Like this
-- tools/readme.md-update
-- tools/mailtrap-implementation
-- fix/sharepoint-access-policy
+## Support policy
+Since v6, we will only support the latest 2 versions, except in v6, in which only we'll support v6. 
 
-The branch and commits types definitions are this:
-- fix: Fixing of detected bugs in the system. Related to PATCH upgrades in the semantic versioning.
-- feat: Development of new functionalities in thesystem. Related to MINOR upgrades in the semantic versioning.
-- test: For commits related to testing.
-- tools: For commits related to internal functionalities.
-- docs: For commits related to the system documentation.
-- refac: For commits related to refactorizations in the system.
-- devops: For commits related to dev ops CI or CD.
+That means when we release v6, only v6 will be supported and will get security updates or bug fixes, and v5 backwards will no longer get security updates.
 
 ## Support VSlices development
 First of all, thanks so much :) you can support the development of the framework (and my adiction to cafeine) here, with [paypal](https://paypal.me/enyu20?country.x=CL&locale.x=es_XC)
