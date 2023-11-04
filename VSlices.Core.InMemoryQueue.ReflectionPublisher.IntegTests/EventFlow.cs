@@ -4,9 +4,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;
-using VSlices.Core.Abstracts.Events;
-using VSlices.Core.Abstracts.Handlers;
-using VSlices.Core.Abstracts.Requests;
+using VSlices.Core.Abstracts.BusinessLogic;
+using VSlices.Core.Abstracts.Event;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.Events.EventQueue.InMemory;
 

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Channels;
-using VSlices.Core.Abstracts.Events;
-using VSlices.Core.Abstracts.Requests;
+using VSlices.Core.Abstracts.BusinessLogic;
+using VSlices.Core.Abstracts.Event;
 
 namespace VSlices.Core.Events.EventQueue.InMemory;
 

@@ -20,7 +20,7 @@ public interface ISimpleEndpointDefinition
 /// <summary>
 /// Defines an endpoint of a use case with dependencies
 /// </summary>
-public interface IEndpointDefinition : ISimpleEndpointDefinition, IFeatureDependencyDefinition
+public interface IEndpointDefinition : ISimpleEndpointDefinition, IUseCaseDependencyDefinition
 {
 
 }

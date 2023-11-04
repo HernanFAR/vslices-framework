@@ -14,12 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\VSlices.Core.DataAccess.EntityFramework\VSlices.Core.DataAccess.EntityFramework.csproj" />
-    <ProjectReference Include="..\..\..\VSlices.Core.Events.EventQueue.InMemory\VSlices.Core.Events.EventQueue.InMemory.csproj" />
-    <ProjectReference Include="..\..\..\VSlices.Core.Events.Publisher.Reflection\VSlices.Core.Events.Publisher.Reflection.csproj" />
-    <ProjectReference Include="..\..\..\VSlices.Core.Handlers.FluentValidation\VSlices.Core.Handlers.FluentValidation.csproj" />
-    <ProjectReference Include="..\..\..\VSlices.Core.Presentation.AspNetCore\VSlices.Core.Presentation.AspNetCore.csproj" />
-    <ProjectReference Include="..\..\..\VSlices.Core.Sender.Reflection\VSlices.Core.Sender.Reflection.csproj" />
+    <ProjectReference Include="..\..\..\VSlices.ShortCuts.Core.Distributed_EF_FV_Monolith\VSlices.ShortCuts.Core.DistributedMonolith.AspNetFVEFReflection.csproj" />
     <ProjectReference Include="..\CrossCutting\CrossCutting.csproj" />
   </ItemGroup>
 

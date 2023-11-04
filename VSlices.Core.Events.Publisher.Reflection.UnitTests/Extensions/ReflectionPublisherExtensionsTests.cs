@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using VSlices.Core.Abstracts.Events;
+using VSlices.Core.Abstracts.Event;
 using VSlices.Core.Events.Publisher.Reflection.Strategies;
 
 namespace VSlices.Core.Events.Publisher.Reflection.IntegTests.Extensions;

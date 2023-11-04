@@ -1,4 +1,6 @@
-﻿using VSlices.Core.Abstracts.Presentation;
+﻿using System.Net.NetworkInformation;
+using VSlices.Core.Abstracts.BusinessLogic;
+using VSlices.Core.Abstracts.Presentation;
 using VSlices.Core.Presentation.AspNetCore;
 
 // ReSharper disable once CheckNamespace
@@ -56,15 +58,15 @@ public static class ServiceCollectionExtensions
 
         foreach (var definerType in definerTypes)
         {
-            var defineDependenciesMethod = definerType.GetMethod(nameof(IFeatureDependencyDefinition.DefineDependencies));
+            var defineDependenciesMethod = definerType.GetMethod(nameof(IUseCaseDependencyDefinition.DefineDependencies));
 
             if (defineDependenciesMethod is null)
             {
-                throw new InvalidOperationException($"{definerType.FullName} does not implement {nameof(IFeatureDependencyDefinition)}");
+                throw new InvalidOperationException($"{definerType.FullName} does not implement {nameof(IUseCaseDependencyDefinition)}");
             }
-
-            services.Add(new ServiceDescriptor(typeof(ISimpleEndpointDefinition), definerType, lifetime));
-
+            
+            services.Add(new ServiceDescriptor(typeof(ISimpleEndpointDefinition), definerType, lifetime)); 
+            
             defineDependenciesMethod.Invoke(null, new object?[] { services });
         }
 

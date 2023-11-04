@@ -1,7 +1,7 @@
 ﻿using Domain.Events;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
-using VSlices.Core.Abstracts.Handlers;
+using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.Responses;
 
 // ReSharper disable once CheckNamespace

@@ -1,6 +1,6 @@
 using FluentAssertions;
 using Moq;
-using VSlices.Core.Abstracts.Requests;
+using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.Responses;
 
 namespace VSlices.CrossCutting.Validation.UnitTests;
