@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using VSlices.Core.Abstracts.BusinessLogic;
+using VSlices.Core.Abstracts.Handlers;
 
 namespace VSlices.CrossCutting.Validation.FluentValidation.UnitTests;
 

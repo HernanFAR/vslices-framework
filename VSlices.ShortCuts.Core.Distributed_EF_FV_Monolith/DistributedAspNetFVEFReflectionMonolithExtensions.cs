@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Hosting;
-using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.Event;
+using VSlices.Core.Abstracts.Handlers;
 using VSlices.Core.Abstracts.Sender;
 using VSlices.Core.Events.EventQueue.InMemory;
 using VSlices.Core.Events.Publisher.Reflection;

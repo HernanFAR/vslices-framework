@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using VSlices.Core.Abstracts.BusinessLogic;
 using VSlices.Core.Abstracts.Configurations;
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
+using VSlices.Core.Abstracts.Requests;
 
 namespace VSlices.Core.Abstracts.Event;
 
