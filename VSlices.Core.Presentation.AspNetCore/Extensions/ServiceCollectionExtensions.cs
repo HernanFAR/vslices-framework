@@ -56,11 +56,11 @@ public static class ServiceCollectionExtensions
 
         foreach (var definerType in definerTypes)
         {
-            var defineDependenciesMethod = definerType.GetMethod(nameof(IUseCaseDependencyDefinition.DefineDependencies));
+            var defineDependenciesMethod = definerType.GetMethod(nameof(IFeatureDependencyDefinition.DefineDependencies));
 
             if (defineDependenciesMethod is null)
             {
-                throw new InvalidOperationException($"{definerType.FullName} does not implement {nameof(IUseCaseDependencyDefinition)}");
+                throw new InvalidOperationException($"{definerType.FullName} does not implement {nameof(IFeatureDependencyDefinition)}");
             }
 
             services.Add(new ServiceDescriptor(typeof(ISimpleEndpointDefinition), definerType, lifetime));

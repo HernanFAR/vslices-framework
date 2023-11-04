@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using VSlices.Core.Presentation.AspNetCore;
 
-namespace VSlices.Core.Presentation.AspNetCore.UnitTests.Extensions;
+namespace VSlices.Integration.AspNetCore.IntegTests.Extensions;
 
 public class WebApplicationExtensionsTests
 {
