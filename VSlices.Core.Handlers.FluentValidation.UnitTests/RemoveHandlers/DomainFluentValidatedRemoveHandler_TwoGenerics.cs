@@ -6,7 +6,7 @@ using VSlices.Core.DataAccess.Abstracts;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.Abstracts.Requests;
 
-namespace VSlices.Core.BusinessLogic.FluentValidation.UnitTests.RemoveHandlers;
+namespace VSlices.Core.Handlers.FluentValidation.UnitTests.RemoveHandlers;
 
 
 public class DomainFluentValidatedRemoveHandler_TwoGenerics

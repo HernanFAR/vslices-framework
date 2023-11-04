@@ -12,7 +12,7 @@ using VSlices.Core.DataAccess.Abstracts;
 using VSlices.Core.Abstracts.Event;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.Abstracts.Sender;
-using VSlices.Core.BusinessLogic.FluentValidation;
+using VSlices.Core.Handlers.FluentValidation;
 using VSlices.Core.DataAccess.EntityFramework;
 using VSlices.Core.Presentation.AspNetCore;
 using VSlices.Core.Abstracts.Requests;

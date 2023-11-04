@@ -3,7 +3,7 @@ using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.Abstracts.Handlers;
 using VSlices.Core.Abstracts.Requests;
 
-namespace VSlices.Core.BusinessLogic;
+namespace VSlices.Core.Handlers;
 
 /// <summary>
 /// Base class for handlers of <see cref="IQuery{TResponse}"/> that reads data

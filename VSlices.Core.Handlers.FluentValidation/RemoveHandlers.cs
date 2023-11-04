@@ -3,7 +3,7 @@ using VSlices.Core.DataAccess.Abstracts;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.Abstracts.Requests;
 
-namespace VSlices.Core.BusinessLogic.FluentValidation;
+namespace VSlices.Core.Handlers.FluentValidation;
 
 /// <summary>
 /// Base class for handlers of <see cref="ICommand{TResponse}"/> that validate entities with Fluent Validation, before remove them

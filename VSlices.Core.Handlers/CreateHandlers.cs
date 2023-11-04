@@ -3,7 +3,7 @@ using VSlices.Core.Abstracts.Requests;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.DataAccess.Abstracts;
 
-namespace VSlices.Core.BusinessLogic;
+namespace VSlices.Core.Handlers;
 
 /// <summary>
 /// Base class for handlers of <see cref="ICommand{TResponse}"/> that creates entities.

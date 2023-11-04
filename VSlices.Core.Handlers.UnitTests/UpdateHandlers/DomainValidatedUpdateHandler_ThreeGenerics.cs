@@ -4,7 +4,7 @@ using VSlices.Core.DataAccess.Abstracts;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.Abstracts.Requests;
 
-namespace VSlices.Core.BusinessLogic.UnitTests.UpdateHandlers;
+namespace VSlices.Core.Handlers.UnitTests.UpdateHandlers;
 
 public class DomainValidatedUpdateHandler_ThreeGenerics
 {

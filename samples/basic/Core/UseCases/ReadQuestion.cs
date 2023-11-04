@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using VSlices.Core.DataAccess.Abstracts;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.Abstracts.Sender;
-using VSlices.Core.BusinessLogic;
+using VSlices.Core.Handlers;
 using VSlices.Core.Presentation.AspNetCore;
 using VSlices.Core.Abstracts.Requests;
 

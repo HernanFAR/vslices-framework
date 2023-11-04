@@ -4,7 +4,7 @@ using VSlices.Core.DataAccess.Abstracts;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.Abstracts.Requests;
 
-namespace VSlices.Core.BusinessLogic.UnitTests.ReadHandlers;
+namespace VSlices.Core.Handlers.UnitTests.ReadHandlers;
 
 public class BasicReadHandler_TwoGenerics
 {

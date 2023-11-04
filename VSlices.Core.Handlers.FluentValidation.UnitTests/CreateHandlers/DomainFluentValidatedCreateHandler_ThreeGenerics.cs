@@ -6,7 +6,7 @@ using VSlices.Core.DataAccess.Abstracts;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.Abstracts.Requests;
 
-namespace VSlices.Core.BusinessLogic.FluentValidation.UnitTests.CreateHandlers;
+namespace VSlices.Core.Handlers.FluentValidation.UnitTests.CreateHandlers;
 
 public class DomainFluentValidatedUpdateHandler_ThreeGenerics
 {

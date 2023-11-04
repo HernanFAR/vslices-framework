@@ -4,7 +4,7 @@ using VSlices.Core.DataAccess.Abstracts;
 using VSlices.Core.Abstracts.Responses;
 using VSlices.Core.Abstracts.Requests;
 
-namespace VSlices.Core.BusinessLogic.UnitTests.RemoveHandlers;
+namespace VSlices.Core.Handlers.UnitTests.RemoveHandlers;
 
 public class DomainValidatedRemoveHandler_ThreeGenerics
 {
