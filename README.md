@@ -38,6 +38,9 @@ Since v6, we will only support the latest 2 versions, except in v6, in which onl
 
 That means when we release v6, only v6 will be supported and will get security updates or bug fixes, and v5 backwards will no longer get security updates.
 
+## How to contribute
+If you want to make contributions to the framework, you must follow the framework convetions. This is detailed [here](how%20to%20contribute.md)
+
 ## Support VSlices development
 First of all, thanks so much :) you can support the development of the framework (and my adiction to cafeine) here, with [paypal](https://paypal.me/enyu20?country.x=CL&locale.x=es_XC)
 
