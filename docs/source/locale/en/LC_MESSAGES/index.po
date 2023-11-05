@@ -25,11 +25,11 @@ msgstr "Before start"
 
 #: ../../source/index.rst:41
 msgid "Primeros pasos"
-msgstr ""
+msgstr "First steps"
 
 #: ../../source/index.rst:50
 msgid "Profundizando en la teoria"
-msgstr ""
+msgstr "Getting deeper"
 
 #: ../../source/index.rst:61
 msgid "Funcionalidades"

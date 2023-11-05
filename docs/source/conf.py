@@ -8,8 +8,7 @@
 
 project = 'VSlices'
 copyright = '2023, Hernán Álvarez'
-author = 'Hernán Álvarez'
-release = 'v6.0'
+author = 'Antonio Enrique & Hernán Álvarez'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

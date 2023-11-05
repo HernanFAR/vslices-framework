@@ -2,6 +2,7 @@ Bienvenido a la documentación de VSlices
 ========================================
 
 Acá tendrás todo lo que necesitas para poder entender y desarrollar con el framework :)
+UwU
 
 ¿Que es VSlices?
 ----------------
