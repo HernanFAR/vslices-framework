@@ -28,4 +28,3 @@ language = 'es'
 
 html_theme = 'sphinx_rtd_theme'
 html_favicon = 'favicon.png'
-html_static_path = ['_static']
