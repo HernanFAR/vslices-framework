@@ -23,32 +23,32 @@ if errorlevel 9009 (
 if "%1" == "" goto help
 
 if "%1" == "auto" (
-	%SPHINXBUILD% -M clean %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
+	sphinx-build -M clean %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
 	sphinx-autobuild %SOURCEDIR% %BUILDDIR%
 	
 	goto end
 )
 
 if "%1" == "auto_en" (
-	%SPHINXBUILD% -M clean %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
+	sphinx-build -M clean %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
 	sphinx-autobuild %SOURCEDIR% %BUILDDIR% -D language=en
 	
 	goto end
 )
 
 if "%1" == "update_locates" (
-	%SPHINXBUILD% -M clean %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
-	%SPHINXBUILD% -b gettext %SOURCEDIR% %BUILDDIR%/pot
+	sphinx-build -M clean %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
+	sphinx-build -b gettext %SOURCEDIR% %BUILDDIR%/pot
 	sphinx-intl update -p %BUILDDIR%/pot -l es -l en
 	
 	goto end
 )
 
-%SPHINXBUILD% -M %1 %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
+sphinx-build -M %1 %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
 goto end
 
 :help
-%SPHINXBUILD% -M help %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
+sphinx-build -M help %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
 
 :end
 popd
