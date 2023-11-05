@@ -1,0 +1,55 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, Hernán Álvarez
+# This file is distributed under the same license as the VSlices package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: VSlices \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-11-05 01:24-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+#: ../../source/antes de e5492a85e13944b38ae1bcbcd59e9891 iniciar/inicio.rst:2
+msgid "Estructura de la documentación"
+msgstr ""
+
+#: ../../source/antes 91225ee32c0a438abc5f5c6190728dda de iniciar/inicio.rst:4
+msgid "La documentación esta segmentada en 4 partes, estás son:"
+msgstr ""
+
+#: ../../source/antes 90a7a95d1c134f4ab4cd9cb4217a2506 de iniciar/inicio.rst:6
+msgid ""
+"Primeros pasos: Encargada de mostrarte lo sencillo que es crear una "
+"aplicación escalable y mantenible, dandote una introducción sencilla a "
+"los conceptos que manejarás con el framework, mediante un proyecto "
+"simple."
+msgstr ""
+
+#: ../../source/antes 8dd0141a38734a168e34d685084b4c98 de iniciar/inicio.rst:7
+msgid ""
+"Profundizando en la teoria: Encargada de mostrarte y profundizar en los "
+"conceptos que viste en el segmento anterior."
+msgstr ""
+
+#: ../../source/antes d1e492ca89e3464cb24dfd75cd9095f1 de iniciar/inicio.rst:8
+msgid ""
+"Funcionalidades: Encargada de mostrarte todas las funcionalides que posee"
+" el framework, junto con los casos de uso que puede llegar a cubrir."
+msgstr ""
+
+#: ../../source/antes 85d6f9f53daa4d11b697da69d78e84f4 de iniciar/inicio.rst:9
+msgid ""
+"Una app completa: Encargada de mostrarte todo el poder del framework, "
+"mediante un proyecto de mayor complejidad."
+msgstr ""
+

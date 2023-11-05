@@ -1,0 +1,33 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, Hernán Álvarez
+# This file is distributed under the same license as the VSlices package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: VSlices \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-11-05 01:24-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+#: ../../source/teoria/patterns.rst:2 4a0504fb3c7c435aa77f3433ea8fcda8
+msgid "¿Que son los patrones CQRS y Mediator?"
+msgstr ""
+
+#: ../../source/teoria/patterns.rst:5 6fdbfd13735f4e64807b12b7489f62e7
+msgid "Descripción de que es"
+msgstr ""
+
+#: ../../source/teoria/patterns.rst:7 f6b2f881876d43c9bb8fad78d80ebd33
+msgid "JAJ cquliao"
+msgstr ""
+

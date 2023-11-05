@@ -1,0 +1,33 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, Hernán Álvarez
+# This file is distributed under the same license as the VSlices package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: VSlices \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-11-05 01:24-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: es\n"
+"Language-Team: es <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+#: ../../source/teoria/vertical 57962a2359ff4374b2450580718812fd slices.rst:2
+msgid "¿Que es Vertical Slices?"
+msgstr ""
+
+#: ../../source/teoria/vertical 1a3df315229147a78d283426d8f1f7e3 slices.rst:5
+msgid "Descripción de que es"
+msgstr ""
+
+#: ../../source/teoria/vertical b4d70f7d0a2f473f803fe2d61dd3eedd slices.rst:7
+msgid "JAJ arquitecto"
+msgstr ""
+

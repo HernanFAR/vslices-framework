@@ -1,0 +1,33 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, Hernán Álvarez
+# This file is distributed under the same license as the VSlices package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: VSlices \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-11-05 01:24-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: es\n"
+"Language-Team: es <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+#: ../../source/teoria/cross 411339a03f0f4298bfb6da5de94c3ba9 cutting.rst:2
+msgid "¿Que los \"cross cutting concerns\"?"
+msgstr ""
+
+#: ../../source/teoria/cross cutting.rst:5 f1b9e5f893b84371ae3db1435d01dcec
+msgid "Descripción de que es"
+msgstr ""
+
+#: ../../source/teoria/cross c07f234dab8843028c20bf46c5a62c37 cutting.rst:7
+msgid "JAJ cruzao"
+msgstr ""
+

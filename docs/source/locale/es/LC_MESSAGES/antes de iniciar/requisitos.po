@@ -1,0 +1,57 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, Hernán Álvarez
+# This file is distributed under the same license as the VSlices package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: VSlices \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-11-05 01:24-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: es\n"
+"Language-Team: es <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+#: ../../source/antes 987a7c3847974fe18cbfca3e43039968 de
+#: iniciar/requisitos.rst:2
+msgid "Requisitos para entender"
+msgstr ""
+
+#: ../../source/antes 00558a3d92a943d3b35c4f8b181890fd de
+#: iniciar/requisitos.rst:4
+msgid ""
+"Antes de emplear VSlices, recomiendo poder entender y aplicar los "
+"siguientes conceptos:"
+msgstr ""
+
+#: ../../source/antes 2e2cb5331cc443478d1ca0eb2907bd52 de
+#: iniciar/requisitos.rst:6
+msgid ""
+"Entendimiento de como funciona la web (Protocolo HTTP, concepto de "
+"Request y Responses)"
+msgstr ""
+
+#: ../../source/antes 50e200ec1ffe43d7a278fc10e4d46faf de
+#: iniciar/requisitos.rst:7
+msgid "Programación orientada a objetos con C#"
+msgstr ""
+
+#: ../../source/antes 25dc1f449b374173bdaf7ffb4777fb57 de
+#: iniciar/requisitos.rst:8
+msgid "Manejo de ASP.Net Core"
+msgstr ""
+
+#: ../../source/antes 8efeac0cb0ca44e097aa78c12a6c2346 de
+#: iniciar/requisitos.rst:10
+msgid ""
+"Puedes continuar con la documentación sin saber estos puntos, pero es "
+"posible que se te sea más dificil de comprender e internalizar."
+msgstr ""
+

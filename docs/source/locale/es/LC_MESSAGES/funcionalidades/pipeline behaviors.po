@@ -1,0 +1,36 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, Hernán Álvarez
+# This file is distributed under the same license as the VSlices package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: VSlices \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-11-05 01:24-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: es\n"
+"Language-Team: es <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+#: ../../source/funcionalidades/pipeline b36112d931bf4472ad42a85b721b021d
+#: behaviors.rst:2
+msgid "Pipeline Behaviors"
+msgstr ""
+
+#: ../../source/funcionalidades/pipeline b23e1495b42b4626973974f594d87a85
+#: behaviors.rst:5
+msgid "Descripción de que es"
+msgstr ""
+
+#: ../../source/funcionalidades/pipeline behaviors.rst:7
+#: fe009c16fb894d1c9efab52d38c10285
+msgid "eeel funcional"
+msgstr ""
+

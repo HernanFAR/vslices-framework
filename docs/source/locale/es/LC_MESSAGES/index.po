@@ -1,0 +1,99 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, Hernán Álvarez
+# This file is distributed under the same license as the VSlices package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: VSlices \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-11-05 01:24-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: es\n"
+"Language-Team: es <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+#: ../../source/index.rst:33
+msgid "Antes de iniciar"
+msgstr ""
+
+#: ../../source/index.rst:41
+msgid "Primeros pasos"
+msgstr ""
+
+#: ../../source/index.rst:50
+msgid "Profundizando en la teoria"
+msgstr ""
+
+#: ../../source/index.rst:61
+msgid "Funcionalidades"
+msgstr ""
+
+#: ../../source/index.rst:77
+msgid "Una app completa"
+msgstr ""
+
+#: ../../source/index.rst:2 17c821352153421abfd570acfece436f
+msgid "Bienvenido a la documentación de VSlices"
+msgstr ""
+
+#: ../../source/index.rst:4 950189d02144490ca173911c07b446d8
+msgid ""
+"Acá tendrás todo lo que necesitas para poder entender y desarrollar con "
+"el framework :)"
+msgstr ""
+
+#: ../../source/index.rst:7 616f90c30cfa4cb1825e18bdea8dd37d
+msgid "¿Que es VSlices?"
+msgstr ""
+
+#: ../../source/index.rst:9 25599e2584e14ed590dc8e5caedd885a
+msgid ""
+"VSlices es un framework flexible orientado al desarrollo web, "
+"desarrollado en C#, fuertemente influenciado por la programación "
+"*orientada a objetos*, la arquitectura *“Vertical Slices”* (De la cual "
+"toma el nombre) y el patrón Command Query Responsability Segregation "
+"(*CQRS*). Tambien tiene una influencia menor de la programación "
+"*funcional*."
+msgstr ""
+
+#: ../../source/index.rst:14 5315d8bec2b743109a13f02c556d7dfc
+msgid ""
+"Este framework gira alrededor del concepto de \"caso de uso\" (o "
+"*features*), siendo estos la documentación con la cual crearás el código "
+"de tú aplicación, ya que representan las *acciones que pueden realizar "
+"los usuarios de tú sistema*, por lo que, al codificar con VSlices, debes "
+"*siempre crear la documentación* asociada a cada caso."
+msgstr ""
+
+#: ../../source/index.rst:20 87c724b6618b48d7a220749632cf2333
+msgid ""
+"Esta diseñado para tener baterias incluidas en varios aspectos, por "
+"consecuente, te centras en lo que **realmente importa**. La "
+"implementación por defecto ya  incluye facilidades para la validación de "
+"contratos y dominio (Empleando *FluentValidation*), junto con el acceso a"
+" datos (Empleando *EntityFramework*), pero esta abierto a que, si lo "
+"necesitas, puedas crear tus propias implementaciones."
+msgstr ""
+
+#: ../../source/index.rst:26 95752d978ff9411ca527e07ecf78ebd9
+msgid "¿Quieres apoyar al desarrollo?"
+msgstr ""
+
+#: ../../source/index.rst:28 849983201cd94ec797d441e209cdd37d
+msgid ""
+"Primero que todo, se agracede mucho, puedes donarme un poco de dinero "
+"para mi adicción al café acá, por `paypal "
+"<https://paypal.me/enyu20?country.x=CL&locale.x=es_XC>`__"
+msgstr ""
+
+#: ../../source/index.rst:31 d7e0e173cad641d9b047a05816044424
+msgid "De verdad, muchas gracias por el apoyo :)"
+msgstr ""
+

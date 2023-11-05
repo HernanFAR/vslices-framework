@@ -1,0 +1,36 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, Hernán Álvarez
+# This file is distributed under the same license as the VSlices package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: VSlices \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-11-05 01:24-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: es\n"
+"Language-Team: es <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+#: ../../source/funcionalidades/entityframework.rst:2
+#: 8a0c9128c94f42ea91f6dfb6623a6f63
+msgid "Acceso a datos con Entity framework"
+msgstr ""
+
+#: ../../source/funcionalidades/entityframework.rst:5
+#: 08a0b739b10545a1adbb23934540a35f
+msgid "Descripción de que es"
+msgstr ""
+
+#: ../../source/funcionalidades/entityframework.rst:7
+#: 6437455d4d9142a0869b8917150e1a54
+msgid "eeel funcional"
+msgstr ""
+

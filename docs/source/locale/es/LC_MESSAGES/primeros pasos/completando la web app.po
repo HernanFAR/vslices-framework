@@ -1,0 +1,36 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, Hernán Álvarez
+# This file is distributed under the same license as the VSlices package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: VSlices \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-11-05 01:24-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: es\n"
+"Language-Team: es <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+#: ../../source/primeros 3ee16ef84afd49bab1b13b4a903d300e app.rst:2 la
+#: pasos/completando web
+msgid "Completando la Web App"
+msgstr ""
+
+#: ../../source/primeros 6288c6139af84749a49efd4e7373b0f6 app.rst:5 la
+#: pasos/completando web
+msgid "Codificando con VSlices"
+msgstr ""
+
+#: ../../source/primeros adc3c4e88c3f43bea1cd3eeef23e686e app.rst:7 la
+#: pasos/completando web
+msgid "JAJ App completa"
+msgstr ""
+

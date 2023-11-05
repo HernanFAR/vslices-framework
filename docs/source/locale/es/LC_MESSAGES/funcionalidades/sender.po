@@ -1,0 +1,56 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, Hernán Álvarez
+# This file is distributed under the same license as the VSlices package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: VSlices \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-11-05 01:24-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: es\n"
+"Language-Team: es <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+#: ../../source/funcionalidades/sender.rst:2 3e27c99762574e698862b7916d3f85b6
+msgid "ISender"
+msgstr ""
+
+#: ../../source/funcionalidades/sender.rst:5 f70414229ca8400ba76ba2929110ddea
+msgid "Descripción de que es"
+msgstr ""
+
+#: ../../source/funcionalidades/sender.rst:7 94aafc6103804573a3d5cc6b2f4c9939
+msgid ""
+"El \"ISender\" es el elemento principal que usarmos en este framework "
+"para poder procesas las \"requests\" de nuestro código."
+msgstr ""
+
+#: ../../source/funcionalidades/sender.rst:9 aa42b364219a443b8cb86c6a0b15f3ec
+msgid ""
+"Es una implementación del patrón \"Mediator\" (Información en ingles `acá"
+" <https://www.dofactory.com/net/mediator-design-pattern>`_, en español, "
+"`acá <https://geeks.ms/jorge/2020/10/14/mediator-pattern-en-c/>`_), el "
+"cual tiene la responsabilidad de enrutar nuestras \"requests\" a su "
+"respectivo \"handler\"."
+msgstr ""
+
+#: ../../source/funcionalidades/sender.rst:13 95098951773f4f21a31c1c6227d258b0
+msgid "ReflectionSender"
+msgstr ""
+
+#: ../../source/funcionalidades/sender.rst:15 bd905c4b4329426990110fce648d23c1
+msgid "En el paquete,"
+msgstr ""
+
+#: ../../source/funcionalidades/sender.rst:17 044834a26c5549559be6b99a1f54bcb6
+msgid "VSlices.Core.Sender.Reflection  se"
+msgstr ""
+

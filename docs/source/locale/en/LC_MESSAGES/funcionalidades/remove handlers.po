@@ -1,0 +1,36 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2023, Hernán Álvarez
+# This file is distributed under the same license as the VSlices package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: VSlices \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-11-05 01:24-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+#: ../../source/funcionalidades/remove fdf84bd056f84f69affe6b91d8d10de5
+#: handlers.rst:2
+msgid "Remove Handlers"
+msgstr ""
+
+#: ../../source/funcionalidades/remove 0150fb8cb1044fe3a6bf697da55945be
+#: handlers.rst:5
+msgid "Descripción de que es"
+msgstr ""
+
+#: ../../source/funcionalidades/remove 9b49f7de06cf4d46a54d60ffa118617e
+#: handlers.rst:7
+msgid "eeel funcional"
+msgstr ""
+
