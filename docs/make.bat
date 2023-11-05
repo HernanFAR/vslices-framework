@@ -7,7 +7,6 @@ REM Command file for Sphinx documentation
 set SOURCEDIR=source
 set BUILDDIR=build
 
-%SPHINXBUILD% >NUL 2>NUL
 if errorlevel 9009 (
 	echo.
 	echo.The 'sphinx-build' command was not found. Make sure you have Sphinx
