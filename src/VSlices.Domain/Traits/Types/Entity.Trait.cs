@@ -9,19 +9,3 @@ public interface Entity<SELF, ID> : Entity<SELF>
 {
     ID Id { get; }
 }
-
-/// <summary>
-/// 
-/// </summary>
-/// <typeparam name="SELF"></typeparam>
-/// <typeparam name="REPR"></typeparam>
-/// <typeparam name="ID"></typeparam>
-public interface Entity<SELF, ID, REPR> : Entity<SELF, ID>
-    where SELF : Entity<SELF, ID, REPR>
-    where ID : Identifier<ID>
-{
-    /// <summary>
-    /// 
-    /// </summary>
-    ID Id { get; }
-}
