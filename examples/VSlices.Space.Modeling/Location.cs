@@ -65,6 +65,9 @@ public sealed class Location :
     private static extern State NewState(Name name, int x, int y);
 
     public static Req<Input, Location>.Full Transformation =>
+        Req<Input, Location>.Ensure<Input>(
+            input => input.Name is not null,
+            "A location requires an established name.") >>
         Req<Input, Location>.Transform<Input, Location>(
             input => new Location(NewState(input.Name, input.X, input.Y)));
 
