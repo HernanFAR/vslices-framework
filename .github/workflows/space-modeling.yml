@@ -1,0 +1,45 @@
+name: Space Modeling CI
+
+on:
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-space-modeling:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Build modeling probe
+        run: dotnet build examples/VSlices.Space.Modeling/VSlices.Space.Modeling.csproj
+
+      - name: Run behavioral tests
+        run: dotnet test tests/VSlices.Tests/VSlices.Tests.csproj
+
+      - name: Verify invalid usage does not compile
+        shell: bash
+        run: |
+          if dotnet build examples/VSlices.Space.Modeling/VSlices.Space.Modeling.csproj -p:DefineConstants=MODELING_INVALID_USAGE; then
+            echo "::error::The invalid modeling probe compiled successfully; expected C# accessibility barriers were not enforced."
+            exit 1
+          fi
+
+          echo "Invalid modeling usage failed to compile as expected."
