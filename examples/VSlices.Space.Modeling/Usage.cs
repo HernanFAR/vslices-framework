@@ -8,9 +8,16 @@ namespace VSlices.Space.Modeling;
 /// </summary>
 public static class Usage
 {
+    public static Fin<Location.Name> CreateName(string value) =>
+        Transformable.Transform<string, Location.Name>(value);
+
     public static Fin<Location> Create() =>
+        CreateName("Warehouse")
+            .Bind(name => Create(name));
+
+    public static Fin<Location> Create(Location.Name name) =>
         Transformable.Transform<Location.Input, Location>(
-            new Location.Input("Warehouse", 10, 20));
+            new Location.Input(name, 10, 20));
 
     public static Fin<Location> Move(Location location) =>
         location.Update(state => state with
@@ -20,6 +27,10 @@ public static class Usage
         });
 
     public static Fin<Location> Rename(Location location, string name) =>
+        CreateName(name)
+            .Bind(validName => Rename(location, validName));
+
+    public static Fin<Location> Rename(Location location, Location.Name name) =>
         location.Update(state => state with { Name = name });
 
     public static (Location Original, Fin<Location> Updated) PreserveSource(Location location) =>
