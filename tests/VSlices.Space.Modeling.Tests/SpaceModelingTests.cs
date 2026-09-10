@@ -1,6 +1,7 @@
+using LanguageExt;
 using VSlices.Space.Modeling;
 
-namespace VSlices.Tests;
+namespace VSlices.Space.Modeling.Tests;
 
 public class SpaceModelingTests
 {

@@ -19,12 +19,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           submodules: recursive
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 10.0.x
 
@@ -32,7 +32,7 @@ jobs:
         run: dotnet build examples/VSlices.Space.Modeling/VSlices.Space.Modeling.csproj
 
       - name: Run behavioral tests
-        run: dotnet test tests/VSlices.Tests/VSlices.Tests.csproj
+        run: dotnet test tests/VSlices.Space.Modeling.Tests/VSlices.Space.Modeling.Tests.csproj
 
       - name: Verify invalid usage does not compile
         shell: bash
