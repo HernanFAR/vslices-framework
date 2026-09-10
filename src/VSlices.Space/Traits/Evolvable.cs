@@ -14,7 +14,7 @@ public interface Evolvable<SELF, STATE>
     /// <summary>
     /// Gets the state currently accepted by this point.
     /// </summary>
-    STATE State { get; }
+    STATE CurrentState { get; }
 
     /// <summary>
     /// Gets the rules that determine whether a proposed state constitutes a valid next instance.
@@ -27,5 +27,5 @@ public interface Evolvable<SELF, STATE>
     /// The source instance is not modified.
     /// </summary>
     Fin<SELF> Update(Func<STATE, STATE> update) =>
-        SELF.Evolution.RunFin(update(State));
+        SELF.Evolution.RunFin(update(CurrentState));
 }
