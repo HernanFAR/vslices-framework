@@ -3,6 +3,9 @@
   <Folder Name="/examples/simple-workflow/">
     <Project Path="examples/SampleWorkflow/SampleWorkflow.Core/SampleWorkflow.Core.csproj" />
   </Folder>
+  <Folder Name="/examples/space-modeling/">
+    <Project Path="examples/VSlices.Space.Modeling/VSlices.Space.Modeling.csproj" />
+  </Folder>
   <Folder Name="/Solution Items/">
     <File Path="AGENTS.md" />
     <File Path="docs/architecture.md" />
