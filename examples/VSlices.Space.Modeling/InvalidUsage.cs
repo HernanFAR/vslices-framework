@@ -3,11 +3,16 @@ namespace VSlices.Space.Modeling;
 
 public static class InvalidUsage
 {
-    public static Location.State CannotMintState()
+    public static Location.State CannotMintState(Location.Name name)
     {
-        // Expected compile failure: State construction remains inaccessible to consumers.
-        // Location itself crosses this .NET realization boundary through a private UnsafeAccessor.
-        return new Location.State("Forged", 0, 0);
+        // Expected compile failure: State construction is owned by Location.
+        return new Location.State(name, 0, 0);
+    }
+
+    public static Location.Name CannotMintName()
+    {
+        // Expected compile failure: Name must be established through its transformation rules.
+        return new Location.Name("Forged");
     }
 
     public static void CannotReplaceState(Location location)
