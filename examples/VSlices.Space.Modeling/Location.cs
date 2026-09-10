@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using VSlices.Arrows;
 using VSlices.Space;
 
@@ -31,12 +32,15 @@ public sealed class Location :
 
     public State State { get; }
 
+    [UnsafeAccessor(UnsafeAccessorKind.Constructor)]
+    private static extern State NewState(string name, int x, int y);
+
     public static Req<Input, Location>.Full Transformation =>
         Req<Input, Location>.Ensure<Input>(
             input => !string.IsNullOrWhiteSpace(input.Name),
             "A location requires a non-empty name.") >>
         Req<Input, Location>.Transform<Input, Location>(
-            input => new Location(new State(input.Name.Trim(), input.X, input.Y)));
+            input => new Location(NewState(input.Name.Trim(), input.X, input.Y)));
 
     public static Req<State, Location>.Full Evolution =>
         Req<State, Location>.Ensure<State>(
