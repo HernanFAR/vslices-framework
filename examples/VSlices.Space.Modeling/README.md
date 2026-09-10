@@ -6,12 +6,42 @@ Its job is to make semantic decisions executable enough that their C# consequenc
 
 ## Current probe
 
-`Location` exercises two concepts:
+`Location` now composes three semantic concepts:
 
 ```text
-Transformable<Location.Input, Location>
-Evolvable<Location, Location.State>
+string -> Location.Name
+Location.Input -> Location
+Location(State0) -> Location(State1)
 ```
+
+through:
+
+```text
+Location.Name : DiscreteSpace<Location.Name>, Transformable<string, Location.Name>
+Location      : Transformable<Location.Input, Location>, Evolvable<Location, Location.State>
+```
+
+`Location.Name` is an independently established semantic value. Its own rules are:
+
+```text
+non-empty
+maximum length: 100 characters
+```
+
+The transformation trims surrounding whitespace before materializing the accepted name.
+
+This means `Location` no longer accepts a primitive `string` as its name input and does not duplicate name invariants. Its input requires an already-established `Location.Name`:
+
+```text
+string
+  -> Location.Name
+  -> Location.Input(Location.Name, ...)
+  -> Location
+```
+
+This is intentional pressure on the idea that `Input` may contain values from already-established semantic spaces rather than only primitives or external representations.
+
+## Input and State
 
 The model intentionally separates:
 
@@ -46,7 +76,7 @@ C# does not grant an enclosing type privileged access to private members of its 
 
 ```csharp
 [UnsafeAccessor(UnsafeAccessorKind.Constructor)]
-private static extern State NewState(string name, int x, int y);
+private static extern State NewState(Name name, int x, int y);
 ```
 
 This accessor is private to `Location`; it preserves the public restriction while allowing the owning semantic type to materialize a state internally.
@@ -60,10 +90,10 @@ location.Update(state => state with { X = state.X + 1 });
 This intentionally distinguishes:
 
 ```text
-arbitrary external data -> State      not allowed
+arbitrary external data -> State       not allowed
 Location-owned materialization -> State allowed through private runtime accessor
-accepted State -> candidate State     allowed
-candidate State -> accepted Location  controlled by Location.Evolution
+accepted State -> candidate State      allowed
+candidate State -> accepted Location   controlled by Location.Evolution
 ```
 
 The use of `UnsafeAccessor` is treated as a .NET realization mechanism, not as part of the semantic model. If a simpler language-level mechanism later preserves the same authority boundary, the realization may change without changing the semantics.
