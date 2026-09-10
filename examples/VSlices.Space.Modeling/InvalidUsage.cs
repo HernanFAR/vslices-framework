@@ -5,7 +5,8 @@ public static class InvalidUsage
 {
     public static Location.State CannotMintState()
     {
-        // Expected compile failure: State construction is owned by Location.
+        // Expected compile failure: State construction remains inaccessible to consumers.
+        // Location itself crosses this .NET realization boundary through a private UnsafeAccessor.
         return new Location.State("Forged", 0, 0);
     }
 
