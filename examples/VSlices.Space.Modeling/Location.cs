@@ -68,16 +68,10 @@ public sealed class Location :
     private static extern State NewState(LocationName name, int x, int y);
 
     public static Req<Input, Location>.Full Transformation =>
-        Req<Input, Location>.Ensure<Input>(
-            input => input.Name is not null,
-            "A location requires an established name.") >>
         Req<Input, Location>.Transform<Input, Location>(
             input => new Location(NewState(input.Name, input.X, input.Y)));
 
     public static Req<State, Location>.Full Evolution =>
-        Req<State, Location>.Ensure<State>(
-            state => state.Name is not null,
-            "A location must keep an established name.") >>
         Req<State, Location>.Transform<State, Location>(
             state => new Location(state));
 }
