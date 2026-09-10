@@ -39,6 +39,8 @@ string
   -> Location
 ```
 
+Once a `Location.Name` exists, it can be reused directly for creation or evolution without repeating the string transformation. The `Usage` probe includes both forms.
+
 This is intentional pressure on the idea that `Input` may contain values from already-established semantic spaces rather than only primitives or external representations.
 
 ## Input and State
