@@ -13,8 +13,11 @@ public static class Usage
 
     public static Fin<Location> Create() =>
         CreateName("Warehouse")
-            .Bind(name => Transformable.Transform<Location.Input, Location>(
-                new Location.Input(name, 10, 20)));
+            .Bind(name => Create(name));
+
+    public static Fin<Location> Create(Location.Name name) =>
+        Transformable.Transform<Location.Input, Location>(
+            new Location.Input(name, 10, 20));
 
     public static Fin<Location> Move(Location location) =>
         location.Update(state => state with
@@ -25,8 +28,10 @@ public static class Usage
 
     public static Fin<Location> Rename(Location location, string name) =>
         CreateName(name)
-            .Bind(validName => location.Update(
-                state => state with { Name = validName }));
+            .Bind(validName => Rename(location, validName));
+
+    public static Fin<Location> Rename(Location location, Location.Name name) =>
+        location.Update(state => state with { Name = name });
 
     public static (Location Original, Fin<Location> Updated) PreserveSource(Location location) =>
         (location, location.Update(state => state with { X = state.X + 10 }));
