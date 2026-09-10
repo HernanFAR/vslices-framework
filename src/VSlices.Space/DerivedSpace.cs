@@ -1,16 +1,18 @@
 namespace VSlices.Space;
 
 /// <summary>
-/// Defines a discrete space whose values derive from values in another discrete space.
+/// Defines a discrete space whose values form a semantic subset of another discrete space.
+/// Every value in the derived space must correspond to a valid value in the base space.
+/// Widening a derived value to its base space must be total and preserve its base semantics.
 /// </summary>
 /// <typeparam name="SELF">The derived value type.</typeparam>
-/// <typeparam name="BASE">The base value type from which this space derives.</typeparam>
+/// <typeparam name="BASE">The base value type whose semantic space contains the derived space.</typeparam>
 public interface DerivedSpace<SELF, BASE> : DiscreteSpace<SELF>
     where SELF : DerivedSpace<SELF, BASE>
     where BASE : DiscreteSpace<BASE>
 {
     /// <summary>
-    /// Projects this derived value into its base space.
+    /// Widens this value into its base space without failure or loss of base semantics.
     /// </summary>
     BASE ToBase();
 }
