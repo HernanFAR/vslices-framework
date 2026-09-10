@@ -9,7 +9,7 @@ Its job is to make semantic decisions executable enough that their C# consequenc
 `Location` now composes three semantic concepts:
 
 ```text
-string -> Location.Name
+string -> LocationName
 Location.Input -> Location
 Location(State0) -> Location(State1)
 ```
@@ -17,11 +17,11 @@ Location(State0) -> Location(State1)
 through:
 
 ```text
-Location.Name : DiscreteSpace<Location.Name>, Transformable<string, Location.Name>
-Location      : Transformable<Location.Input, Location>, Evolvable<Location, Location.State>
+LocationName : DiscreteSpace<LocationName>, Transformable<string, LocationName>
+Location     : Transformable<Location.Input, Location>, Evolvable<Location, Location.State>
 ```
 
-`Location.Name` is an independently established semantic value. Its own rules are:
+`LocationName` is an independently established semantic value. Its own rules are:
 
 ```text
 non-empty
@@ -30,16 +30,14 @@ maximum length: 100 characters
 
 The transformation trims surrounding whitespace before materializing the accepted name.
 
-This means `Location` no longer accepts a primitive `string` as its name input and does not duplicate name invariants. Its input requires an already-established `Location.Name`:
+This means `Location` no longer accepts a primitive `string` as its name input and does not duplicate name invariants. Its input requires an already-established `LocationName`:
 
 ```text
 string
-  -> Location.Name
-  -> Location.Input(Location.Name, ...)
+  -> LocationName
+  -> Location.Input(LocationName, ...)
   -> Location
 ```
-
-Once a `Location.Name` exists, it can be reused directly for creation or evolution without repeating the string transformation. The `Usage` probe includes both forms.
 
 This is intentional pressure on the idea that `Input` may contain values from already-established semantic spaces rather than only primitives or external representations.
 
@@ -48,15 +46,20 @@ This is intentional pressure on the idea that `Input` may contain values from al
 The model intentionally separates:
 
 ```text
-Input  = information required to establish a Location
-State  = currently accepted state of an existing Location
+Input = information required to establish a Location
+State = currently accepted state of an existing Location
 ```
 
-Creation is target-owned:
+`State` does not mean that every member is evolvable. A state may contain both information fixed when the first point is established and information callers are allowed to propose changes to later.
+
+The current `Location.State` makes that distinction explicit:
 
 ```text
-Location.Input -> Location
+Name = creation-fixed / never replaceable after establishment
+X/Y  = evolvable through Update
 ```
+
+Accordingly, `Name` is get-only, while `X` and `Y` remain `init` properties so `with` can produce candidate states for those parts.
 
 Evolution is persistent rather than mutating:
 
@@ -68,7 +71,7 @@ Location(State0)
     -> new Location(State1) | rejection
 ```
 
-The original `Location` has no writable `State` and `Update` never receives authority to replace it. Accepted evolution materializes a new `Location`.
+The original `Location` has no writable `CurrentState`; accepted evolution materializes a new `Location`.
 
 ## State authority
 
@@ -78,38 +81,49 @@ C# does not grant an enclosing type privileged access to private members of its 
 
 ```csharp
 [UnsafeAccessor(UnsafeAccessorKind.Constructor)]
-private static extern State NewState(Name name, int x, int y);
+private static extern State NewState(LocationName name, int x, int y);
 ```
 
 This accessor is private to `Location`; it preserves the public restriction while allowing the owning semantic type to materialize a state internally.
 
-External code can still derive a candidate from a state it legitimately obtained:
+External code can derive candidates only through members that `State` deliberately exposes as evolvable:
 
 ```csharp
-location.Update(state => state with { X = state.X + 1 });
+location.Update(state => state with
+{
+    X = state.X + 1,
+    Y = state.Y + 1
+});
+```
+
+but cannot propose a different creation-fixed name:
+
+```csharp
+state with { Name = anotherName } // expected compile failure
 ```
 
 This intentionally distinguishes:
 
 ```text
-arbitrary external data -> State        not allowed
-Location-owned materialization -> State allowed through private runtime accessor
-accepted State -> candidate State       allowed
-candidate State -> accepted Location    controlled by Location.Evolution
+arbitrary external data -> State           not allowed
+Location-owned materialization -> State    allowed through private runtime accessor
+accepted State -> candidate X/Y            allowed
+accepted State -> replacement Name         not allowed
+candidate State -> accepted Location       controlled by Location.Evolution
 ```
 
 The use of `UnsafeAccessor` is treated as a .NET realization mechanism, not as part of the semantic model. If a simpler language-level mechanism later preserves the same authority boundary, the realization may change without changing the semantics.
 
 ## Name authority
 
-`Location.Name` also has a private constructor, but unlike `State` its target-owned `Transformable<string, Name>` rules live inside `Name` itself. Therefore `Name` can directly call its own constructor after its invariants succeed; no `UnsafeAccessor` is needed.
+`LocationName` also has a private constructor, but unlike `State` its target-owned `Transformable<string, LocationName>` rules live inside `LocationName` itself. Therefore it can directly call its own constructor after its invariants succeed; no `UnsafeAccessor` is needed.
 
 This gives a useful contrast:
 
 ```text
-string -> Name       owned and materialized by Name itself
-Input  -> Location   owned by Location
-State  -> Location'  owned by Location, with State construction bridged by .NET realization
+string -> LocationName  owned and materialized by LocationName itself
+Input  -> Location      owned by Location
+State  -> Location'     owned by Location, with State construction bridged by .NET realization
 ```
 
 ## Negative compile probes
@@ -117,8 +131,9 @@ State  -> Location'  owned by Location, with State construction bridged by .NET 
 `InvalidUsage.cs` contains examples behind `MODELING_INVALID_USAGE` that are expected not to compile. They attempt to:
 
 - call the private `Location.State` constructor;
-- call the private `Location.Name` constructor instead of using its transformation;
-- assign `Location.State` from outside the owner.
+- call the private `LocationName` constructor instead of using its transformation;
+- change creation-fixed `State.Name` through `with`;
+- replace `Location.CurrentState` from outside the owner.
 
 The normal modeling surface can be built with:
 
