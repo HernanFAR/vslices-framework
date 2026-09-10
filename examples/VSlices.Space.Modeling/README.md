@@ -42,6 +42,15 @@ The original `Location` has no writable `State` and `Update` never receives auth
 
 `Location.State` has a private constructor. External code cannot mint a state from arbitrary data.
 
+C# does not grant an enclosing type privileged access to private members of its nested type, so `Location` cannot directly call `new Location.State(...)` either. The probe intentionally keeps the constructor private and bridges this realization limitation through .NET's `UnsafeAccessor` support:
+
+```csharp
+[UnsafeAccessor(UnsafeAccessorKind.Constructor)]
+private static extern State NewState(string name, int x, int y);
+```
+
+This accessor is private to `Location`; it preserves the public restriction while allowing the owning semantic type to materialize a state internally.
+
 External code can still derive a candidate from a state it legitimately obtained:
 
 ```csharp
@@ -51,10 +60,13 @@ location.Update(state => state with { X = state.X + 1 });
 This intentionally distinguishes:
 
 ```text
-arbitrary data -> State              not allowed
-accepted State -> candidate State    allowed
-candidate State -> accepted Location controlled by Location.Evolution
+arbitrary external data -> State      not allowed
+Location-owned materialization -> State allowed through private runtime accessor
+accepted State -> candidate State     allowed
+candidate State -> accepted Location  controlled by Location.Evolution
 ```
+
+The use of `UnsafeAccessor` is treated as a .NET realization mechanism, not as part of the semantic model. If a simpler language-level mechanism later preserves the same authority boundary, the realization may change without changing the semantics.
 
 ## Negative compile probes
 
