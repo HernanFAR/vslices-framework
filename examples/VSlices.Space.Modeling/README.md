@@ -90,19 +90,32 @@ location.Update(state => state with { X = state.X + 1 });
 This intentionally distinguishes:
 
 ```text
-arbitrary external data -> State       not allowed
+arbitrary external data -> State        not allowed
 Location-owned materialization -> State allowed through private runtime accessor
-accepted State -> candidate State      allowed
-candidate State -> accepted Location   controlled by Location.Evolution
+accepted State -> candidate State       allowed
+candidate State -> accepted Location    controlled by Location.Evolution
 ```
 
 The use of `UnsafeAccessor` is treated as a .NET realization mechanism, not as part of the semantic model. If a simpler language-level mechanism later preserves the same authority boundary, the realization may change without changing the semantics.
+
+## Name authority
+
+`Location.Name` also has a private constructor, but unlike `State` its target-owned `Transformable<string, Name>` rules live inside `Name` itself. Therefore `Name` can directly call its own constructor after its invariants succeed; no `UnsafeAccessor` is needed.
+
+This gives a useful contrast:
+
+```text
+string -> Name       owned and materialized by Name itself
+Input  -> Location   owned by Location
+State  -> Location'  owned by Location, with State construction bridged by .NET realization
+```
 
 ## Negative compile probes
 
 `InvalidUsage.cs` contains examples behind `MODELING_INVALID_USAGE` that are expected not to compile. They attempt to:
 
 - call the private `Location.State` constructor;
+- call the private `Location.Name` constructor instead of using its transformation;
 - assign `Location.State` from outside the owner.
 
 The normal modeling surface can be built with:
