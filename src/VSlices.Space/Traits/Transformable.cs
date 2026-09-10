@@ -1,7 +1,7 @@
 using LanguageExt;
 using VSlices.Arrows;
 
-namespace VSlices.Space;
+namespace VSlices.Space.Traits;
 
 /// <summary>
 /// Defines a semantic transformation from <typeparamref name="FROM"/> to

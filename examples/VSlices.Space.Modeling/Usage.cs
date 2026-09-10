@@ -1,5 +1,5 @@
 using LanguageExt;
-using VSlices.Space;
+using VSlices.Space.Traits;
 
 namespace VSlices.Space.Modeling;
 

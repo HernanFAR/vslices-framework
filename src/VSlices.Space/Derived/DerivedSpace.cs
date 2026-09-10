@@ -1,4 +1,4 @@
-namespace VSlices.Space;
+namespace VSlices.Space.Derived;
 
 /// <summary>
 /// Defines a discrete space whose values form a semantic subset of another discrete space.

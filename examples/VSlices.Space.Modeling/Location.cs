@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 using VSlices.Arrows;
-using VSlices.Space;
+using VSlices.Space.Traits;
 
 namespace VSlices.Space.Modeling;
 

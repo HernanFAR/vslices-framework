@@ -1,4 +1,4 @@
-namespace VSlices.Space;
+namespace VSlices.Space.Derived;
 
 /// <summary>
 /// Defines the semantic laws that govern <see cref="DerivedSpace{SELF, BASE}"/>.
