@@ -12,7 +12,7 @@ public static class InvalidUsage
     public static Location.Name CannotMintName()
     {
         // Expected compile failure: Name must be established through its transformation rules.
-        return new Location.Name("Forged");
+        return new LocationName("Forged");
     }
 
     public static void CannotReplaceState(Location location)

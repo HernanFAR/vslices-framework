@@ -8,14 +8,14 @@ namespace VSlices.Space.Modeling;
 /// </summary>
 public static class Usage
 {
-    public static Fin<Location.Name> CreateName(string value) =>
-        Transformable.Transform<string, Location.Name>(value);
+    public static Fin<LocationName> CreateName(string value) =>
+        Transformable.Transform<string, LocationName>(value);
 
     public static Fin<Location> Create() =>
         CreateName("Warehouse")
             .Bind(name => Create(name));
 
-    public static Fin<Location> Create(Location.Name name) =>
+    public static Fin<Location> Create(LocationName name) =>
         Transformable.Transform<Location.Input, Location>(
             new Location.Input(name, 10, 20));
 
@@ -30,7 +30,7 @@ public static class Usage
         CreateName(name)
             .Bind(validName => Rename(location, validName));
 
-    public static Fin<Location> Rename(Location location, Location.Name name) =>
+    public static Fin<Location> Rename(Location location, LocationName name) =>
         location.Update(state => state with { Name = name });
 
     public static (Location Original, Fin<Location> Updated) PreserveSource(Location location) =>

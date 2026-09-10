@@ -29,3 +29,17 @@ public interface Evolvable<SELF, STATE>
     Fin<SELF> Update(Func<STATE, STATE> update) =>
         SELF.Evolution.RunFin(update(CurrentState));
 }
+
+public static class Evolvable
+{
+    public static Fin<SELF> update<SELF, STATE>(Evolvable<SELF, STATE> evolvable, Func<STATE, STATE> update)
+        where SELF : Evolvable<SELF, STATE> =>
+        evolvable.Update(update);
+}
+
+public static class EvolvableExtensions
+{
+    public static Fin<SELF> Update<SELF, STATE>(this Evolvable<SELF, STATE> evolvable, Func<STATE, STATE> update)
+        where SELF : Evolvable<SELF, STATE> =>
+        Evolvable.update(evolvable, update);
+}
