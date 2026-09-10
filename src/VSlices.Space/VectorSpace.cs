@@ -1,12 +1,13 @@
 using System.Numerics;
 
-namespace VSlices.Domain.Traits;
+namespace VSlices.Space;
 
 /// <summary>
-///
+/// Defines a vector space whose values support additive composition,
+/// subtraction, unary negation, and scalar multiplication and division.
 /// </summary>
-/// <typeparam name="SELF"></typeparam>
-/// <typeparam name="SCALAR"></typeparam>
+/// <typeparam name="SELF">The value type inhabiting the vector space.</typeparam>
+/// <typeparam name="SCALAR">The scalar type used by the vector space.</typeparam>
 public interface VectorSpace<SELF, SCALAR> :
     DiscreteSpace<SELF>,
     IUnaryNegationOperators<SELF, SELF>,
@@ -21,6 +22,5 @@ public interface VectorSpace<SELF, SCALAR> :
     /// <summary>
     /// Returns the origin of the vector space.
     /// </summary>
-    /// <returns>The origin point of the vector space.</returns>
     public static virtual SELF Origin => SELF.AdditiveIdentity;
 }

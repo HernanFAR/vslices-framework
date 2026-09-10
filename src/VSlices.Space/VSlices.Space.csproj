@@ -1,23 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<ItemGroup>
 		<ProjectReference Include="..\VSlices\VSlices.csproj" />
-		<ProjectReference Include="..\VSlices.Space\VSlices.Space.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<Using Include="LanguageExt.Common" />
 		<Using Include="LanguageExt.Traits" />
 		<Using Include="LanguageExt.Effects" />
-		
+
 		<Using Include="LanguageExt.Prelude" Static="true" />
-		
+
 		<Using Include="VSlices.Monads" />
 		<Using Include="VSlices.Arrows" />
-		<Using Include="VSlices.Space" />
-		<Using Include="VSlices.Domain.Traits" />
-		
-		<Using Include="VSlices.VSlicesPrelude" Static="true" />
-		<Using Include="VSlices.VSlicesDomainPrelude" Static="true" />
 
+		<Using Include="VSlices.VSlicesPrelude" Static="true" />
 	</ItemGroup>
 </Project>

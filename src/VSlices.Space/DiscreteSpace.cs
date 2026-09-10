@@ -1,7 +1,7 @@
 using System;
 using System.Numerics;
 
-namespace VSlices.Domain.Traits;
+namespace VSlices.Space;
 
 /// <summary>
 /// Defines a semantic space whose values support equality comparison.
