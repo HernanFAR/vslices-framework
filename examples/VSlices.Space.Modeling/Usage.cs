@@ -13,12 +13,16 @@ public static class Usage
 
     public static Fin<Location> Create() =>
         CreateName("Warehouse")
-            .Bind(name => Create(name));
+            .Bind(Create);
 
     public static Fin<Location> Create(LocationName name) =>
         Transformable.Transform<Location.Input, Location>(
             new Location.Input(name, 10, 20));
 
+    /// <summary>
+    /// X and Y are evolvable parts of Location.State.
+    /// Name is intentionally absent: it is fixed by the first established state.
+    /// </summary>
     public static Fin<Location> Move(Location location) =>
         location.Update(state => state with
         {
@@ -26,13 +30,14 @@ public static class Usage
             Y = state.Y + 1
         });
 
-    public static Fin<Location> Rename(Location location, string name) =>
-        CreateName(name)
-            .Bind(validName => Rename(location, validName));
-
-    public static Fin<Location> Rename(Location location, LocationName name) =>
-        location.Update(state => state with { Name = name });
-
-    public static (Location Original, Fin<Location> Updated) PreserveSource(Location location) =>
-        (location, location.Update(state => state with { X = state.X + 10 }));
+    /// <summary>
+    /// Keeps both the source point and its creation-only name visible while proposing an evolution.
+    /// The updated Location must preserve that same Name because State.Name cannot be changed by callers.
+    /// </summary>
+    public static (Location Original, LocationName Name, Fin<Location> Updated) PreserveSourceAndName(Location location) =>
+        (
+            location,
+            location.CurrentState.Name,
+            location.Update(state => state with { X = state.X + 10 })
+        );
 }
