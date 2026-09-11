@@ -88,13 +88,11 @@ extension<LU, LP, LT, RU, RP, RT>(Mass<LU, LP, LT>)
 }
 ```
 
-with the corresponding Unit, Prefix, Dimension, and generic-math constraints.
-
-The semantic operation remains implemented by `Mass.Add` / `Mass.Subtract`; the extension block is only the C# realization that exposes that already-defined policy as operator syntax.
+with corresponding Unit, Prefix, Dimension, and generic-math constraints. The semantic operation remains implemented by `Mass.Add` / `Mass.Subtract`; the extension block only supplies operator realization.
 
 Behavioral tests pressure normal `+` / `-` syntax for same coordinates, different Prefix/carrier under one Unit, fully different Unit/Prefix/carrier within Mass, recommended `Mass<T>` descendants, and `vMass`.
 
-The semantic policy has not changed: conversion remains checked and the result remains left-biased. What changed is the realization mechanism available to express it.
+The semantic policy has not changed: conversion remains checked and the result remains left-biased. What changed is the C# realization mechanism available to express it.
 
 The remaining question is semantic and ergonomic rather than merely syntactic: when does an operator hide too much conversion policy, even if C# can express and infer it?
 
