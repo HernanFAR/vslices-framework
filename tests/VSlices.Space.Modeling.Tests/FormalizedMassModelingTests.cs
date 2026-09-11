@@ -1,7 +1,7 @@
 using System.Numerics;
 using VSlices.Space.Modeling.QuantityFamilies;
+using VSlices.Space.Modeling.QuantityFamilies.Formalization;
 using FormalMass = VSlices.Space.Modeling.QuantityFamilies.Formalization.Mass;
-using FormalMassOperators = VSlices.Space.Modeling.QuantityFamilies.Formalization.MassOperators;
 
 namespace VSlices.Space.Modeling.Tests;
 
@@ -64,7 +64,7 @@ public class FormalizedMassModelingTests
 
     private sealed class ProbeMass<U, P, T> :
         VSlices.Space.Modeling.QuantityFamilies.Formalization.Mass<U, P, T, ProbeMass<U, P, T>>,
-        VSlices.Space.Modeling.QuantityFamilies.Formalization.QuantityFactory<T, ProbeMass<U, P, T>>
+        QuantityFactory<T, ProbeMass<U, P, T>>
         where U : Unit<Dimension.Mass>
         where P : Prefix
         where T : INumber<T>
