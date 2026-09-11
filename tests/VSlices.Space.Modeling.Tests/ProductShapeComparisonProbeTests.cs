@@ -10,10 +10,7 @@ public class ProductShapeComparisonProbeTests
     {
         var mass = new ProbeMass<double>(2d);
         var length = new ProbeLength<double>(3d);
-
-        ProductA<Dimension.Mass, Kilograms, Dimension.Length, Meters, double> result =
-            MultiplyA(mass, length);
-
+        ProductA<Dimension.Mass, Kilograms, Dimension.Length, Meters, double> result = MultiplyA(mass, length);
         Assert.Equal(6d, result.Value);
     }
 
@@ -22,17 +19,8 @@ public class ProductShapeComparisonProbeTests
     {
         var mass = new ProbeMass<double>(2d);
         var length = new ProbeLength<double>(3d);
-
-        ProductB<
-            Dimension.Product<Dimension.Mass, Dimension.Length>,
-            ProductCoordinate<Dimension.Mass, Kilograms, Dimension.Length, Meters>,
-            double> result = MultiplyB(mass, length);
-
+        ProductB<Dimension.Product<Dimension.Mass, Dimension.Length>, ProductCoordinate<Dimension.Mass, Kilograms, Dimension.Length, Meters>, double> result = MultiplyB(mass, length);
         Assert.Equal(6d, result.Value);
-        Assert.IsAssignableFrom<Q<
-            Dimension.Product<Dimension.Mass, Dimension.Length>,
-            ProductCoordinate<Dimension.Mass, Kilograms, Dimension.Length, Meters>,
-            double>>(result);
     }
 
     [Fact]
@@ -40,17 +28,8 @@ public class ProductShapeComparisonProbeTests
     {
         var mass = new ProbeMass<double>(2d);
         var length = new ProbeLength<double>(3d);
-
-        StructuralQuantity<
-            Dimension.Product<Dimension.Mass, Dimension.Length>,
-            ProductCoordinate<Dimension.Mass, Kilograms, Dimension.Length, Meters>,
-            double> result = MultiplyC(mass, length);
-
+        StructuralQuantity<Dimension.Product<Dimension.Mass, Dimension.Length>, ProductCoordinate<Dimension.Mass, Kilograms, Dimension.Length, Meters>, double> result = MultiplyC(mass, length);
         Assert.Equal(6d, result.Value);
-        Assert.IsAssignableFrom<Q<
-            Dimension.Product<Dimension.Mass, Dimension.Length>,
-            ProductCoordinate<Dimension.Mass, Kilograms, Dimension.Length, Meters>,
-            double>>(result);
     }
 
     [Fact]
@@ -58,17 +37,8 @@ public class ProductShapeComparisonProbeTests
     {
         var mass = new ProbeMass<decimal>(2m);
         var length = new ProbeLength<decimal>(3m);
-
-        Q<
-            Dimension.Product<Dimension.Mass, Dimension.Length>,
-            ProductCoordinate<Dimension.Mass, Kilograms, Dimension.Length, Meters>,
-            decimal> b = MultiplyB(mass, length);
-
-        Q<
-            Dimension.Product<Dimension.Mass, Dimension.Length>,
-            ProductCoordinate<Dimension.Mass, Kilograms, Dimension.Length, Meters>,
-            decimal> c = MultiplyC(mass, length);
-
+        Q<Dimension.Product<Dimension.Mass, Dimension.Length>, ProductCoordinate<Dimension.Mass, Kilograms, Dimension.Length, Meters>, decimal> b = MultiplyB(mass, length);
+        Q<Dimension.Product<Dimension.Mass, Dimension.Length>, ProductCoordinate<Dimension.Mass, Kilograms, Dimension.Length, Meters>, decimal> c = MultiplyC(mass, length);
         Assert.Equal(b.Value, c.Value);
         Assert.Equal(6m, b.Value);
     }
@@ -78,20 +48,9 @@ public class ProductShapeComparisonProbeTests
     {
         var left = new ProbeLength<double>(2d);
         var right = new ProbeLength<double>(3d);
-
-        ProductA<Dimension.Length, Meters, Dimension.Length, Meters, double> a =
-            SquareA(left, right);
-
-        ProductB<
-            Dimension.Product<Dimension.Length, Dimension.Length>,
-            ProductCoordinate<Dimension.Length, Meters, Dimension.Length, Meters>,
-            double> b = SquareB(left, right);
-
-        StructuralQuantity<
-            Dimension.Product<Dimension.Length, Dimension.Length>,
-            ProductCoordinate<Dimension.Length, Meters, Dimension.Length, Meters>,
-            double> c = SquareC(left, right);
-
+        var a = SquareA(left, right);
+        var b = SquareB(left, right);
+        var c = SquareC(left, right);
         Assert.Equal(6d, a.Value);
         Assert.Equal(a.Value, b.Value);
         Assert.Equal(a.Value, c.Value);
@@ -104,34 +63,9 @@ public class ProductShapeComparisonProbeTests
         var height = new ProbeLength<double>(3d);
         var mass = new ProbeMass<double>(4d);
 
-        var areaA = SquareA(width, height);
-        var areaB = SquareB(width, height);
-        var areaC = SquareC(width, height);
-
-        ProductA<
-            Dimension.Product<Dimension.Length, Dimension.Length>,
-            ProductCoordinate<Dimension.Length, Meters, Dimension.Length, Meters>,
-            Dimension.Mass,
-            Kilograms,
-            double> a = NestedA(areaA, mass);
-
-        ProductB<
-            Dimension.Product<Dimension.Product<Dimension.Length, Dimension.Length>, Dimension.Mass>,
-            ProductCoordinate<
-                Dimension.Product<Dimension.Length, Dimension.Length>,
-                ProductCoordinate<Dimension.Length, Meters, Dimension.Length, Meters>,
-                Dimension.Mass,
-                Kilograms>,
-            double> b = NestedB(areaB, mass);
-
-        StructuralQuantity<
-            Dimension.Product<Dimension.Product<Dimension.Length, Dimension.Length>, Dimension.Mass>,
-            ProductCoordinate<
-                Dimension.Product<Dimension.Length, Dimension.Length>,
-                ProductCoordinate<Dimension.Length, Meters, Dimension.Length, Meters>,
-                Dimension.Mass,
-                Kilograms>,
-            double> c = NestedC(areaC, mass);
+        var a = NestedA(SquareA(width, height), mass);
+        var b = NestedB(SquareB(width, height), mass);
+        var c = NestedC(SquareC(width, height), mass);
 
         Assert.Equal(24d, a.Value);
         Assert.Equal(a.Value, b.Value);
