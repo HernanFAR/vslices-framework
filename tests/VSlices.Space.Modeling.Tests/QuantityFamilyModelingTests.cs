@@ -25,7 +25,7 @@ public class QuantityFamilyModelingTests
     }
 
     [Fact]
-    public void Same_unit_mass_can_add_a_different_prefix_and_backing_type_through_extension_operator()
+    public void Extension_operator_adds_same_unit_across_prefix_and_backing_type()
     {
         Mass<Grams, Kilo, double> kilograms = new ProbeMass<Grams, Kilo, double>(1d);
         Mass<Grams, Micro, decimal> micrograms = new ProbeMass<Grams, Micro, decimal>(500_000_000m);
@@ -36,7 +36,7 @@ public class QuantityFamilyModelingTests
     }
 
     [Fact]
-    public void Fully_open_mass_can_add_across_unit_prefix_and_backing_type_through_extension_operator()
+    public void Extension_operator_adds_across_unit_prefix_and_backing_type()
     {
         Mass<Grams, None, decimal> grams = new ProbeMass<Grams, None, decimal>(1_000m);
         Mass<Pounds, None, double> pounds = new ProbeMass<Pounds, None, double>(1d);
@@ -47,7 +47,7 @@ public class QuantityFamilyModelingTests
     }
 
     [Fact]
-    public void Fully_open_mass_addition_is_left_biased()
+    public void Extension_operator_addition_is_left_biased()
     {
         Mass<Pounds, None, decimal> pounds = new ProbeMass<Pounds, None, decimal>(1m);
         Mass<Grams, Kilo, double> kilograms = new ProbeMass<Grams, Kilo, double>(1d);
@@ -59,7 +59,7 @@ public class QuantityFamilyModelingTests
     }
 
     [Fact]
-    public void Fully_open_mass_subtraction_uses_the_same_left_biased_conversion_policy()
+    public void Extension_operator_subtraction_uses_the_same_left_biased_conversion_policy()
     {
         Mass<Grams, None, decimal> grams = new ProbeMass<Grams, None, decimal>(1_000m);
         Mass<Grams, Kilo, double> kilograms = new ProbeMass<Grams, Kilo, double>(0.25d);
@@ -70,7 +70,7 @@ public class QuantityFamilyModelingTests
     }
 
     [Fact]
-    public void Recommended_mass_descendants_can_use_extension_operator_inference()
+    public void Recommended_mass_descendants_participate_in_extension_operator_inference()
     {
         var recommended = new Mass<double>(1d);
         Mass<Grams, Micro, decimal> micrograms = new ProbeMass<Grams, Micro, decimal>(500_000_000m);
@@ -81,7 +81,7 @@ public class QuantityFamilyModelingTests
     }
 
     [Fact]
-    public void Fully_recommended_mass_can_use_extension_operator_inference()
+    public void Fully_recommended_mass_participates_in_extension_operator_inference()
     {
         var recommended = new vMass(1d);
         Mass<Pounds, None, decimal> pounds = new ProbeMass<Pounds, None, decimal>(1m);
