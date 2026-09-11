@@ -31,7 +31,10 @@ jobs:
       - name: Build modeling probe
         run: dotnet build examples/VSlices.Space.Modeling/VSlices.Space.Modeling.csproj
 
-      - name: Run behavioral tests
+      - name: Run Space tests
+        run: dotnet test tests/VSlices.Space.Tests/VSlices.Space.Tests.csproj
+
+      - name: Run modeling behavioral tests
         run: dotnet test tests/VSlices.Space.Modeling.Tests/VSlices.Space.Modeling.Tests.csproj
 
       - name: Verify invalid usage does not compile

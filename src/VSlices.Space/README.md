@@ -1,57 +1,114 @@
 # VSlices.Space
 
-`VSlices.Space` is the semantic surface for describing what can validly exist, the structures recognized over those values, relations between semantic spaces, and characteristics intrinsic to points inhabiting them.
+`VSlices.Space` is the semantic surface for describing what values can validly exist and which structures are intrinsic to those values.
 
-This project is being extracted incrementally from `VSlices.Domain`. The migration is intentionally not one-to-one: concepts are moved only when their independent semantics are clear, while legacy composites and representation-coupled abstractions are reconsidered instead of mechanically preserved.
+Its current working principle is:
 
-## Current scope
+> Space establishes meaning. Grounding establishes contact.
 
-The current space-level concepts are:
+The abstractions in this project are intentionally pressure-tested from real cases. They should not gain operations merely because their CLR representation supports those operations.
 
-- `DiscreteSpace`: a semantic space whose values support an explicitly defined notion of equality.
-- `VectorSpace`: a discrete space with vector-space operations over a scalar type.
-- `AffineSpace`: a discrete space whose points can be translated by vectors and whose subtraction yields a displacement.
-- `MaintainedSpace`: a discrete space whose complete recognized set of values is explicitly maintained.
-- `DerivedSpace`: a semantic subset of another discrete space, with total semantics-preserving widening to its base space.
-- `Transformable`: a potentially fallible semantic transformation relation between a source and target space, owned by an explicit semantic context or by the target itself.
+## Core spaces
 
-Point-level characteristics currently include:
+- `DiscreteSpace<SELF>` expresses semantic equality without introducing ordering or algebra.
+- `VectorSpace<SELF,SCALAR>` expresses additive vector structure and scalar multiplication/division.
+- `AffineSpace<POINT,DISTANCE,SCALAR>` separates points from the vectors that translate them.
+- `MaintainedSpace<SELF>` expresses a complete recognized set maintained explicitly by the type.
+- `DerivedSpace<SELF,BASE>` expresses semantic subset inclusion (`SELF ⊆ BASE`) and total widening to the base space.
 
-- `Evolvable`: an existing point can propose a change over its current state and, when accepted, produce a new valid instance without mutating the source point.
+## Quantity families
 
-The semantic laws governing `DerivedSpace` are centralized in `DerivedSpaceLaws`.
-
-## Input and state
-
-The current modeling direction distinguishes two surfaces that concrete semantic types may expose:
+The current quantitative surface lives under `VSlices.Space.Quantities`.
 
 ```text
-Input = semantic knowledge required to attempt initial establishment
-State = currently accepted state of an existing point
+Q<F,U,P,T>
 ```
 
-`Input` is not an external representation and may itself contain already-established values from other spaces. Representation conversion remains a Grounding concern.
+expresses quantity-family membership together with a representation coordinate:
 
-`State` is not required to have the same shape as `Input`. For evolvable points, construction of an accepted `State` remains controlled by the owning type, while callers may derive candidate states from an already-obtained valid state.
+```text
+F = dimensional family
+U = Unit
+P = Prefix
+T = numeric carrier
+```
 
-## Direction of the migration
+The first concrete dimensional families are:
 
-`VSlices.Domain` is kept temporarily while concepts are migrated in small, verifiable slices. During this transition it may depend on `VSlices.Space`.
+```text
+Mass
+Length
+Duration
+```
 
-`Validatable` is currently classified as contextual admissibility owned by Work rather than Space: an already-valid value may or may not be usable in a particular work context.
+They intentionally provide three independent base dimensions to pressure dimensional composition without prematurely introducing a complete physical-units algebra.
 
-Common semantic values such as `Length`, `Mass`, `Duration`, `Money` and related concepts are expected to remain first-class values rather than collapse into aliases of dimensional expressions. Two values can share dimensional structure while still represent different semantic concepts.
+Current recommended forms are:
 
-## Modeling probes
+```text
+vMass     = kilograms over double
+vLength   = meters over double
+vDuration = seconds over double
+```
 
-`examples/VSlices.Space.Modeling` exists to exercise emerging contracts as C# models before treating them as stable framework design. It is not an automated test suite. The project contains positive usage examples and opt-in negative compilation probes for restrictions that should be enforced by the type model itself.
+Each family also exposes progressively more open generic forms so consumers and Tooling can choose unit, prefix, carrier, and nominal closure where necessary.
 
-## Under review
+### Nominal closure
 
-`QuantitySpace` is intentionally not migrated yet. Its current `CanonValue` requirement is under semantic review: the open question is whether a canonical scalar coordinate belongs to the contract of the space or whether unit/carrier conversion belongs primarily to grounding or concrete realization.
+The most general family types include `SELF`:
 
-The pending dimensional composition work (`Power`, `Product`, `Quotient`, and related structures) remains outside the current migration slice until `QuantitySpace` is clarified.
+```text
+Mass<U,P,T,SELF>
+Length<U,P,T,SELF>
+Duration<U,P,T,SELF>
+```
 
-## Working criterion
+`SELF` means that homogeneous arithmetic closes over the nominal type of the left operand.
 
-A concept belongs in this project when it describes a semantic space, a relation between semantic spaces, a characteristic intrinsic to points in a space, or laws intrinsic to those structures. Composite interfaces must add independent semantic meaning; reducing typing alone is not sufficient justification.
+The runtime reconstruction step uses LanguageExt's cached constructor delegate mechanism (`IL.Ctor<T,SELF>()`). The required `SELF(T value)` constructor shape is therefore a realization convention rather than additional semantic vocabulary. VSlices Tooling is expected to generate or verify that shape for generated Values.
+
+### Coordinate conversion
+
+Homogeneous addition and subtraction currently use a deterministic left-biased policy:
+
+```text
+right quantity
+  -> right Unit/Prefix scale
+  -> left carrier via checked numeric conversion
+  -> left Unit/Prefix coordinate
+  -> arithmetic
+  -> left nominal SELF
+```
+
+The policy is deliberately still under pressure for representability, rounding, and overflow.
+
+## Next pressure: dimensional composition
+
+`Mass`, `Length`, and `Duration` now form the minimal independent pressure set for discovering the semantics of:
+
+```text
+Product<A,B>
+Quotient<N,D>
+Power<B,E>
+```
+
+Representative cases include:
+
+```text
+Mass * Length
+Length * Length
+Length / Duration
+Mass / Duration
+Length / Length
+Length^2
+```
+
+These structural dimensional constructions must remain distinct from domain semantic names. Two domain quantities may share dimensional geometry without therefore being the same semantic Space.
+
+## Working criteria
+
+- Semantic structure precedes realization convenience.
+- A composite abstraction must add independent meaning, laws, or authority.
+- Do not reconstruct guarantees already expressed by semantic types as business invariants.
+- Carrier operations do not automatically belong to the semantic Space.
+- Generated realization constraints should remain owned by Tooling when they do not constitute semantic vocabulary.

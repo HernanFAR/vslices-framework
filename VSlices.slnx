@@ -23,6 +23,7 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/VSlices.Space.Modeling.Tests/VSlices.Space.Modeling.Tests.csproj" />
+    <Project Path="tests/VSlices.Space.Tests/VSlices.Space.Tests.csproj" />
     <Project Path="tests/VSlices.Tests/VSlices.Tests.csproj" Id="58e0e2db-df3c-4f98-8635-a99989c3050b" />
   </Folder>
 </Solution>
