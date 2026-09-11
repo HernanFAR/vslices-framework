@@ -333,7 +333,17 @@ It is naturally read as a value in `km²` without introducing a separate `Square
 
 ### Worked example
 
-Assume two nominal Length values:
+The library does not currently expose convenience types named `KilometerLength` or `MeterLength`; the following local types only make the example readable:
+
+```csharp
+sealed class KilometerLength(decimal value)
+    : Length<Kilometers, decimal, KilometerLength>(value);
+
+sealed class MeterLength(decimal value)
+    : Length<Meters, decimal, MeterLength>(value);
+```
+
+Now:
 
 ```csharp
 var width = new KilometerLength(2m);
