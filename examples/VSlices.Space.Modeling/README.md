@@ -20,7 +20,7 @@ Two quantity shapes intentionally coexist so they can pressure each other rather
 
 ### Q quantity-family probe
 
-`QuantityFamilies/QuantityFamily.cs` explores a different geometry:
+`QuantityFamilies/QuantityFamily.cs` explores:
 
 ```text
 Q<F, U, P, T>
@@ -42,9 +42,9 @@ where T : INumberBase<T>
 
 Concrete `Mass<U,P,T>` strengthens the carrier to `INumber<T>` because it owns arithmetic.
 
-The generic argument order is conceptual rather than selected for defaulting convenience. Unit currently forms a stronger neighborhood than Prefix, and Prefix a stronger neighborhood than numeric carrier. Therefore `Mass<Grams,None,decimal>` is considered conceptually closer to `Mass<Grams,Micro,double>` than to `Mass<Pounds,None,decimal>`.
+The generic argument order is conceptual: Unit currently forms a stronger neighborhood than Prefix, and Prefix a stronger neighborhood than numeric carrier. `Mass<Grams,None,decimal>` is therefore considered conceptually closer to `Mass<Grams,Micro,double>` than to `Mass<Pounds,None,decimal>`.
 
-The recommended specialization ladder currently is:
+The recommended specialization ladder is:
 
 ```text
 abstract Mass<U,P,T>
@@ -64,7 +64,7 @@ These forms progressively fix VSlices defaults rather than introduce new quantit
 
 ## Quantity-family interoperability
 
-The general Mass family owns exact-coordinate arithmetic and explicit cross-coordinate conversion. Cross-coordinate conversion is currently left-biased:
+The general Mass family owns exact-coordinate arithmetic and explicit cross-coordinate conversion. Conversion is currently left-biased:
 
 ```text
 Mass<U1,P1,T1> + Mass<U2,P2,T2>
@@ -75,9 +75,9 @@ The right quantity is converted into the left coordinate through Unit scale, Pre
 
 ### C# 14 extension-operator pressure
 
-The first version of this probe concluded that a fully open operator was blocked because ordinary C# operator declarations cannot introduce their own generic parameters. That conclusion was incomplete for the .NET 10 / C# 14 target.
+The earlier conclusion that fully open operator syntax was blocked by C# was incomplete. On the current `.NET 10` target, C# 14 extension blocks can introduce generic parameters inferred from the combined extension receiver and operator operands.
 
-C# 14 extension blocks can introduce generic parameters that are inferred from the combined extension receiver and operator operands. The probe now declares an extension block whose six generic parameters describe both Mass operands:
+The probe now uses a six-parameter extension block:
 
 ```csharp
 extension<LU, LP, LT, RU, RP, RT>(Mass<LU, LP, LT>)
@@ -88,9 +88,9 @@ extension<LU, LP, LT, RU, RP, RT>(Mass<LU, LP, LT>)
 }
 ```
 
-with dimensional, unit, prefix, and numeric constraints on all parameters.
+with the corresponding Unit, Prefix, Dimension, and generic-math constraints.
 
-The test surface now pressures all of these forms through normal `+` / `-` syntax:
+Behavioral tests now pressure normal `+` / `-` syntax for:
 
 ```text
 same Unit + same Prefix + same carrier
@@ -100,17 +100,17 @@ recommended Mass<T> + fully generic Mass<...>
 vMass + fully generic Mass<...>
 ```
 
-The semantic policy has not changed: the result remains left-biased and numeric conversion remains checked. What changed is the C# realization mechanism available to express that policy.
+The semantic policy has not changed: conversion remains checked and the result remains left-biased. What changed is the realization mechanism available to express it.
 
-The important remaining question is no longer simply whether C# can spell the operator. It is whether extension-operator inference remains ergonomic and predictable across consumer-defined descendants and whether an operator hides too much conversion policy at larger representational distances.
+The remaining question is therefore semantic and ergonomic rather than merely syntactic: when does an operator hide too much conversion policy, even if C# can express and infer it?
 
 ## Current questions
 
-The quantity-family experiment is still pressure, not a settled public API. Immediate questions include:
+The quantity-family experiment remains pressure, not a settled public API. Immediate questions include:
 
 - whether `Q<F,U,P,T>` adds genuine quantity-family semantics rather than becoming a renamed generic-math mechanism;
 - which capabilities belong to `Q` versus concrete quantity families;
-- whether C# 14 extension operators remain usable with recommended descendants and consumer-defined Mass realizations;
+- whether C# 14 extension-operator inference remains usable with recommended descendants and consumer-defined realizations;
 - whether static result types preserve enough nominal information across operations;
 - how Transformable should participate in quantity establishment after the family geometry stabilizes;
 - what role, if any, remains for the older `Quantity<DIM,PREFIX>` structural type;
