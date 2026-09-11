@@ -108,3 +108,30 @@ public static class LengthOperators
             left.Subtract(right);
     }
 }
+
+/// <summary>
+/// First production Product pressure. Multiplication is intentionally declared
+/// only for Length x Length and requires both operands to share the same carrier.
+/// Product availability is therefore explicit rather than universal over Q.
+/// </summary>
+public static class LengthProductOperators
+{
+    extension<LEFT_C, RIGHT_C, T, LEFT_SELF, RIGHT_SELF>(
+        Length<LEFT_C, T, LEFT_SELF>)
+        where LEFT_C : Coordinate<Dimension.Length>
+        where RIGHT_C : Coordinate<Dimension.Length>
+        where T : INumber<T>
+        where LEFT_SELF : Length<LEFT_C, T, LEFT_SELF>
+        where RIGHT_SELF : Length<RIGHT_C, T, RIGHT_SELF>
+    {
+        public static Product<
+            Dimension.Length,
+            LEFT_C,
+            Dimension.Length,
+            RIGHT_C,
+            T> operator *(
+                Length<LEFT_C, T, LEFT_SELF> left,
+                Length<RIGHT_C, T, RIGHT_SELF> right) =>
+            new(left.Value * right.Value);
+    }
+}
