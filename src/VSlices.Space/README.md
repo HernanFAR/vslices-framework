@@ -41,7 +41,7 @@ Length
 Duration
 ```
 
-They intentionally provide three independent dimensions to pressure dimensional composition without prematurely introducing a complete physical-units algebra.
+They intentionally provide three independent base dimensions to pressure dimensional composition without prematurely introducing a complete physical-units algebra.
 
 Current recommended forms are:
 
