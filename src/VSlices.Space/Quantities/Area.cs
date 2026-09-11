@@ -5,8 +5,8 @@ namespace VSlices.Space.Quantities;
 /// <summary>
 /// Semantic area established from a homogeneous Length product.
 /// C names the shared Length coordinate basis used to express the composed
-/// dimensional shape, so Area<Kilometers,T> is expressed in km² without a
-/// separate SquaredKilometers backing type.
+/// dimensional shape. An Area expressed over Kilometers is therefore read in
+/// square kilometers without requiring a separate SquaredKilometers type.
 /// </summary>
 [AlgebraicSymbol("area")]
 public sealed record Area<C, T>(
