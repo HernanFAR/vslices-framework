@@ -72,4 +72,69 @@ public class ProductShapeComparisonProbeTests
         Assert.Equal(b.Value, c.Value);
         Assert.Equal(6m, b.Value);
     }
+
+    [Fact]
+    public void length_times_length_preserves_effective_meter_coordinates_in_all_candidates()
+    {
+        var left = new ProbeLength<double>(2d);
+        var right = new ProbeLength<double>(3d);
+
+        ProductA<Dimension.Length, Meters, Dimension.Length, Meters, double> a =
+            SquareA(left, right);
+
+        ProductB<
+            Dimension.Product<Dimension.Length, Dimension.Length>,
+            ProductCoordinate<Dimension.Length, Meters, Dimension.Length, Meters>,
+            double> b = SquareB(left, right);
+
+        StructuralQuantity<
+            Dimension.Product<Dimension.Length, Dimension.Length>,
+            ProductCoordinate<Dimension.Length, Meters, Dimension.Length, Meters>,
+            double> c = SquareC(left, right);
+
+        Assert.Equal(6d, a.Value);
+        Assert.Equal(a.Value, b.Value);
+        Assert.Equal(a.Value, c.Value);
+    }
+
+    [Fact]
+    public void nested_product_makes_structure_growth_visible_without_changing_the_shared_carrier()
+    {
+        var width = new ProbeLength<double>(2d);
+        var height = new ProbeLength<double>(3d);
+        var mass = new ProbeMass<double>(4d);
+
+        var areaA = SquareA(width, height);
+        var areaB = SquareB(width, height);
+        var areaC = SquareC(width, height);
+
+        ProductA<
+            Dimension.Product<Dimension.Length, Dimension.Length>,
+            ProductCoordinate<Dimension.Length, Meters, Dimension.Length, Meters>,
+            Dimension.Mass,
+            Kilograms,
+            double> a = NestedA(areaA, mass);
+
+        ProductB<
+            Dimension.Product<Dimension.Product<Dimension.Length, Dimension.Length>, Dimension.Mass>,
+            ProductCoordinate<
+                Dimension.Product<Dimension.Length, Dimension.Length>,
+                ProductCoordinate<Dimension.Length, Meters, Dimension.Length, Meters>,
+                Dimension.Mass,
+                Kilograms>,
+            double> b = NestedB(areaB, mass);
+
+        StructuralQuantity<
+            Dimension.Product<Dimension.Product<Dimension.Length, Dimension.Length>, Dimension.Mass>,
+            ProductCoordinate<
+                Dimension.Product<Dimension.Length, Dimension.Length>,
+                ProductCoordinate<Dimension.Length, Meters, Dimension.Length, Meters>,
+                Dimension.Mass,
+                Kilograms>,
+            double> c = NestedC(areaC, mass);
+
+        Assert.Equal(24d, a.Value);
+        Assert.Equal(a.Value, b.Value);
+        Assert.Equal(a.Value, c.Value);
+    }
 }
