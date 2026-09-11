@@ -64,7 +64,7 @@ These forms progressively fix VSlices defaults rather than introduce new quantit
 
 ## Quantity-family interoperability
 
-The general Mass family owns exact-coordinate arithmetic and explicit cross-coordinate conversion. Conversion is currently left-biased:
+The general Mass family owns exact-coordinate arithmetic and cross-coordinate conversion. Conversion is currently left-biased:
 
 ```text
 Mass<U1,P1,T1> + Mass<U2,P2,T2>
@@ -89,6 +89,8 @@ extension<LU, LP, LT, RU, RP, RT>(Mass<LU, LP, LT>)
 ```
 
 with the corresponding Unit, Prefix, Dimension, and generic-math constraints.
+
+The semantic operation remains implemented by `Mass.Add` / `Mass.Subtract`; the extension block is only the C# realization that exposes that already-defined policy as operator syntax.
 
 Behavioral tests pressure normal `+` / `-` syntax for same coordinates, different Prefix/carrier under one Unit, fully different Unit/Prefix/carrier within Mass, recommended `Mass<T>` descendants, and `vMass`.
 
