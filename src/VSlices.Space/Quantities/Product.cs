@@ -14,7 +14,8 @@ public sealed record Product<LEFT_F, LEFT_C, RIGHT_F, RIGHT_C, T>(T Value) :
     Q<
         Dimension.Product<LEFT_F, RIGHT_F>,
         ProductCoordinate<LEFT_F, LEFT_C, RIGHT_F, RIGHT_C>,
-        T>
+        T>,
+    DiscreteSpace<Product<LEFT_F, LEFT_C, RIGHT_F, RIGHT_C, T>>
     where LEFT_F : Dimension
     where LEFT_C : Coordinate<LEFT_F>
     where RIGHT_F : Dimension
