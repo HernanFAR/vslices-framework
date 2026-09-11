@@ -4,9 +4,18 @@ This project is a modeling probe for the emerging `VSlices.Space` API. It is int
 
 Its job is to make semantic decisions executable enough that their C# consequences can be inspected before those decisions become stable framework contracts.
 
-## Current probe
+## Current probes
 
-`Location` now composes three semantic concepts:
+The project currently contains two kinds of pressure:
+
+1. `Location`, which explores semantic establishment, evolution, and authority.
+2. Quantitative modeling, which now contains both the original `Quantity<DIM, PREFIX>` experiment and a parallel `Q<F, U, P, T>` quantity-family experiment.
+
+The second experiment deliberately exists beside the first one rather than replacing it immediately. The point is to compare what each geometry makes easy or awkward before promoting either shape into framework API.
+
+## Location probe
+
+`Location` composes three semantic concepts:
 
 ```text
 string -> LocationName
@@ -38,8 +47,6 @@ string
   -> Location.Input(LocationName, ...)
   -> Location
 ```
-
-This is intentional pressure on the idea that `Input` may contain values from already-established semantic spaces rather than only primitives or external representations.
 
 ## Input and State
 
@@ -125,6 +132,188 @@ string -> LocationName  owned and materialized by LocationName itself
 Input  -> Location      owned by Location
 State  -> Location'     owned by Location, with State construction bridged by .NET realization
 ```
+
+## Quantity-family probe
+
+A new parallel experiment lives under:
+
+```text
+QuantityFamilies/QuantityFamily.cs
+```
+
+Its current hypothesis is that the useful abstraction is not necessarily an instantiable `Quantity<DIM, PREFIX>` value. Instead, a quantity can expose structural family membership through:
+
+```csharp
+Q<F, U, P, T>
+```
+
+with:
+
+```text
+F = dimensional family
+U = unit
+P = prefix
+T = backing numeric type
+```
+
+The current contract deliberately stays small:
+
+```csharp
+public interface Q<F, U, P, T>
+    where F : Dimension
+    where U : Unit<F>
+    where P : Prefix
+    where T : INumberBase<T>
+```
+
+`Q` only states structural membership and the numeric carrier requirement. Concrete quantitative algebra may require stronger constraints.
+
+### Dimension as a type hierarchy
+
+The probe represents dimensions as a type hierarchy rather than marker structs:
+
+```text
+Dimension
+└── Dimension.Mass
+```
+
+This keeps the dimension available to generic constraints without introducing a separate runtime descriptor/witness distinction.
+
+### Unit, Prefix, and backing type
+
+Units are constrained to their dimension:
+
+```csharp
+Unit<Dimension.Mass>
+```
+
+so an incompatible unit cannot participate in a mass family merely because it has a scale.
+
+The probe currently contains:
+
+```text
+Units:   Grams, Pounds
+Prefixes: None, Kilo, Micro
+Carriers: any T satisfying the relevant .NET generic-math contracts
+```
+
+`Q` asks only for `INumberBase<T>`, because family membership needs a numeric carrier but not necessarily the full ordered arithmetic surface.
+
+`Mass<U, P, T>` currently strengthens that to `INumber<T>` because its implementation actually performs arithmetic.
+
+### Conceptual family ordering
+
+The generic order is intentionally:
+
+```text
+Mass<U, P, T>
+```
+
+rather than ordering arguments by defaulting convenience.
+
+The current reason is conceptual proximity:
+
+```text
+Mass<Grams, None, decimal>
+```
+
+is treated as structurally closer to:
+
+```text
+Mass<Grams, Micro, double>
+```
+
+than to:
+
+```text
+Mass<Pounds, None, decimal>
+```
+
+because Unit establishes a stronger quantity-family neighborhood than Prefix or backing carrier.
+
+### Recommended specializations
+
+The current inheritance probe expresses progressively stronger VSlices recommendations:
+
+```text
+abstract Mass<U, P, T>
+    consumer chooses Unit, Prefix, and carrier
+
+abstract Mass<P, T>
+    = Mass<Grams, P, T>
+    VSlices fixes the recommended Unit
+
+Mass<T>
+    = Mass<Grams, Kilo, T>
+    VSlices fixes Unit + Prefix
+
+vMass
+    = Mass<Grams, Kilo, double>
+    VSlices fixes Unit + Prefix + carrier
+```
+
+`vMass` remains a deliberately provisional name while `LanguageExt.Mass` occupies the simple `Mass` name in overlapping contexts.
+
+These recommended forms add defaults rather than new semantics.
+
+### Arithmetic pressure
+
+The probe intentionally distinguishes cheap interoperability from increasingly distant interoperability.
+
+Exact coordinate addition is an operator on the most general family:
+
+```text
+Mass<U, P, T> + Mass<U, P, T>
+    -> Mass<U, P, T>
+```
+
+Cross-coordinate addition is currently explicit:
+
+```csharp
+left.Add(right)
+```
+
+and supports a right operand with different:
+
+```text
+Unit
+Prefix
+backing numeric type
+```
+
+provided both Units belong to `Dimension.Mass` and numeric conversion into the left carrier succeeds through .NET generic math.
+
+The current policy is left-biased:
+
+```text
+Mass<U1, P1, T1>.Add(Mass<U2, P2, T2>)
+    -> Mass<U1, P1, T1>
+```
+
+The right coordinate is converted into the left Unit/Prefix/carrier before arithmetic.
+
+This is deliberately not yet exposed as a universal cross-shape `+` operator. C# operators cannot introduce their own generic parameters, so an open operation of the form:
+
+```text
+Mass<U1, P1, T1> + Mass<U2, P2, T2>
+```
+
+cannot be expressed by a single generic operator declaration in the same way that a generic method can. That target-language constraint is evidence for the design rather than a reason to hide conversion policy.
+
+The useful question is therefore becoming:
+
+```text
+which interoperability deserves operator syntax,
+and which should remain an explicit family conversion/addition operation?
+```
+
+The probe currently tests:
+
+- family membership through `Q<Dimension.Mass, ...>`;
+- exact Unit/Prefix/carrier addition through the generic Mass base;
+- same-Unit addition across Prefix and numeric carrier;
+- fully open addition across Unit, Prefix, and numeric carrier;
+- left-biased result coordinates.
 
 ## Negative compile probes
 
