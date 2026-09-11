@@ -90,19 +90,11 @@ extension<LU, LP, LT, RU, RP, RT>(Mass<LU, LP, LT>)
 
 with the corresponding Unit, Prefix, Dimension, and generic-math constraints.
 
-Behavioral tests now pressure normal `+` / `-` syntax for:
-
-```text
-same Unit + same Prefix + same carrier
-same Unit + different Prefix + different carrier
-different Unit + different Prefix + different carrier
-recommended Mass<T> + fully generic Mass<...>
-vMass + fully generic Mass<...>
-```
+Behavioral tests pressure normal `+` / `-` syntax for same coordinates, different Prefix/carrier under one Unit, fully different Unit/Prefix/carrier within Mass, recommended `Mass<T>` descendants, and `vMass`.
 
 The semantic policy has not changed: conversion remains checked and the result remains left-biased. What changed is the realization mechanism available to express it.
 
-The remaining question is therefore semantic and ergonomic rather than merely syntactic: when does an operator hide too much conversion policy, even if C# can express and infer it?
+The remaining question is semantic and ergonomic rather than merely syntactic: when does an operator hide too much conversion policy, even if C# can express and infer it?
 
 ## Current questions
 
