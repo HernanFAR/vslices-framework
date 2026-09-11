@@ -3,30 +3,30 @@ using System.Numerics;
 namespace VSlices.Space.Quantities;
 
 /// <summary>
-/// Semantic area established from the structural product of two Length quantities.
-/// The exact effective coordinates of both operands are preserved.
+/// Semantic area established from a homogeneous Length product.
+/// C names the shared Length coordinate basis used to express the composed
+/// dimensional shape, so Area<Kilometers,T> is expressed in km² without a
+/// separate SquaredKilometers backing type.
 /// </summary>
 [AlgebraicSymbol("area")]
-public sealed record Area<LEFT_C, RIGHT_C, T>(
+public sealed record Area<C, T>(
     Product<
         Dimension.Length,
-        LEFT_C,
         Dimension.Length,
-        RIGHT_C,
+        C,
         T> Product) :
     Q<
         Dimension.Product<Dimension.Length, Dimension.Length>,
-        ProductCoordinate<Dimension.Length, LEFT_C, Dimension.Length, RIGHT_C>,
+        ProductCoordinate<Dimension.Length, Dimension.Length, C>,
         T>,
     DerivedSpace<
-        Area<LEFT_C, RIGHT_C, T>,
-        Product<Dimension.Length, LEFT_C, Dimension.Length, RIGHT_C, T>>
-    where LEFT_C : Coordinate<Dimension.Length>
-    where RIGHT_C : Coordinate<Dimension.Length>
+        Area<C, T>,
+        Product<Dimension.Length, Dimension.Length, C, T>>
+    where C : Coordinate<Dimension.Length>
     where T : INumber<T>
 {
     public T Value => Product.Value;
 
-    public Product<Dimension.Length, LEFT_C, Dimension.Length, RIGHT_C, T> ToBase() =>
+    public Product<Dimension.Length, Dimension.Length, C, T> ToBase() =>
         Product;
 }
