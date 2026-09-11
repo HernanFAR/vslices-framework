@@ -17,6 +17,20 @@ public abstract class Dimension
         {
         }
     }
+
+    public sealed class Length : Dimension
+    {
+        private Length()
+        {
+        }
+    }
+
+    public sealed class Duration : Dimension
+    {
+        private Duration()
+        {
+        }
+    }
 }
 
 /// <summary>
@@ -37,6 +51,26 @@ public readonly struct Grams : Unit<Dimension.Mass>
 public readonly struct Pounds : Unit<Dimension.Mass>
 {
     public static decimal Scale => 453.59237m;
+}
+
+public readonly struct Meters : Unit<Dimension.Length>
+{
+    public static decimal Scale => 1m;
+}
+
+public readonly struct Feet : Unit<Dimension.Length>
+{
+    public static decimal Scale => 0.3048m;
+}
+
+public readonly struct Seconds : Unit<Dimension.Duration>
+{
+    public static decimal Scale => 1m;
+}
+
+public readonly struct Minutes : Unit<Dimension.Duration>
+{
+    public static decimal Scale => 60m;
 }
 
 /// <summary>
