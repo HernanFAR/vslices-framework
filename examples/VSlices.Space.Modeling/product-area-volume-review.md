@@ -197,6 +197,6 @@ The negative-compilation path is exercised through the existing `MODELING_INVALI
 
 ## Current evidence
 
-At the time this note was added, Space Modeling CI #81 had passed the Area / Volume pressure case.
+Space Modeling CI #81 passed the Area / Volume pressure case at commit `f8437f1bb7489ab55901f8c7ed781ebfd485b46c`.
 
 That establishes only that the current C# 14 surface is realizable and that undeclared `Area * Area` multiplication remains unavailable. It does **not** establish that this is the final Product design.
