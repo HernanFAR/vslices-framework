@@ -4,147 +4,48 @@ This project is a modeling probe for the emerging `VSlices.Space` API. It is int
 
 Its job is to make semantic decisions executable enough that their C# consequences can be inspected before those decisions become stable framework contracts.
 
-## Current probe
+## Location probe
 
-`Location` now composes three semantic concepts:
+`Location` composes independently established semantic values and persistent evolution. `LocationName` is established through `Transformable<string, LocationName>`; `Location.Input` and `Location.State` reuse that semantic type rather than duplicating its invariants. `Location.State` keeps `Name` creation-fixed while `X/Y` are proposal-updatable. The private State constructor is bridged only by a private .NET `UnsafeAccessor`, which is treated as a realization mechanism rather than semantic authority.
 
-```text
-string -> LocationName
-Location.Input -> Location
-Location(State0) -> Location(State1)
-```
+The negative-compilation probe in `InvalidUsage.cs` verifies that callers cannot mint semantic state, bypass `LocationName` establishment, replace a creation-fixed name, or replace accepted state directly.
 
-through:
+## Quantity experiments
 
-```text
-LocationName : DiscreteSpace<LocationName>, Transformable<string, LocationName>
-Location     : Transformable<Location.Input, Location>, Evolvable<Location, Location.State>
-```
+Two quantity shapes intentionally coexist so they can pressure each other rather than forcing an early migration.
 
-`LocationName` is an independently established semantic value. Its own rules are:
+### Original structural quantity probe
 
-```text
-non-empty
-maximum length: 100 characters
-```
+`Quantities/` currently contains the earlier `Quantity<DIM, PREFIX>` experiment and provisional `vMass` Value. It established canonical-coordinate, prefix-conversion, vector-operation, and negative-mass pressure, but an instantiable generic structural Quantity may be mixing quantity-family structure with concrete Value identity.
 
-The transformation trims surrounding whitespace before materializing the accepted name.
+### Q quantity-family probe
 
-This means `Location` no longer accepts a primitive `string` as its name input and does not duplicate name invariants. Its input requires an already-established `LocationName`:
+`QuantityFamilies/QuantityFamily.cs` explores `Q<F,U,P,T>` where `F` is the dimensional family, `U` the Unit, `P` the Prefix, and `T` the backing numeric type. `Q` constrains `T` only to `INumberBase<T>`; concrete `Mass<U,P,T>` strengthens that to `INumber<T>` because it owns arithmetic.
 
-```text
-string
-  -> LocationName
-  -> Location.Input(LocationName, ...)
-  -> Location
-```
+The generic argument order is conceptual: Unit currently forms a stronger neighborhood than Prefix, and Prefix a stronger neighborhood than numeric carrier. `Mass<Grams,None,decimal>` is therefore considered conceptually closer to `Mass<Grams,Micro,double>` than to `Mass<Pounds,None,decimal>`.
 
-This is intentional pressure on the idea that `Input` may contain values from already-established semantic spaces rather than only primitives or external representations.
+Recommended specialization currently progresses from `Mass<U,P,T>` to `Mass<P,T> = Mass<Grams,P,T>`, then `Mass<T> = Mass<Grams,Kilo,T>`, then provisional `vMass = Mass<Grams,Kilo,double>`. These forms fix defaults rather than add semantics.
 
-## Input and State
+## Quantity-family interoperability
 
-The model intentionally separates:
+Cross-coordinate conversion is left-biased: a right Mass is converted into the left Unit, Prefix, and numeric carrier through `Unit.Scale`, `Prefix.Scale`, and `T.CreateChecked`. The result therefore remains in the left coordinate.
 
-```text
-Input = information required to establish a Location
-State = currently accepted state of an existing Location
-```
+### C# 14 extension-operator pressure
 
-`State` does not mean that every member is evolvable. A state may contain both information fixed when the first point is established and information callers are allowed to propose changes to later.
+The earlier conclusion that fully open operator syntax was blocked by C# was incomplete. On the current .NET 10 target, C# 14 extension blocks can introduce generic parameters inferred from the combined receiver and operator operands.
 
-The current `Location.State` makes that distinction explicit:
+The probe uses a six-parameter extension block so both Mass operands contribute their Unit, Prefix, and numeric carrier. The semantic operation remains implemented by `Mass.Add` / `Mass.Subtract`; the extension block supplies only the C# operator realization.
 
-```text
-Name = creation-fixed / never replaceable after establishment
-X/Y  = evolvable through Update
-```
+Behavioral tests exercise `+` / `-` across same coordinates, different Prefix/carrier under one Unit, fully different Unit/Prefix/carrier within Mass, recommended `Mass<T>` descendants, and `vMass`.
 
-Accordingly, `Name` is get-only, while `X` and `Y` remain `init` properties so `with` can produce candidate states for those parts.
+The semantic policy remains checked and left-biased. Space Modeling CI run #23 verified the model, behavioral tests, and negative-compilation probe successfully.
 
-Evolution is persistent rather than mutating:
+The remaining question is semantic and ergonomic rather than syntactic: when does an operator hide too much conversion policy, even if C# can express and infer it?
 
-```text
-Location(State0)
-    + Func<State, State>
-    -> candidate State
-    -> evolution rules
-    -> new Location(State1) | rejection
-```
+## Current questions
 
-The original `Location` has no writable `CurrentState`; accepted evolution materializes a new `Location`.
+The quantity-family experiment remains pressure, not a settled public API. Immediate questions include whether `Q<F,U,P,T>` adds genuine quantity-family semantics, which capabilities belong to Q versus concrete families, how extension-operator inference behaves for descendants and consumer types, whether static result types preserve enough nominal information, how Transformable participates in establishment, what role remains for the older `Quantity<DIM,PREFIX>` type, and later how dimensions compose through Product, Quotient, and Power.
 
-## State authority
+## Verification
 
-`Location.State` has a private constructor. External code cannot mint a state from arbitrary data.
-
-C# does not grant an enclosing type privileged access to private members of its nested type, so `Location` cannot directly call `new Location.State(...)` either. The probe intentionally keeps the constructor private and bridges this realization limitation through .NET's `UnsafeAccessor` support:
-
-```csharp
-[UnsafeAccessor(UnsafeAccessorKind.Constructor)]
-private static extern State NewState(LocationName name, int x, int y);
-```
-
-This accessor is private to `Location`; it preserves the public restriction while allowing the owning semantic type to materialize a state internally.
-
-External code can derive candidates only through members that `State` deliberately exposes as evolvable:
-
-```csharp
-location.Update(state => state with
-{
-    X = state.X + 1,
-    Y = state.Y + 1
-});
-```
-
-but cannot propose a different creation-fixed name:
-
-```csharp
-state with { Name = anotherName } // expected compile failure
-```
-
-This intentionally distinguishes:
-
-```text
-arbitrary external data -> State           not allowed
-Location-owned materialization -> State    allowed through private runtime accessor
-accepted State -> candidate X/Y            allowed
-accepted State -> replacement Name         not allowed
-candidate State -> accepted Location       controlled by Location.Evolution
-```
-
-The use of `UnsafeAccessor` is treated as a .NET realization mechanism, not as part of the semantic model. If a simpler language-level mechanism later preserves the same authority boundary, the realization may change without changing the semantics.
-
-## Name authority
-
-`LocationName` also has a private constructor, but unlike `State` its target-owned `Transformable<string, LocationName>` rules live inside `LocationName` itself. Therefore it can directly call its own constructor after its invariants succeed; no `UnsafeAccessor` is needed.
-
-This gives a useful contrast:
-
-```text
-string -> LocationName  owned and materialized by LocationName itself
-Input  -> Location      owned by Location
-State  -> Location'     owned by Location, with State construction bridged by .NET realization
-```
-
-## Negative compile probes
-
-`InvalidUsage.cs` contains examples behind `MODELING_INVALID_USAGE` that are expected not to compile. They attempt to:
-
-- call the private `Location.State` constructor;
-- call the private `LocationName` constructor instead of using its transformation;
-- change creation-fixed `State.Name` through `with`;
-- replace `Location.CurrentState` from outside the owner.
-
-The normal modeling surface can be built with:
-
-```text
-dotnet build examples/VSlices.Space.Modeling/VSlices.Space.Modeling.csproj
-```
-
-To intentionally exercise the compiler barriers:
-
-```text
-dotnet build examples/VSlices.Space.Modeling/VSlices.Space.Modeling.csproj -p:DefineConstants=MODELING_INVALID_USAGE
-```
-
-The second command is expected to fail compilation. That failure is part of the probe: these restrictions should exist in the C# model itself rather than being asserted by runtime tests.
+The normal probe builds with `dotnet build examples/VSlices.Space.Modeling/VSlices.Space.Modeling.csproj`; behavioral tests run through `tests/VSlices.Space.Modeling.Tests`; and the `MODELING_INVALID_USAGE` build is expected to fail. `.github/workflows/space-modeling.yml` exercises all three paths on pull requests.
