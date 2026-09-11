@@ -103,26 +103,14 @@ public readonly record struct StructuralQuantity<F, C, T>(T Value) : Q<F, C, T>
     where C : Coordinate<F>
     where T : INumber<T>;
 
-public static class ProductAOperators
+public static class ProductComparison
 {
-    extension<LEFT_F, LEFT_C, RIGHT_F, RIGHT_C, T>(ProbeMass<T>)
-        where LEFT_F : Dimension
-        where LEFT_C : Coordinate<LEFT_F>
-        where RIGHT_F : Dimension
-        where RIGHT_C : Coordinate<RIGHT_F>
-        where T : INumber<T>
-    {
-    }
-
     public static ProductA<Dimension.Mass, Kilograms, Dimension.Length, Meters, T> MultiplyA<T>(
         ProbeMass<T> left,
         ProbeLength<T> right)
         where T : INumber<T> =>
         new(left.Value * right.Value);
-}
 
-public static class ProductBOperators
-{
     public static ProductB<
         Dimension.Product<Dimension.Mass, Dimension.Length>,
         ProductCoordinate<Dimension.Mass, Kilograms, Dimension.Length, Meters>,
@@ -131,10 +119,7 @@ public static class ProductBOperators
         ProbeLength<T> right)
         where T : INumber<T> =>
         new(left.Value * right.Value);
-}
 
-public static class StructuralProductOperators
-{
     public static StructuralQuantity<
         Dimension.Product<Dimension.Mass, Dimension.Length>,
         ProductCoordinate<Dimension.Mass, Kilograms, Dimension.Length, Meters>,
