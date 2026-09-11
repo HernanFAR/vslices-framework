@@ -34,75 +34,78 @@ public abstract class Dimension
 }
 
 /// <summary>
-/// A unit belonging to a dimensional family.
-/// Scale is expressed relative to the family's current reference unit.
+/// An effective coordinate belonging to a dimensional family.
+/// Scale is expressed relative to the family's current canonical coordinate.
+/// A coordinate may already encode what would otherwise be modeled as a unit
+/// plus a multiplicative prefix.
 /// </summary>
-public interface Unit<F>
+public interface Coordinate<F>
     where F : Dimension
 {
     static abstract decimal Scale { get; }
 }
 
-public readonly struct Grams : Unit<Dimension.Mass>
+public readonly struct Grams : Coordinate<Dimension.Mass>
 {
     public static decimal Scale => 1m;
 }
 
-public readonly struct Pounds : Unit<Dimension.Mass>
-{
-    public static decimal Scale => 453.59237m;
-}
-
-public readonly struct Meters : Unit<Dimension.Length>
-{
-    public static decimal Scale => 1m;
-}
-
-public readonly struct Feet : Unit<Dimension.Length>
-{
-    public static decimal Scale => 0.3048m;
-}
-
-public readonly struct Seconds : Unit<Dimension.Duration>
-{
-    public static decimal Scale => 1m;
-}
-
-public readonly struct Minutes : Unit<Dimension.Duration>
-{
-    public static decimal Scale => 60m;
-}
-
-/// <summary>
-/// A multiplicative prefix applied to a unit coordinate.
-/// </summary>
-public interface Prefix
-{
-    static abstract decimal Scale { get; }
-}
-
-public readonly struct None : Prefix
-{
-    public static decimal Scale => 1m;
-}
-
-public readonly struct Kilo : Prefix
+public readonly struct Kilograms : Coordinate<Dimension.Mass>
 {
     public static decimal Scale => 1_000m;
 }
 
-public readonly struct Micro : Prefix
+public readonly struct Micrograms : Coordinate<Dimension.Mass>
+{
+    public static decimal Scale => 0.000001m;
+}
+
+public readonly struct Pounds : Coordinate<Dimension.Mass>
+{
+    public static decimal Scale => 453.59237m;
+}
+
+public readonly struct Meters : Coordinate<Dimension.Length>
+{
+    public static decimal Scale => 1m;
+}
+
+public readonly struct Kilometers : Coordinate<Dimension.Length>
+{
+    public static decimal Scale => 1_000m;
+}
+
+public readonly struct Micrometers : Coordinate<Dimension.Length>
+{
+    public static decimal Scale => 0.000001m;
+}
+
+public readonly struct Feet : Coordinate<Dimension.Length>
+{
+    public static decimal Scale => 0.3048m;
+}
+
+public readonly struct Seconds : Coordinate<Dimension.Duration>
+{
+    public static decimal Scale => 1m;
+}
+
+public readonly struct Minutes : Coordinate<Dimension.Duration>
+{
+    public static decimal Scale => 60m;
+}
+
+public readonly struct Microseconds : Coordinate<Dimension.Duration>
 {
     public static decimal Scale => 0.000001m;
 }
 
 /// <summary>
-/// Quantity-family membership and representation coordinate.
+/// Quantity-family membership, effective coordinate, and numeric carrier.
 /// </summary>
-public interface Q<F, U, P, T>
+public interface Q<F, C, T>
     where F : Dimension
-    where U : Unit<F>
-    where P : Prefix
+    where C : Coordinate<F>
     where T : INumberBase<T>
 {
     T Value { get; }
