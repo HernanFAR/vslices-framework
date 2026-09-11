@@ -1,0 +1,55 @@
+using VSlices.Space.Quantities;
+
+namespace VSlices.Space.Tests;
+
+public class ProductTests
+{
+    [Fact]
+    public void length_multiplication_preserves_structural_dimension_coordinate_and_carrier()
+    {
+        var width = new ProbeLength<Kilometers, decimal>(2m);
+        var depth = new ProbeLength<Meters, decimal>(3m);
+
+        Product<
+            Dimension.Length,
+            Kilometers,
+            Dimension.Length,
+            Meters,
+            decimal> product = width * depth;
+
+        Assert.Equal(6m, product.Value);
+        Assert.IsAssignableFrom<
+            Q<
+                Dimension.Product<Dimension.Length, Dimension.Length>,
+                ProductCoordinate<Dimension.Length, Kilometers, Dimension.Length, Meters>,
+                decimal>>(product);
+        Assert.Equal(1_000m,
+            ProductCoordinate<Dimension.Length, Kilometers, Dimension.Length, Meters>.Scale);
+    }
+
+    [Fact]
+    public void recommended_lengths_can_form_a_structural_product_without_becoming_area()
+    {
+        var width = new vLength(2d);
+        var depth = new vLength(3d);
+
+        var product = width * depth;
+
+        Assert.IsType<Product<
+            Dimension.Length,
+            Meters,
+            Dimension.Length,
+            Meters,
+            double>>(product);
+        Assert.Equal(6d, product.Value);
+    }
+
+    private sealed class ProbeLength<C, T> : Length<C, T, ProbeLength<C, T>>
+        where C : Coordinate<Dimension.Length>
+        where T : System.Numerics.INumber<T>
+    {
+        public ProbeLength(T value) : base(value)
+        {
+        }
+    }
+}
