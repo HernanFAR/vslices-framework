@@ -142,6 +142,32 @@ public abstract class Mass<U, P, T> : Q<Dimension.Mass, U, P, T>
 }
 
 /// <summary>
+/// C# 14 extension operators test whether the fully open Mass family can retain natural operator syntax.
+/// All six coordinate parameters live on the extension block so the compiler can infer them from the two operands.
+/// </summary>
+public static class MassOperators
+{
+    extension<LEFT_U, LEFT_P, LEFT_T, RIGHT_U, RIGHT_P, RIGHT_T>(Mass<LEFT_U, LEFT_P, LEFT_T>)
+        where LEFT_U : Unit<Dimension.Mass>
+        where LEFT_P : Prefix
+        where LEFT_T : INumber<LEFT_T>
+        where RIGHT_U : Unit<Dimension.Mass>
+        where RIGHT_P : Prefix
+        where RIGHT_T : INumber<RIGHT_T>
+    {
+        public static Mass<LEFT_U, LEFT_P, LEFT_T> operator +(
+            Mass<LEFT_U, LEFT_P, LEFT_T> left,
+            Mass<RIGHT_U, RIGHT_P, RIGHT_T> right) =>
+            left.Add(right);
+
+        public static Mass<LEFT_U, LEFT_P, LEFT_T> operator -(
+            Mass<LEFT_U, LEFT_P, LEFT_T> left,
+            Mass<RIGHT_U, RIGHT_P, RIGHT_T> right) =>
+            left.Subtract(right);
+    }
+}
+
+/// <summary>
 /// VSlices-recommended unit specialization: grams remain fixed while prefix and carrier stay open.
 /// </summary>
 public abstract class Mass<P, T> : Mass<Grams, P, T>
