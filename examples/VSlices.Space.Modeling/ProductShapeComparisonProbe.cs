@@ -129,7 +129,6 @@ public static class ProductComparison
         where T : INumber<T> =>
         new(left.Value * right.Value);
 
-    // First depth increase: Length × Length.
     public static ProductA<Dimension.Length, Meters, Dimension.Length, Meters, T> SquareA<T>(
         ProbeLength<T> left,
         ProbeLength<T> right)
@@ -154,8 +153,6 @@ public static class ProductComparison
         where T : INumber<T> =>
         new(left.Value * right.Value);
 
-    // Second depth increase: (Length × Length) × Mass.
-    // A must feed its previous decomposition back as the next left family/coordinate pair.
     public static ProductA<
         Dimension.Product<Dimension.Length, Dimension.Length>,
         ProductCoordinate<Dimension.Length, Meters, Dimension.Length, Meters>,
@@ -167,7 +164,6 @@ public static class ProductComparison
         where T : INumber<T> =>
         new(left.Value * right.Value);
 
-    // B keeps the same four-parameter quantity family; nesting grows only inside F and C.
     public static ProductB<
         Dimension.Product<Dimension.Product<Dimension.Length, Dimension.Length>, Dimension.Mass>,
         ProductCoordinate<
@@ -184,7 +180,6 @@ public static class ProductComparison
         where T : INumber<T> =>
         new(left.Value * right.Value);
 
-    // C has the same composed F/C growth as B, but no quantity-level Product family.
     public static StructuralQuantity<
         Dimension.Product<Dimension.Product<Dimension.Length, Dimension.Length>, Dimension.Mass>,
         ProductCoordinate<
