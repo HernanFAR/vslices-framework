@@ -1,6 +1,7 @@
 using LanguageExt;
 using VSlices.Space.Modeling.Quantities;
 using VSlices.Space.Traits;
+using ModelingMass = VSlices.Space.Modeling.Quantities.Mass;
 
 namespace VSlices.Space.Modeling.Tests;
 
@@ -20,7 +21,7 @@ public class QuantityModelingTests
     [Fact]
     public void Mass_is_established_from_its_canonical_structural_quantity()
     {
-        var result = Transformable.Transform<Quantity<MassDimension, Kilo>, Mass>(
+        var result = Transformable.Transform<Quantity<MassDimension, Kilo>, ModelingMass>(
             new Quantity<MassDimension, Kilo>(2.5d));
 
         var mass = Success(result);
@@ -31,8 +32,8 @@ public class QuantityModelingTests
     [Fact]
     public void Mass_vector_operations_are_closed_over_mass()
     {
-        var left = Mass(7d);
-        var right = Mass(2d);
+        var left = CreateMass(7d);
+        var right = CreateMass(2d);
 
         Assert.Equal(9d, (left + right).CanonValue);
         Assert.Equal(5d, (left - right).CanonValue);
@@ -45,8 +46,8 @@ public class QuantityModelingTests
     [Fact]
     public void Mass_subtraction_may_produce_a_negative_mass_quantity()
     {
-        var smaller = Mass(2d);
-        var larger = Mass(5d);
+        var smaller = CreateMass(2d);
+        var larger = CreateMass(5d);
 
         var difference = smaller - larger;
 
@@ -56,7 +57,7 @@ public class QuantityModelingTests
     [Fact]
     public void Mass_can_expose_an_alternate_prefix_without_changing_its_canonical_metric()
     {
-        var mass = Mass(1d);
+        var mass = CreateMass(1d);
 
         var micro = mass.In<Micro>();
 
@@ -64,8 +65,8 @@ public class QuantityModelingTests
         Assert.Equal(1d, mass.CanonValue);
     }
 
-    private static Mass Mass(double canonicalValue) =>
-        Success(Transformable.Transform<Quantity<MassDimension, Kilo>, Mass>(
+    private static ModelingMass CreateMass(double canonicalValue) =>
+        Success(Transformable.Transform<Quantity<MassDimension, Kilo>, ModelingMass>(
             new Quantity<MassDimension, Kilo>(canonicalValue)));
 
     private static T Success<T>(Fin<T> result) =>
