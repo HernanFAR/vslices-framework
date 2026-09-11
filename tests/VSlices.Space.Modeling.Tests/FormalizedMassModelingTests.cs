@@ -64,7 +64,7 @@ public class FormalizedMassModelingTests
 
     private sealed class ProbeMass<U, P, T> :
         VSlices.Space.Modeling.QuantityFamilies.Formalization.Mass<U, P, T, ProbeMass<U, P, T>>,
-        QuantityFactory<T, ProbeMass<U, P, T>>
+        VSlices.Space.Modeling.QuantityFamilies.Formalization.QuantityFactory<T, ProbeMass<U, P, T>>
         where U : Unit<Dimension.Mass>
         where P : Prefix
         where T : INumber<T>
