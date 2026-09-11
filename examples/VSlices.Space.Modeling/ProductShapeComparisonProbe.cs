@@ -62,7 +62,6 @@ public readonly record struct ProbeMass<T>(T Value) : Q<Dimension.Mass, Kilogram
 public readonly record struct ProbeLength<T>(T Value) : Q<Dimension.Length, Meters, T>
     where T : INumber<T>;
 
-// A — current probe shape. Product owns the decomposition of both operands.
 public readonly record struct ProductA<LEFT_F, LEFT_C, RIGHT_F, RIGHT_C, T>(T Value) :
     Q<
         Dimension.Product<LEFT_F, RIGHT_F>,
@@ -74,8 +73,6 @@ public readonly record struct ProductA<LEFT_F, LEFT_C, RIGHT_F, RIGHT_C, T>(T Va
     where RIGHT_C : Coordinate<RIGHT_F>
     where T : INumber<T>;
 
-// B — option 5. Product receives the already-composed family and coordinate.
-// It no longer owns or remembers the decomposition that produced them.
 public abstract class ProductB<F, C, T, SELF> : Q<F, C, T>
     where F : Dimension
     where C : Coordinate<F>
@@ -95,9 +92,6 @@ public sealed class ProductB<F, C, T> : ProductB<F, C, T, ProductB<F, C, T>>
     public ProductB(T value) : base(value) { }
 }
 
-// C — stronger erasure candidate. There is no quantity-level Product family at
-// all; Product survives only in Dimension and Coordinate. The result is just a
-// structural quantity living at the composed F/C coordinate.
 public readonly record struct StructuralQuantity<F, C, T>(T Value) : Q<F, C, T>
     where F : Dimension
     where C : Coordinate<F>
@@ -108,50 +102,36 @@ public static class ProductComparison
     public static ProductA<Dimension.Mass, Kilograms, Dimension.Length, Meters, T> MultiplyA<T>(
         ProbeMass<T> left,
         ProbeLength<T> right)
-        where T : INumber<T> =>
-        new(left.Value * right.Value);
+        where T : INumber<T> => new(left.Value * right.Value);
 
     public static ProductB<
         Dimension.Product<Dimension.Mass, Dimension.Length>,
         ProductCoordinate<Dimension.Mass, Kilograms, Dimension.Length, Meters>,
-        T> MultiplyB<T>(
-        ProbeMass<T> left,
-        ProbeLength<T> right)
-        where T : INumber<T> =>
-        new(left.Value * right.Value);
+        T> MultiplyB<T>(ProbeMass<T> left, ProbeLength<T> right)
+        where T : INumber<T> => new(left.Value * right.Value);
 
     public static StructuralQuantity<
         Dimension.Product<Dimension.Mass, Dimension.Length>,
         ProductCoordinate<Dimension.Mass, Kilograms, Dimension.Length, Meters>,
-        T> MultiplyC<T>(
-        ProbeMass<T> left,
-        ProbeLength<T> right)
-        where T : INumber<T> =>
-        new(left.Value * right.Value);
+        T> MultiplyC<T>(ProbeMass<T> left, ProbeLength<T> right)
+        where T : INumber<T> => new(left.Value * right.Value);
 
     public static ProductA<Dimension.Length, Meters, Dimension.Length, Meters, T> SquareA<T>(
         ProbeLength<T> left,
         ProbeLength<T> right)
-        where T : INumber<T> =>
-        new(left.Value * right.Value);
+        where T : INumber<T> => new(left.Value * right.Value);
 
     public static ProductB<
         Dimension.Product<Dimension.Length, Dimension.Length>,
         ProductCoordinate<Dimension.Length, Meters, Dimension.Length, Meters>,
-        T> SquareB<T>(
-        ProbeLength<T> left,
-        ProbeLength<T> right)
-        where T : INumber<T> =>
-        new(left.Value * right.Value);
+        T> SquareB<T>(ProbeLength<T> left, ProbeLength<T> right)
+        where T : INumber<T> => new(left.Value * right.Value);
 
     public static StructuralQuantity<
         Dimension.Product<Dimension.Length, Dimension.Length>,
         ProductCoordinate<Dimension.Length, Meters, Dimension.Length, Meters>,
-        T> SquareC<T>(
-        ProbeLength<T> left,
-        ProbeLength<T> right)
-        where T : INumber<T> =>
-        new(left.Value * right.Value);
+        T> SquareC<T>(ProbeLength<T> left, ProbeLength<T> right)
+        where T : INumber<T> => new(left.Value * right.Value);
 
     public static ProductA<
         Dimension.Product<Dimension.Length, Dimension.Length>,
@@ -161,8 +141,7 @@ public static class ProductComparison
         T> NestedA<T>(
         ProductA<Dimension.Length, Meters, Dimension.Length, Meters, T> left,
         ProbeMass<T> right)
-        where T : INumber<T> =>
-        new(left.Value * right.Value);
+        where T : INumber<T> => new(left.Value * right.Value);
 
     public static ProductB<
         Dimension.Product<Dimension.Product<Dimension.Length, Dimension.Length>, Dimension.Mass>,
@@ -177,8 +156,7 @@ public static class ProductComparison
             ProductCoordinate<Dimension.Length, Meters, Dimension.Length, Meters>,
             T> left,
         ProbeMass<T> right)
-        where T : INumber<T> =>
-        new(left.Value * right.Value);
+        where T : INumber<T> => new(left.Value * right.Value);
 
     public static StructuralQuantity<
         Dimension.Product<Dimension.Product<Dimension.Length, Dimension.Length>, Dimension.Mass>,
@@ -193,6 +171,5 @@ public static class ProductComparison
             ProductCoordinate<Dimension.Length, Meters, Dimension.Length, Meters>,
             T> left,
         ProbeMass<T> right)
-        where T : INumber<T> =>
-        new(left.Value * right.Value);
+        where T : INumber<T> => new(left.Value * right.Value);
 }
