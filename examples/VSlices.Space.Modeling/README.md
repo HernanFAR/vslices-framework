@@ -42,23 +42,7 @@ where T : INumberBase<T>
 
 Concrete `Mass<U,P,T>` strengthens the carrier to `INumber<T>` because it owns arithmetic.
 
-The generic argument order is conceptual rather than selected for defaulting convenience. Unit currently forms a stronger neighborhood than Prefix, and Prefix a stronger neighborhood than numeric carrier. Therefore:
-
-```text
-Mass<Grams, None, decimal>
-```
-
-is considered conceptually closer to:
-
-```text
-Mass<Grams, Micro, double>
-```
-
-than to:
-
-```text
-Mass<Pounds, None, decimal>
-```
+The generic argument order is conceptual rather than selected for defaulting convenience. Unit currently forms a stronger neighborhood than Prefix, and Prefix a stronger neighborhood than numeric carrier. Therefore `Mass<Grams,None,decimal>` is considered conceptually closer to `Mass<Grams,Micro,double>` than to `Mass<Pounds,None,decimal>`.
 
 The recommended specialization ladder currently is:
 
@@ -87,15 +71,7 @@ Mass<U1,P1,T1> + Mass<U2,P2,T2>
     -> Mass<U1,P1,T1>
 ```
 
-The right quantity is converted into the left coordinate through:
-
-```text
-Unit scale
-+ Prefix scale
-+ T1.CreateChecked(right.Value)
-```
-
-This means Unit, Prefix, and .NET generic math each own one part of the realization rather than Mass containing a catalog of concrete conversions.
+The right quantity is converted into the left coordinate through Unit scale, Prefix scale, and `T1.CreateChecked(right.Value)`. Unit, Prefix, and .NET generic math therefore each own one part of the realization rather than Mass containing a catalog of concrete conversions.
 
 ### C# 14 extension-operator pressure
 
@@ -114,21 +90,19 @@ extension<LU, LP, LT, RU, RP, RT>(Mass<LU, LP, LT>)
 
 with dimensional, unit, prefix, and numeric constraints on all parameters.
 
-This directly tests whether natural operator syntax can survive across the full same-dimension family:
+The test surface now pressures all of these forms through normal `+` / `-` syntax:
 
 ```text
-Mass<Grams,Kilo,double>
-+
-Mass<Grams,Micro,decimal>
-
-Mass<Grams,None,decimal>
-+
-Mass<Pounds,None,double>
+same Unit + same Prefix + same carrier
+same Unit + different Prefix + different carrier
+different Unit + different Prefix + different carrier
+recommended Mass<T> + fully generic Mass<...>
+vMass + fully generic Mass<...>
 ```
 
 The semantic policy has not changed: the result remains left-biased and numeric conversion remains checked. What changed is the C# realization mechanism available to express that policy.
 
-If the compiler accepts this shape, operator availability no longer needs to decrease merely because Unit, Prefix, or carrier differ. The remaining design question becomes semantic and ergonomic: at what representational distance should VSlices still prefer an explicit operation because an operator would hide too much policy?
+The important remaining question is no longer simply whether C# can spell the operator. It is whether extension-operator inference remains ergonomic and predictable across consumer-defined descendants and whether an operator hides too much conversion policy at larger representational distances.
 
 ## Current questions
 
