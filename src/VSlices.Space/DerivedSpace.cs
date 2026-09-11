@@ -1,4 +1,4 @@
-using VSlices.Space.Derived;
+using VSlices.Space.Laws;
 
 namespace VSlices.Space;
 
