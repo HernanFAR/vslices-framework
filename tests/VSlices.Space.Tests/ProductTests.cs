@@ -70,18 +70,16 @@ public class ProductTests
 
         var structural = width * depth;
         Area<Kilometers, decimal> semantic = area(structural);
+        Product<Dimension.Length, Dimension.Length, Kilometers, decimal> widened =
+            WidenArea(semantic);
 
         Assert.Equal(0.006m, semantic.Value);
-        Assert.Equal(structural, semantic.ToBase());
+        Assert.Equal(structural, widened);
         Assert.IsAssignableFrom<
             Q<
                 Dimension.Product<Dimension.Length, Dimension.Length>,
                 ProductCoordinate<Dimension.Length, Dimension.Length, Kilometers>,
                 decimal>>(semantic);
-        Assert.IsAssignableFrom<
-            DerivedSpace<
-                Area<Kilometers, decimal>,
-                Product<Dimension.Length, Dimension.Length, Kilometers, decimal>>>(semantic);
     }
 
     [Fact]
@@ -105,6 +103,11 @@ public class ProductTests
             double>>(structural);
         Assert.IsType<Area<Meters, double>>(area(structural));
     }
+
+    private static Product<Dimension.Length, Dimension.Length, C, T> WidenArea<C, T>(Area<C, T> area)
+        where C : Coordinate<Dimension.Length>
+        where T : System.Numerics.INumber<T> =>
+        area.ToBase();
 
     private sealed class ProbeLength<C, T> : Length<C, T, ProbeLength<C, T>>
         where C : Coordinate<Dimension.Length>
