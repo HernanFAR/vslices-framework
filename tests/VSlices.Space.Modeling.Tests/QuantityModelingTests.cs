@@ -1,7 +1,6 @@
 using LanguageExt;
 using VSlices.Space.Modeling.Quantities;
 using VSlices.Space.Traits;
-using ModelingMass = VSlices.Space.Modeling.Quantities.Mass;
 
 namespace VSlices.Space.Modeling.Tests;
 
@@ -21,7 +20,7 @@ public class QuantityModelingTests
     [Fact]
     public void Mass_is_established_from_its_canonical_structural_quantity()
     {
-        var result = Transformable.Transform<Quantity<MassDimension, Kilo>, ModelingMass>(
+        var result = Transformable.Transform<Quantity<MassDimension, Kilo>, vMass>(
             new Quantity<MassDimension, Kilo>(2.5d));
 
         var mass = Success(result);
@@ -65,8 +64,8 @@ public class QuantityModelingTests
         Assert.Equal(1d, mass.CanonValue);
     }
 
-    private static ModelingMass CreateMass(double canonicalValue) =>
-        Success(Transformable.Transform<Quantity<MassDimension, Kilo>, ModelingMass>(
+    private static vMass CreateMass(double canonicalValue) =>
+        Success(Transformable.Transform<Quantity<MassDimension, Kilo>, vMass>(
             new Quantity<MassDimension, Kilo>(canonicalValue)));
 
     private static T Success<T>(Fin<T> result) =>
