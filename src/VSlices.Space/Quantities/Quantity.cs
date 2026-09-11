@@ -31,6 +31,19 @@ public abstract class Dimension
         {
         }
     }
+
+    /// <summary>
+    /// Structural dimensional multiplication. The operands remain visible in
+    /// the type; no semantic interpretation such as Area or Energy is implied.
+    /// </summary>
+    public sealed class Product<LEFT, RIGHT> : Dimension
+        where LEFT : Dimension
+        where RIGHT : Dimension
+    {
+        private Product()
+        {
+        }
+    }
 }
 
 /// <summary>
@@ -98,6 +111,21 @@ public readonly struct Minutes : Coordinate<Dimension.Duration>
 public readonly struct Microseconds : Coordinate<Dimension.Duration>
 {
     public static decimal Scale => 0.000001m;
+}
+
+/// <summary>
+/// Effective coordinate produced by multiplying two quantity coordinates.
+/// The coordinate keeps the dimensional families explicit because C# cannot
+/// recover them as associated types from LEFT_C and RIGHT_C alone.
+/// </summary>
+public readonly struct ProductCoordinate<LEFT_F, LEFT_C, RIGHT_F, RIGHT_C> :
+    Coordinate<Dimension.Product<LEFT_F, RIGHT_F>>
+    where LEFT_F : Dimension
+    where LEFT_C : Coordinate<LEFT_F>
+    where RIGHT_F : Dimension
+    where RIGHT_C : Coordinate<RIGHT_F>
+{
+    public static decimal Scale => LEFT_C.Scale * RIGHT_C.Scale;
 }
 
 /// <summary>
