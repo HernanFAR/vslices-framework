@@ -69,6 +69,28 @@ public class QuantityFamilyModelingTests
         Assert.Equal(750m, result.Value);
     }
 
+    [Fact]
+    public void Recommended_mass_descendants_can_use_extension_operator_inference()
+    {
+        var recommended = new Mass<double>(1d);
+        Mass<Grams, Micro, decimal> micrograms = new ProbeMass<Grams, Micro, decimal>(500_000_000m);
+
+        var result = recommended + micrograms;
+
+        Assert.Equal(1.5d, result.Value, precision: 12);
+    }
+
+    [Fact]
+    public void Fully_recommended_mass_can_use_extension_operator_inference()
+    {
+        var recommended = new vMass(1d);
+        Mass<Pounds, None, decimal> pounds = new ProbeMass<Pounds, None, decimal>(1m);
+
+        var result = recommended + pounds;
+
+        Assert.Equal(1d + (double)Pounds.Scale / 1_000d, result.Value, precision: 12);
+    }
+
     private sealed class ProbeMass<U, P, T> : Mass<U, P, T>
         where U : Unit<Dimension.Mass>
         where P : Prefix
