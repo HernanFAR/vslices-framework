@@ -84,8 +84,16 @@ public static class LengthProductOperators
         where LEFT_SELF : Length<LEFT_C, T, LEFT_SELF>
         where RIGHT_SELF : Length<RIGHT_C, T, RIGHT_SELF>
     {
-        public static Product<Dimension.Length, LEFT_C, Dimension.Length, RIGHT_C, T> operator *(
+        public static Product<Dimension.Length, Dimension.Length, LEFT_C, T> operator *(
             Length<LEFT_C, T, LEFT_SELF> left,
-            Length<RIGHT_C, T, RIGHT_SELF> right) => new(left.Value * right.Value);
+            Length<RIGHT_C, T, RIGHT_SELF> right)
+        {
+            var rightValue = T.CreateChecked(right.Value);
+            var rightScale = T.CreateChecked(RIGHT_C.Scale);
+            var leftScale = T.CreateChecked(LEFT_C.Scale);
+            var rightInLeftCoordinate = rightValue * rightScale / leftScale;
+
+            return new(left.Value * rightInLeftCoordinate);
+        }
     }
 }
