@@ -25,7 +25,7 @@ public class QuantityFamilyModelingTests
     }
 
     [Fact]
-    public void Same_unit_mass_can_add_a_different_prefix_and_backing_type()
+    public void Same_unit_mass_can_add_a_different_prefix_and_backing_type_through_extension_operator()
     {
         Mass<Grams, Kilo, double> kilograms = new ProbeMass<Grams, Kilo, double>(1d);
         Mass<Grams, Micro, decimal> micrograms = new ProbeMass<Grams, Micro, decimal>(500_000_000m);
@@ -36,7 +36,7 @@ public class QuantityFamilyModelingTests
     }
 
     [Fact]
-    public void Fully_open_mass_can_add_across_unit_prefix_and_backing_type()
+    public void Fully_open_mass_can_add_across_unit_prefix_and_backing_type_through_extension_operator()
     {
         Mass<Grams, None, decimal> grams = new ProbeMass<Grams, None, decimal>(1_000m);
         Mass<Pounds, None, double> pounds = new ProbeMass<Pounds, None, double>(1d);
