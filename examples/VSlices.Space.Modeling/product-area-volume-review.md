@@ -1,109 +1,100 @@
 # Product / Area / Volume review note
 
-This note is intentionally small. It exists to make the current Product experiment easy to review before we promote any of it into the production `VSlices.Space` surface.
+This note is intentionally small. It exists to make the current Product experiment easy to review before we promote Area/Volume semantics or source-generation behavior further.
 
-## What the experiment is trying to prove
+## Production quantity geometry
 
-We currently want multiplication to be **available only when an explicit structural operation has been declared**.
+The production quantity surface is now:
 
-The type system must not imply a universal rule such as:
-
-```text
-A * B -> Product<A,B>
+```csharp
+Q<F, C, T>
 ```
 
-for every pair of quantity spaces.
+where `C : Coordinate<F>` is the effective coordinate. Unit + Prefix are no longer transported as separate generic axes.
 
-Instead, the current pressure case authorizes exactly these two operations:
+The first production Product pressure builds directly on that geometry.
+
+## Structural Product
+
+Production now contains:
+
+```csharp
+Dimension.Product<LEFT, RIGHT>
+```
+
+and:
+
+```csharp
+ProductCoordinate<LEFT_F, LEFT_C, RIGHT_F, RIGHT_C>
+    : Coordinate<Dimension.Product<LEFT_F, RIGHT_F>>
+```
+
+The coordinate scale is the product of both operand coordinate scales.
+
+The first executable structural quantity is deliberately explicit:
+
+```csharp
+Product<LEFT_F, LEFT_C, RIGHT_F, RIGHT_C, T>
+    : Q<
+        Dimension.Product<LEFT_F, RIGHT_F>,
+        ProductCoordinate<LEFT_F, LEFT_C, RIGHT_F, RIGHT_C>,
+        T>
+```
+
+This generic shape is evidence, not a final public-design commitment. C# still needs the dimensional families explicitly because it cannot recover them as associated types from `LEFT_C` and `RIGHT_C` alone.
+
+## First authorized multiplication
+
+The first production operator is only:
 
 ```text
 Length * Length
-    -> Product<Length,Length,...>
-
-Area * Length
-    -> Product<Area,Length,...>
 ```
 
-and deliberately leaves operations such as:
+and requires one converged carrier `T`.
+
+For example:
 
 ```text
-Area * Area
+2 km * 3 m
+
+Value:      6
+Dimension:  Product<Length, Length>
+Coordinate: Product<Kilometers, Meters>
+Carrier:    decimal
 ```
 
-undefined.
-
-The negative-compilation probe verifies that this unavailable operation stays unavailable.
+No universal rule exists saying every `Q<A,...> * Q<B,...>` is legal. Product is able to represent a structural multiplication result; availability of a multiplication remains explicit.
 
 ## Structural result vs semantic interpretation
 
-`Product` is currently being pressured as a canonical **structural** multiplication result.
+The current production step intentionally stops here:
 
 ```text
 Length * Length
-    -> Product<Length,Length,...>
+    -> Product<Length, Length, ...>
 ```
 
-This does **not** mean that the result is already `Area`.
+It does **not** yet produce `Area`.
 
-The semantic interpretation is explicit:
+The earlier Modeling probe remains useful for the intended next semantic step:
 
 ```text
 Product<Length,Length,...>
     -> area(...)
     -> Area
-```
 
-Likewise:
-
-```text
 Area * Length
     -> Product<Area,Length,...>
     -> volume(...)
     -> Volume
 ```
 
-The desired C# consumption surface is therefore:
-
-```csharp
-using static ...Conversions;
-
-var areaValue = area(width * depth);
-var volumeValue = volume(areaValue * height);
-```
-
-No implicit conversion is intended.
-
-## Why `Area` is preserved inside the next Product
-
-The second multiplication intentionally produces:
-
-```text
-Product<Area,Length,...>
-```
-
-rather than immediately expanding Area back into:
-
-```text
-Product<Product<Length,Length,...>,Length,...>
-```
-
-The first form preserves knowledge already established by the model: the operand is an `Area`.
-
-Whether these two structural forms are algebraically compatible is a separate problem:
-
-```text
-Product<Area,Length,...>
-
-vs
-
-Product<Product<Length,Length,...>,Length,...>
-```
-
-They are not the same CLR type. Future work may establish algebraic equivalence or expansion without erasing their distinct syntactic/semantic forms.
+No implicit conversion is intended. The proposed ergonomic surface remains generated static functions imported with `using static`.
 
 ## `AlgebraicSymbol`
 
-The current probe uses declarations equivalent to:
+The earlier probe uses declarations equivalent to:
 
 ```csharp
 [AlgebraicSymbol("area")]
@@ -113,13 +104,13 @@ Area ...
 Volume ...
 ```
 
-The attribute does not define the algebraic relationship itself. That relationship must already be present in the type declaration / semantic model.
+The attribute does not define the algebraic relationship itself. That relationship must already be present in the semantic model.
 
-Its purpose is to authorize the explicit establishment function that Tooling may generate:
+Its intended purpose is to authorize an explicit establishment function that Tooling may generate:
 
 ```csharp
-public static Area area(Product<Length,Length,...> value);
-public static Volume volume(Product<Area,Length,...> value);
+public static Area area(Product<...> value);
+public static Volume volume(Product<...> value);
 ```
 
 Current working rule:
@@ -128,75 +119,44 @@ Current working rule:
 
 ## Generated ownership surface
 
-The intended split is:
+The intended split remains:
 
 ```text
 VSlices-owned declarations
     -> VSlices `Conversions`
 
 consumer-owned declarations
-    -> project `CustomConversions`
+    -> project-configured `CustomConversions`
 ```
 
-For consumer-owned conversions, the project pays a one-time configuration cost for the target namespace/class and then imports it through `using static`.
-
-This keeps VSlices-generated API separate from application/domain-generated API.
-
-## Current executable Product shape
-
-The conceptual notation used during discussion is:
-
-```text
-Product<A,B>
-```
-
-The first executable probe currently needs:
-
-```csharp
-Product<A,B,T>
-```
-
-because the resulting value needs a converged numeric carrier.
-
-This is **not yet a production decision**.
-
-The useful question is whether `T`:
-
-- genuinely belongs to `Product`;
-- can be recovered from its operands;
-- belongs to a common quantity carrier abstraction instead;
-- disappears once the real `QuantitySpace` representation is used.
-
-The probe should be treated as evidence, not as the final generic signature.
+The consumer pays one configuration cost per project and then imports the generated surface through `using static`.
 
 ## Things worth challenging during review
 
-1. Does `Product` deserve to be a real quantity-space type, or is it merely structural metadata around another quantity representation?
-2. Is preserving `Area` in `Product<Area,Length,...>` the right default, or should composition operate on expanded structural bases?
-3. Does `DerivedSpace<Area,Product<Length,Length,...>>` truthfully express the relationship we want, or do algebraic semantic interpretations need a distinct relation?
-4. Is the carrier `T` genuinely part of Product identity, or only realization state?
-5. Which declaration should authorize `Length * Length`: the Product structure itself, `Area`, or an explicit operation declaration separate from both?
-6. Can a source generator derive the exact C# operator surface from the semantic declarations without inventing additional operations?
-7. What diagnostic should be produced when two `[AlgebraicSymbol]` declarations would generate the same invalid/ambiguous C# member?
+1. Does `Product<LEFT_F, LEFT_C, RIGHT_F, RIGHT_C, T>` expose too much realization detail, or is that unavoidable until Tooling can hide/recover it?
+2. Should Product keep operand dimensions/coordinates explicitly, or should only the resulting `Q<F,C,T>` shape survive?
+3. Does `Dimension.Product<A,B>` deserve CLR identity exactly in operand order, or will algebraic equivalence later need a separate normalization relation?
+4. Is `ProductCoordinate` correctly structural, including non-normalized forms such as `Kilometers × Meters`?
+5. Is requiring a common `T` the right default, leaving mixed-carrier multiplication to an explicit policy?
+6. What declaration should authorize `Length * Length`: an explicit operation declaration, a semantic target such as Area, or another mechanism?
+7. Can `Area` later remain semantic in `Product<Area,Length,...>` without forcing immediate expansion to `Product<Product<Length,Length>,Length,...>`?
 
 ## Current files
 
-The executable probe is:
+Production pressure:
+
+```text
+src/VSlices.Space/Quantities/Quantity.cs
+src/VSlices.Space/Quantities/Product.cs
+src/VSlices.Space/Quantities/Length.cs
+tests/VSlices.Space.Tests/ProductTests.cs
+```
+
+Earlier semantic-establishment probe:
 
 ```text
 examples/VSlices.Space.Modeling/AlgebraicSymbolAreaVolumeProbe.cs
-```
-
-Its behavioral tests are:
-
-```text
 tests/VSlices.Space.Modeling.Tests/AlgebraicSymbolAreaVolumeProbeTests.cs
 ```
 
-The negative-compilation path is exercised through the existing `MODELING_INVALID_USAGE` build in Space Modeling CI.
-
-## Current evidence
-
-Space Modeling CI #81 passed the Area / Volume pressure case at commit `f8437f1bb7489ab55901f8c7ed781ebfd485b46c`.
-
-That establishes only that the current C# 14 surface is realizable and that undeclared `Area * Area` multiplication remains unavailable. It does **not** establish that this is the final Product design.
+The next boundary is `Product -> area(...) -> Area` against the real production `Q<F,C,T>` surface.
