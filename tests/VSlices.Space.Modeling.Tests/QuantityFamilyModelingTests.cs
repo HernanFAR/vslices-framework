@@ -27,10 +27,10 @@ public class QuantityFamilyModelingTests
     [Fact]
     public void Same_unit_mass_can_add_a_different_prefix_and_backing_type()
     {
-        var kilograms = new ProbeMass<Grams, Kilo, double>(1d);
-        var micrograms = new ProbeMass<Grams, Micro, decimal>(500_000_000m);
+        Mass<Grams, Kilo, double> kilograms = new ProbeMass<Grams, Kilo, double>(1d);
+        Mass<Grams, Micro, decimal> micrograms = new ProbeMass<Grams, Micro, decimal>(500_000_000m);
 
-        var result = kilograms.Add(micrograms);
+        var result = kilograms + micrograms;
 
         Assert.Equal(1.5d, result.Value, precision: 12);
     }
@@ -38,10 +38,10 @@ public class QuantityFamilyModelingTests
     [Fact]
     public void Fully_open_mass_can_add_across_unit_prefix_and_backing_type()
     {
-        var grams = new ProbeMass<Grams, None, decimal>(1_000m);
-        var pounds = new ProbeMass<Pounds, None, double>(1d);
+        Mass<Grams, None, decimal> grams = new ProbeMass<Grams, None, decimal>(1_000m);
+        Mass<Pounds, None, double> pounds = new ProbeMass<Pounds, None, double>(1d);
 
-        var result = grams.Add(pounds);
+        var result = grams + pounds;
 
         Assert.Equal(1_453.59237m, result.Value);
     }
@@ -49,13 +49,24 @@ public class QuantityFamilyModelingTests
     [Fact]
     public void Fully_open_mass_addition_is_left_biased()
     {
-        var pounds = new ProbeMass<Pounds, None, decimal>(1m);
-        var kilograms = new ProbeMass<Grams, Kilo, double>(1d);
+        Mass<Pounds, None, decimal> pounds = new ProbeMass<Pounds, None, decimal>(1m);
+        Mass<Grams, Kilo, double> kilograms = new ProbeMass<Grams, Kilo, double>(1d);
 
-        var result = pounds.Add(kilograms);
+        var result = pounds + kilograms;
 
         var expectedPounds = 1m + (1_000m / Pounds.Scale);
         Assert.Equal(expectedPounds, result.Value);
+    }
+
+    [Fact]
+    public void Fully_open_mass_subtraction_uses_the_same_left_biased_conversion_policy()
+    {
+        Mass<Grams, None, decimal> grams = new ProbeMass<Grams, None, decimal>(1_000m);
+        Mass<Grams, Kilo, double> kilograms = new ProbeMass<Grams, Kilo, double>(0.25d);
+
+        var result = grams - kilograms;
+
+        Assert.Equal(750m, result.Value);
     }
 
     private sealed class ProbeMass<U, P, T> : Mass<U, P, T>
