@@ -192,7 +192,7 @@ so an incompatible unit cannot participate in a mass family merely because it ha
 The probe currently contains:
 
 ```text
-Units:   Grams, Pounds
+Units:    Grams, Pounds
 Prefixes: None, Kilo, Micro
 Carriers: any T satisfying the relevant .NET generic-math contracts
 ```
