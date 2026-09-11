@@ -34,13 +34,13 @@ Cross-coordinate conversion is left-biased: a right Mass is converted into the l
 
 The earlier conclusion that fully open operator syntax was blocked by C# was incomplete. On the current .NET 10 target, C# 14 extension blocks can introduce generic parameters inferred from the combined receiver and operator operands.
 
-The probe now uses a six-parameter extension block so both Mass operands contribute their Unit, Prefix, and numeric carrier. The semantic operation remains implemented by `Mass.Add` / `Mass.Subtract`; the extension block supplies only the C# operator realization.
+The probe uses a six-parameter extension block so both Mass operands contribute their Unit, Prefix, and numeric carrier. The semantic operation remains implemented by `Mass.Add` / `Mass.Subtract`; the extension block supplies only the C# operator realization.
 
-Behavioral tests pressure `+` / `-` across same coordinates, different Prefix/carrier under one Unit, fully different Unit/Prefix/carrier within Mass, recommended `Mass<T>` descendants, and `vMass`.
+Behavioral tests exercise `+` / `-` across same coordinates, different Prefix/carrier under one Unit, fully different Unit/Prefix/carrier within Mass, recommended `Mass<T>` descendants, and `vMass`.
 
-The semantic policy has not changed: conversion remains checked and result selection remains left-biased. What changed is the target-language mechanism available to express that policy.
+The semantic policy remains checked and left-biased. Space Modeling CI run #23 verified the model, behavioral tests, and negative-compilation probe successfully.
 
-The remaining question is semantic and ergonomic rather than merely syntactic: when does an operator hide too much conversion policy, even if C# can express and infer it?
+The remaining question is semantic and ergonomic rather than syntactic: when does an operator hide too much conversion policy, even if C# can express and infer it?
 
 ## Current questions
 
