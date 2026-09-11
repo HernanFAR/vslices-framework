@@ -41,7 +41,7 @@ Length
 Duration
 ```
 
-They intentionally provide enough independent dimensions to pressure future dimensional composition without prematurely introducing a complete physical-units algebra.
+They intentionally provide three independent dimensions to pressure dimensional composition without prematurely introducing a complete physical-units algebra.
 
 Current recommended forms are:
 
@@ -84,7 +84,7 @@ The policy is deliberately still under pressure for representability, rounding, 
 
 ## Next pressure: dimensional composition
 
-`Mass`, `Length`, and `Duration` now give three independent quantity families for discovering the minimum semantics of:
+`Mass`, `Length`, and `Duration` now form the minimal independent pressure set for discovering the semantics of:
 
 ```text
 Product<A,B>
@@ -92,7 +92,18 @@ Quotient<N,D>
 Power<B,E>
 ```
 
-These structural dimensional constructions must remain distinct from domain semantic names. For example, two domain quantities may share dimensional geometry without therefore being the same semantic Space.
+Representative cases include:
+
+```text
+Mass * Length
+Length * Length
+Length / Duration
+Mass / Duration
+Length / Length
+Length^2
+```
+
+These structural dimensional constructions must remain distinct from domain semantic names. Two domain quantities may share dimensional geometry without therefore being the same semantic Space.
 
 ## Working criteria
 
