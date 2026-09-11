@@ -62,11 +62,9 @@ public class ProductShapeComparisonProbeTests
         var width = new ProbeLength<double>(2d);
         var height = new ProbeLength<double>(3d);
         var mass = new ProbeMass<double>(4d);
-
         var a = NestedA(SquareA(width, height), mass);
         var b = NestedB(SquareB(width, height), mass);
         var c = NestedC(SquareC(width, height), mass);
-
         Assert.Equal(24d, a.Value);
         Assert.Equal(a.Value, b.Value);
         Assert.Equal(a.Value, c.Value);
