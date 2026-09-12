@@ -23,7 +23,7 @@ public class vMassTests
         vMass result = left + right;
 
         Assert.IsType<vMass>(result);
-        Assert.Equal(1d + (double)Pounds.Scale / Kilograms.Scale, result.Value, precision: 12);
+        Assert.Equal(1d + (double)(Pounds.Scale / Kilograms.Scale), result.Value, precision: 12);
     }
 
     [Fact]

@@ -1,162 +1,133 @@
-# Product / Area / Volume review note
+# Product -> Area review
 
-This note is intentionally small. It exists to make the current Product experiment easy to review before we promote Area/Volume semantics or source-generation behavior further.
+This note records the current production pressure over `Q<F,C,T>`.
 
-## Production quantity geometry
+## Quantity basis
 
-The production quantity surface is now:
-
-```csharp
-Q<F, C, T>
-```
-
-where `C : Coordinate<F>` is the effective coordinate. Unit + Prefix are no longer transported as separate generic axes.
-
-The first production Product pressure builds directly on that geometry.
-
-## Structural Product
-
-Production now contains:
+Production uses:
 
 ```csharp
-Dimension.Product<LEFT, RIGHT>
+Q<F,C,T>
 ```
 
-and:
+`F` carries dimensional meaning, `C` carries the coordinate basis used to express that family, and `T` carries the numeric representation.
 
-```csharp
-ProductCoordinate<LEFT_F, LEFT_C, RIGHT_F, RIGHT_C>
-    : Coordinate<Dimension.Product<LEFT_F, RIGHT_F>>
-```
+A key consequence is that algebraic shape should not be duplicated inside the coordinate type. We should not need types such as `SquaredMeters`, `SquaredKilometers`, or `CubedFeet` merely because the dimensional expression is squared or cubed. The dimensional expression already carries that information.
 
-The coordinate scale is the product of both operand coordinate scales.
+## Two structural Product forms
 
-The first executable structural quantity is deliberately explicit:
+Two canonical Product shapes are now under pressure.
 
-```csharp
-Product<LEFT_F, LEFT_C, RIGHT_F, RIGHT_C, T>
-    : Q<
-        Dimension.Product<LEFT_F, RIGHT_F>,
-        ProductCoordinate<LEFT_F, LEFT_C, RIGHT_F, RIGHT_C>,
-        T>
-```
+### Homogeneous / coordinate-converged Product
 
-This generic shape is evidence, not a final public-design commitment. C# still needs the dimensional families explicitly because it cannot recover them as associated types from `LEFT_C` and `RIGHT_C` alone.
-
-## First authorized multiplication
-
-The first production operator is only:
+When both operands belong to a dimensional family whose coordinates can be converted into one another, the right operand is converted to the left coordinate before multiplication.
 
 ```text
-Length * Length
+Q<F,C1,T> * Q<F,C2,T>
+    -> convert C2 to C1
+    -> Product<F,F,C1,T>
 ```
 
-and requires one converged carrier `T`.
+`C1` is not a generated square-coordinate type. It remains the base coordinate used to express the product.
 
-For example:
+Example:
 
 ```text
 2 km * 3 m
+3 m -> 0.003 km
+2 * 0.003 -> 0.006
 
-Value:      6
-Dimension:  Product<Length, Length>
-Coordinate: Product<Kilometers, Meters>
-Carrier:    decimal
+Product<Length,Length,Kilometers,decimal>
 ```
 
-No universal rule exists saying every `Q<A,...> * Q<B,...>` is legal. Product is able to represent a structural multiplication result; availability of a multiplication remains explicit.
+The dimensional family `Product<Length,Length>` supplies the square shape, so the value is understood as `0.006 km²` without requiring a `SquaredKilometers` CLR type.
 
-## Structural result vs semantic interpretation
+The corresponding `Q` membership uses a structural adapter:
 
-The current production step intentionally stops here:
+```csharp
+Q<
+    Dimension.Product<Length,Length>,
+    ProductCoordinate<Length,Length,Kilometers>,
+    decimal>
+```
+
+`ProductCoordinate<LEFT_F,RIGHT_F,C>` lifts the shared coordinate basis into the composed dimension. Its scale is `C.Scale * C.Scale`.
+
+### Heterogeneous Product
+
+When dimensions are different, there is no meaningful coordinate conversion such as meters -> kilograms. Both coordinate bases must therefore remain visible:
+
+```csharp
+Product<LEFT_F,LEFT_C,RIGHT_F,RIGHT_C,T>
+```
+
+with membership:
+
+```csharp
+Q<
+    Dimension.Product<LEFT_F,RIGHT_F>,
+    ProductCoordinate<LEFT_F,LEFT_C,RIGHT_F,RIGHT_C>,
+    T>
+```
+
+Example:
 
 ```text
-Length * Length
-    -> Product<Length, Length, ...>
+Product<Mass,Kilograms,Length,Meters,decimal>
 ```
 
-It does **not** yet produce `Area`.
+represents a structural `kg*m` quantity without inventing domain semantics.
 
-The earlier Modeling probe remains useful for the intended next semantic step:
+## Area
 
-```text
-Product<Length,Length,...>
-    -> area(...)
-    -> Area
-
-Area * Length
-    -> Product<Area,Length,...>
-    -> volume(...)
-    -> Volume
-```
-
-No implicit conversion is intended. The proposed ergonomic surface remains generated static functions imported with `using static`.
-
-## `AlgebraicSymbol`
-
-The earlier probe uses declarations equivalent to:
+Area now uses the homogeneous Product directly:
 
 ```csharp
 [AlgebraicSymbol("area")]
-Area ...
-
-[AlgebraicSymbol("volume")]
-Volume ...
+Area<C,T>
+    : Q<
+        Dimension.Product<Length,Length>,
+        ProductCoordinate<Length,Length,C>,
+        T>
+    : DerivedSpace<
+        Area<C,T>,
+        Product<Length,Length,C,T>>
 ```
 
-The attribute does not define the algebraic relationship itself. That relationship must already be present in the semantic model.
-
-Its intended purpose is to authorize an explicit establishment function that Tooling may generate:
+Consumption remains explicit:
 
 ```csharp
-public static Area area(Product<...> value);
-public static Volume volume(Product<...> value);
+using static VSlices.Space.Quantities.Conversions;
+
+var structural = width * depth;
+var semantic = area(structural);
 ```
 
-Current working rule:
-
-> Source generation may complete a declared semantic relation; it must not invent the relation.
-
-## Generated ownership surface
-
-The intended split remains:
+This keeps three statements separate:
 
 ```text
-VSlices-owned declarations
-    -> VSlices `Conversions`
+Length * Length
+    authorizes and materializes a structural Product
 
-consumer-owned declarations
-    -> project-configured `CustomConversions`
+Product<Length,Length,C,T>
+    carries the algebraic dimensional shape and coordinate basis
+
+area(...)
+    explicitly establishes Area semantics
 ```
 
-The consumer pays one configuration cost per project and then imports the generated surface through `using static`.
+No implicit conversion is introduced.
 
-## Things worth challenging during review
-
-1. Does `Product<LEFT_F, LEFT_C, RIGHT_F, RIGHT_C, T>` expose too much realization detail, or is that unavoidable until Tooling can hide/recover it?
-2. Should Product keep operand dimensions/coordinates explicitly, or should only the resulting `Q<F,C,T>` shape survive?
-3. Does `Dimension.Product<A,B>` deserve CLR identity exactly in operand order, or will algebraic equivalence later need a separate normalization relation?
-4. Is `ProductCoordinate` correctly structural, including non-normalized forms such as `Kilometers × Meters`?
-5. Is requiring a common `T` the right default, leaving mixed-carrier multiplication to an explicit policy?
-6. What declaration should authorize `Length * Length`: an explicit operation declaration, a semantic target such as Area, or another mechanism?
-7. Can `Area` later remain semantic in `Product<Area,Length,...>` without forcing immediate expansion to `Product<Product<Length,Length>,Length,...>`?
-
-## Current files
-
-Production pressure:
+## Current interpretation
 
 ```text
-src/VSlices.Space/Quantities/Quantity.cs
-src/VSlices.Space/Quantities/Product.cs
-src/VSlices.Space/Quantities/Length.cs
-tests/VSlices.Space.Tests/ProductTests.cs
+Dimension tells us what is composed.
+Coordinate tells us how the basis is measured.
+Product realization combines both without manufacturing one coordinate type per algebraic operation.
 ```
 
-Earlier semantic-establishment probe:
+The homogeneous/heterogeneous split is not merely ergonomic. It records whether operand coordinates admit convergence to one shared basis.
 
-```text
-examples/VSlices.Space.Modeling/AlgebraicSymbolAreaVolumeProbe.cs
-tests/VSlices.Space.Modeling.Tests/AlgebraicSymbolAreaVolumeProbeTests.cs
-```
+## Open pressure
 
-The next boundary is `Product -> area(...) -> Area` against the real production `Q<F,C,T>` surface.
+The next case should be `Area * Length -> Product -> volume(...) -> Volume`. That case should tell us whether the homogeneous Product shape generalizes cleanly when one operand already carries semantic information, and whether `Area` should remain visible as an operand or expose its structural base during composition.

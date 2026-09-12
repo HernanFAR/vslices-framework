@@ -114,9 +114,23 @@ public readonly struct Microseconds : Coordinate<Dimension.Duration>
 }
 
 /// <summary>
-/// Effective coordinate produced by multiplying two quantity coordinates.
-/// The coordinate keeps the dimensional families explicit because C# cannot
-/// recover them as associated types from LEFT_C and RIGHT_C alone.
+/// Effective coordinate for a homogeneous product whose operands were first
+/// converged to one shared base coordinate C. The algebraic shape lives in the
+/// composed Dimension; C names the base coordinate used to express it.
+/// </summary>
+public readonly struct ProductCoordinate<LEFT_F, RIGHT_F, C> :
+    Coordinate<Dimension.Product<LEFT_F, RIGHT_F>>
+    where LEFT_F : Dimension
+    where RIGHT_F : Dimension
+    where C : Coordinate<LEFT_F>
+{
+    public static decimal Scale => C.Scale * C.Scale;
+}
+
+/// <summary>
+/// Effective coordinate produced by multiplying quantities whose dimensional
+/// families cannot share one coordinate basis. Both operand coordinates remain
+/// explicit because neither can be converted into the other.
 /// </summary>
 public readonly struct ProductCoordinate<LEFT_F, LEFT_C, RIGHT_F, RIGHT_C> :
     Coordinate<Dimension.Product<LEFT_F, RIGHT_F>>
