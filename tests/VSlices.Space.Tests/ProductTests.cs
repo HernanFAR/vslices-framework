@@ -1,8 +1,6 @@
 using VSlices.Space.Quantities;
 using VSlices.Space.Quantities.Abstract;
-using VSlices.Space.Quantities.Algebra;
-using VSlices.Space.Quantities.Derived;
-using static VSlices.Space.Quantities.Conversions;
+using static VSlices.Space.Conversions;
 
 namespace VSlices.Space.Tests;
 
@@ -14,75 +12,49 @@ public class ProductTests
         var width = new ProbeLength<Kilometers, decimal>(2m);
         var depth = new ProbeLength<Meters, decimal>(3m);
 
-        Product<
-            Dimension.Length,
-            Dimension.Length,
-            Kilometers,
-            decimal> product = width * depth;
+        Product<M.Length, M.Length, Kilometers, decimal> product = width * depth;
 
         Assert.Equal(0.006m, product.Value);
-        Assert.IsAssignableFrom<
-            Q<
-                Dimension.Product<Dimension.Length, Dimension.Length>,
-                ProductCoordinate<Dimension.Length, Dimension.Length, Kilometers>,
-                decimal>>(product);
-        Assert.Equal(1_000_000m,
-            ProductCoordinate<Dimension.Length, Dimension.Length, Kilometers>.Scale);
+        Assert.IsAssignableFrom<Q<M.Mul<M.Length, M.Length>, Kilometers, decimal>>(product);
+        Assert.Equal(1_000m, Kilometers.ReferenceScale);
     }
 
     [Fact]
-    public void recommended_lengths_form_a_homogeneous_structural_product_without_becoming_area()
+    public void recommended_lengths_form_a_structural_product_without_becoming_area()
     {
         var width = new vLength(2d);
         var depth = new vLength(3d);
 
         var product = width * depth;
 
-        Assert.IsType<Product<
-            Dimension.Length,
-            Dimension.Length,
-            Meters,
-            double>>(product);
+        Assert.IsType<Product<M.Length, M.Length, Meters, double>>(product);
         Assert.Equal(6d, product.Value);
     }
 
     [Fact]
-    public void heterogeneous_product_preserves_independent_coordinate_bases()
+    public void heterogeneous_product_preserves_independent_coordinate_bases_without_claiming_one_Q_coordinate()
     {
-        var product = new Product<
-            Dimension.Mass,
-            Kilograms,
-            Dimension.Length,
-            Meters,
-            decimal>(6m);
+        var product = new Product<M.Mass, Kilograms, M.Length, Meters, decimal>(6m);
 
-        Assert.IsAssignableFrom<
-            Q<
-                Dimension.Product<Dimension.Mass, Dimension.Length>,
-                ProductCoordinate<Dimension.Mass, Kilograms, Dimension.Length, Meters>,
-                decimal>>(product);
-        Assert.Equal(1_000m,
-            ProductCoordinate<Dimension.Mass, Kilograms, Dimension.Length, Meters>.Scale);
+        Assert.Equal(6m, product.Value);
+        Assert.Equal(1_000m, Kilograms.ReferenceScale);
+        Assert.Equal(1m, Meters.ReferenceScale);
+        Assert.IsNotAssignableFrom<Q<M.Mul<M.Mass, M.Length>, Kilograms, decimal>>(product);
     }
 
     [Fact]
-    public void area_is_explicitly_established_from_the_homogeneous_length_product()
+    public void area_is_explicitly_established_from_the_length_product()
     {
         var width = new ProbeLength<Kilometers, decimal>(2m);
         var depth = new ProbeLength<Meters, decimal>(3m);
 
         var structural = width * depth;
         Area<Kilometers, decimal> semantic = area(structural);
-        Product<Dimension.Length, Dimension.Length, Kilometers, decimal> widened =
-            WidenArea(semantic);
+        Product<M.Length, M.Length, Kilometers, decimal> widened = WidenArea(semantic);
 
         Assert.Equal(0.006m, semantic.Value);
         Assert.Equal(structural, widened);
-        Assert.IsAssignableFrom<
-            Q<
-                Dimension.Product<Dimension.Length, Dimension.Length>,
-                ProductCoordinate<Dimension.Length, Dimension.Length, Kilometers>,
-                decimal>>(semantic);
+        Assert.IsAssignableFrom<Q<M.Mul<M.Length, M.Length>, Kilometers, decimal>>(semantic);
     }
 
     [Fact]
@@ -97,38 +69,24 @@ public class ProductTests
 
         var width = new vLength(2d);
         var depth = new vLength(3d);
-        var structural = width * depth;
 
-        Assert.IsType<Product<
-            Dimension.Length,
-            Dimension.Length,
-            Meters,
-            double>>(structural);
-        Assert.IsType<Area<Meters, double>>(area(structural));
+        Assert.IsType<Area<Meters, double>>(area(width * depth));
     }
 
     [Fact]
-    public void area_times_length_aligns_the_primitive_length_basis_but_keeps_full_product_shape()
+    public void area_times_length_aligns_the_primitive_basis_and_uses_compact_product()
     {
         var width = new ProbeLength<Kilometers, decimal>(2m);
         var depth = new ProbeLength<Meters, decimal>(300m);
         var height = new ProbeLength<Meters, decimal>(500m);
         var surface = area(width * depth);
 
-        Product<
-            Dimension.Product<Dimension.Length, Dimension.Length>,
-            ProductCoordinate<Dimension.Length, Dimension.Length, Kilometers>,
-            Dimension.Length,
-            Kilometers,
-            decimal> structural = surface * height;
+        Product<M.Mul<M.Length, M.Length>, M.Length, Kilometers, decimal> structural =
+            surface * height;
 
         Assert.Equal(0.3m, structural.Value);
-        Assert.Equal(1_000_000_000m,
-            ProductCoordinate<
-                Dimension.Product<Dimension.Length, Dimension.Length>,
-                ProductCoordinate<Dimension.Length, Dimension.Length, Kilometers>,
-                Dimension.Length,
-                Kilometers>.Scale);
+        Assert.IsAssignableFrom<
+            Q<M.Mul<M.Mul<M.Length, M.Length>, M.Length>, Kilometers, decimal>>(structural);
     }
 
     [Fact]
@@ -141,26 +99,13 @@ public class ProductTests
         var structural = surface * height;
 
         Volume<Kilometers, decimal> semantic = volume(structural);
-        Product<
-            Dimension.Product<Dimension.Length, Dimension.Length>,
-            ProductCoordinate<Dimension.Length, Dimension.Length, Kilometers>,
-            Dimension.Length,
-            Kilometers,
-            decimal> widened = WidenVolume(semantic);
+        Product<M.Mul<M.Length, M.Length>, M.Length, Kilometers, decimal> widened =
+            WidenVolume(semantic);
 
         Assert.Equal(0.3m, semantic.Value);
         Assert.Equal(structural, widened);
         Assert.IsAssignableFrom<
-            Q<
-                Dimension.Product<
-                    Dimension.Product<Dimension.Length, Dimension.Length>,
-                    Dimension.Length>,
-                ProductCoordinate<
-                    Dimension.Product<Dimension.Length, Dimension.Length>,
-                    ProductCoordinate<Dimension.Length, Dimension.Length, Kilometers>,
-                    Dimension.Length,
-                    Kilometers>,
-                decimal>>(semantic);
+            Q<M.Mul<M.Mul<M.Length, M.Length>, M.Length>, Kilometers, decimal>>(semantic);
     }
 
     [Fact]
@@ -177,31 +122,23 @@ public class ProductTests
         var depth = new vLength(3d);
         var height = new vLength(4d);
 
-        Assert.IsType<Volume<Meters, double>>(
-            volume(area(width * depth) * height));
+        Assert.IsType<Volume<Meters, double>>(volume(area(width * depth) * height));
     }
 
-    private static Product<Dimension.Length, Dimension.Length, C, T> WidenArea<C, T>(Area<C, T> area)
-        where C : Coordinate<Dimension.Length>
+    private static Product<M.Length, M.Length, C, T> WidenArea<C, T>(Area<C, T> area)
+        where C : Coordinate<M.Length>
         where T : System.Numerics.INumber<T> =>
         area.ToBase();
 
-    private static Product<
-        Dimension.Product<Dimension.Length, Dimension.Length>,
-        ProductCoordinate<Dimension.Length, Dimension.Length, C>,
-        Dimension.Length,
-        C,
-        T> WidenVolume<C, T>(Volume<C, T> volume)
-        where C : Coordinate<Dimension.Length>
+    private static Product<M.Mul<M.Length, M.Length>, M.Length, C, T> WidenVolume<C, T>(Volume<C, T> volume)
+        where C : Coordinate<M.Length>
         where T : System.Numerics.INumber<T> =>
         volume.ToBase();
 
-    private sealed class ProbeLength<C, T> : Length<C, T, ProbeLength<C, T>>
-        where C : Coordinate<Dimension.Length>
+    private sealed class ProbeLength<C, T> : Length<ProbeLength<C, T>, C, T>
+        where C : Coordinate<M.Length>
         where T : System.Numerics.INumber<T>
     {
-        public ProbeLength(T value) : base(value)
-        {
-        }
+        public ProbeLength(T value) : base(value) { }
     }
 }
