@@ -11,8 +11,9 @@ public class LengthDurationTests
     {
         var length = new vLength(2.5d);
 
-        Assert.IsAssignableFrom<Q<Dimension.Length, Meters, double>>(length);
+        Assert.IsAssignableFrom<Q<M.Length, Meters, double>>(length);
         Assert.Equal(2.5d, length.Value);
+        Assert.Equal(1m, Meters.ReferenceScale);
     }
 
     [Fact]
@@ -45,8 +46,9 @@ public class LengthDurationTests
     {
         var duration = new vDuration(2.5d);
 
-        Assert.IsAssignableFrom<Q<Dimension.Duration, Seconds, double>>(duration);
+        Assert.IsAssignableFrom<Q<M.Duration, Seconds, double>>(duration);
         Assert.Equal(2.5d, duration.Value);
+        Assert.Equal(1m, Seconds.ReferenceScale);
     }
 
     [Fact]
@@ -74,21 +76,17 @@ public class LengthDurationTests
         Assert.Equal(1.5m, result.Value);
     }
 
-    private sealed class ProbeLength<C, T> : Length<C, T, ProbeLength<C, T>>
-        where C : Coordinate<Dimension.Length>
+    private sealed class ProbeLength<C, T> : Length<ProbeLength<C, T>, C, T>
+        where C : Coordinate<M.Length>
         where T : INumber<T>
     {
-        public ProbeLength(T value) : base(value)
-        {
-        }
+        public ProbeLength(T value) : base(value) { }
     }
 
-    private sealed class ProbeDuration<C, T> : Duration<C, T, ProbeDuration<C, T>>
-        where C : Coordinate<Dimension.Duration>
+    private sealed class ProbeDuration<C, T> : Duration<ProbeDuration<C, T>, C, T>
+        where C : Coordinate<M.Duration>
         where T : INumber<T>
     {
-        public ProbeDuration(T value) : base(value)
-        {
-        }
+        public ProbeDuration(T value) : base(value) { }
     }
 }
