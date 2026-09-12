@@ -18,7 +18,7 @@ That distinction is the key to reading the API.
 
 ## 1. The core shape: `Q<F, C, T>`
 
-Every quantity belongs to a dimensional family, is expressed using a coordinate basis, and carries a numeric value:
+Every quantity belongs to a dimensional family, is expressed using a coordinate, and carries a numeric value:
 
 ```csharp
 Q<F, C, T>
@@ -28,7 +28,7 @@ where:
 
 ```text
 F = dimensional family
-C = coordinate basis
+C = effective coordinate for that family
 T = numeric carrier
 ```
 
@@ -38,11 +38,11 @@ For example:
 Q<Dimension.Length, Kilometers, double>
 ```
 
-means:
-
-> a quantity of Length, expressed using Kilometers as its coordinate basis, with a `double` numeric carrier.
+means a quantity of Length expressed in Kilometers with a `double` numeric carrier.
 
 `C` replaces the earlier separation between unit and prefix. `Kilometers`, for example, is already the effective coordinate rather than `Meters + Kilo` being carried independently through every generic type.
+
+For composed quantities, the public semantic type may expose only the primitive basis while its `Q` membership uses a lifted coordinate such as `ProductCoordinate<...>`.
 
 ## 2. Base quantities
 
@@ -98,7 +98,7 @@ Duration:  Seconds, Minutes, Microseconds
 
 Coordinates describe a **basis of expression**. They do not have to encode the whole algebraic shape of a composed dimension.
 
-This becomes important for Area.
+This is why the model does not require types such as `SquaredKilometers` or `CubicMeters`.
 
 ## 4. Same-family arithmetic converges to the left coordinate
 
@@ -124,18 +124,18 @@ This gives a useful general rule:
 
 ```text
 LEFT operation RIGHT
-    -> convert RIGHT coordinate to LEFT coordinate when the family allows it
+    -> convert RIGHT coordinate to LEFT coordinate when a truthful conversion exists
     -> perform the operation
-    -> express the result using LEFT coordinate
+    -> express the result using LEFT's basis
 ```
 
-The current homogeneous multiplication pressure follows the same principle.
+The current multiplication examples follow the same principle where applicable.
 
 ## 5. Structural Product
 
 `Product` represents structural dimensional multiplication. It does **not** by itself introduce domain semantics such as Area, Volume, Energy, or Torque.
 
-Two Product shapes are currently useful because two materially different coordinate situations exist.
+Two Product shapes are currently useful because two materially different structural situations exist.
 
 ### 5.1 Homogeneous / coordinate-converged Product
 
@@ -181,43 +181,25 @@ Dimension.Product<
     Dimension.Length>
 ```
 
-The coordinate only tells us the basis used to express that shape.
+and `ProductCoordinate<Length,Length,Kilometers>` lifts the Kilometer basis into that composed dimension.
 
-So:
+### 5.2 Full Product
 
-```text
-Product<Length,Length,Kilometers,T>
+The full Product form preserves a coordinate for each operand dimensional shape:
+
+```csharp
+Product<LEFT_F, LEFT_C, RIGHT_F, RIGHT_C, T>
 ```
 
-is read as:
+It is necessary whenever the operand dimensions cannot be represented truthfully by the compact homogeneous shape.
 
-```text
-Length × Length expressed on the Kilometer basis
-= km²
-```
-
-This avoids needing an ever-growing family of backing types such as:
-
-```text
-SquaredMeters
-SquaredKilometers
-CubedFeet
-...
-```
-
-### 5.2 Heterogeneous Product
-
-When the dimensions differ, there is no general conversion from the right coordinate to the left coordinate.
-
-For example:
+A simple example is:
 
 ```text
 Mass<Kilograms,T> * Length<Meters,T>
 ```
 
-cannot convert `Meters` into `Kilograms`.
-
-The structural result therefore preserves both coordinate bases:
+where `Meters` cannot be converted into `Kilograms`:
 
 ```csharp
 Product<
@@ -228,23 +210,47 @@ Product<
     T>
 ```
 
-This is structurally different from the homogeneous Product because the two coordinate bases cannot be collapsed truthfully.
+The Volume pressure revealed an important refinement: **using the full Product form does not imply that the primitive coordinate bases are unrelated.**
+
+For example, `Area<Kilometers,T> * Length<Meters,T>` can convert the Length from Meters to Kilometers before multiplication, because both ultimately use Length as their primitive basis. But the operand dimensional shapes remain different:
+
+```text
+Area coordinate shape   = km²
+Length coordinate shape = km
+```
+
+so the structural result still uses the full Product form:
+
+```csharp
+Product<
+    Dimension.Product<Dimension.Length, Dimension.Length>,
+    ProductCoordinate<Dimension.Length, Dimension.Length, Kilometers>,
+    Dimension.Length,
+    Kilometers,
+    T>
+```
 
 In short:
 
 ```text
-homogeneous product
-    -> one converged coordinate basis
+compact Product
+    -> same dimensional family, one converged basis parameter is sufficient
 
-heterogeneous product
-    -> two independently preserved coordinate bases
+full Product
+    -> operand dimensional shapes remain independently represented
+       even when their primitive bases can first be aligned
 ```
 
 ## 6. Representability does not grant operator authority
 
 The fact that `Product<A,B,...>` can represent a structural result does not mean every multiplication is automatically available.
 
-The current production surface explicitly exposes `Length * Length`.
+The current production surface explicitly exposes:
+
+```text
+Length * Length
+Area   * Length
+```
 
 This is deliberate:
 
@@ -264,23 +270,7 @@ A structural `Length × Length` result is not automatically an `Area`.
 var structural = width * depth;
 ```
 
-produces a structural Product:
-
-```csharp
-Product<
-    Dimension.Length,
-    Dimension.Length,
-    Kilometers,
-    decimal>
-```
-
-It does not directly produce:
-
-```csharp
-Area<Kilometers, decimal>
-```
-
-Semantic interpretation is established explicitly:
+produces a structural Product. Semantic interpretation is established explicitly:
 
 ```csharp
 using static VSlices.Space.Quantities.Conversions;
@@ -296,9 +286,17 @@ representable as Length × Length
 semantically established as Area
 ```
 
+The same rule now applies to Volume:
+
+```text
+representable as (Length × Length) × Length
+!=
+semantically established as Volume
+```
+
 ## 8. Area
 
-`Area<C,T>` is the first semantic quantity established from a structural Product.
+`Area<C,T>` is a semantic quantity established from a homogeneous Length Product.
 
 Its current shape is equivalent to:
 
@@ -314,11 +312,7 @@ Area<C,T>
 and it is a `DerivedSpace` of:
 
 ```csharp
-Product<
-    Dimension.Length,
-    Dimension.Length,
-    C,
-    T>
+Product<Dimension.Length, Dimension.Length, C, T>
 ```
 
 So:
@@ -327,70 +321,81 @@ So:
 Area<Kilometers, decimal>
 ```
 
-means an Area whose structural dimensional shape is `Length × Length`, expressed on the Kilometer basis, using `decimal` as its numeric carrier.
+is naturally read in `km²` without introducing a separate `SquaredKilometers` type.
 
-It is naturally read as a value in `km²` without introducing a separate `SquaredKilometers` type.
+## 9. Volume
 
-### Worked example
+`Volume<C,T>` is established explicitly from `Area<C,T> * Length<...,T>`.
 
-The library does not currently expose convenience types named `KilometerLength` or `MeterLength`; the following local types only make the example readable:
-
-```csharp
-sealed class KilometerLength(decimal value)
-    : Length<Kilometers, decimal, KilometerLength>(value);
-
-sealed class MeterLength(decimal value)
-    : Length<Meters, decimal, MeterLength>(value);
-```
-
-Now:
-
-```csharp
-var width = new KilometerLength(2m);
-var depth = new MeterLength(300m);
-```
-
-Their structural multiplication follows the left-coordinate rule:
+Suppose:
 
 ```text
-300 m -> 0.3 km
-2 km * 0.3 km
-= 0.6 km²
+surface = 0.6 km²
+height  = 500 m
+```
+
+The authorized multiplication aligns the primitive Length basis first:
+
+```text
+500 m -> 0.5 km
+0.6 km² * 0.5 km
+= 0.3 km³
+```
+
+The structural result is still a full Product because Area and Length have different dimensional shapes:
+
+```csharp
+Product<
+    Dimension.Product<Dimension.Length, Dimension.Length>,
+    ProductCoordinate<Dimension.Length, Dimension.Length, Kilometers>,
+    Dimension.Length,
+    Kilometers,
+    decimal>
 ```
 
 Then:
 
 ```csharp
-var structural = width * depth;
-```
-
-has the structural shape:
-
-```text
-Product<Length,Length,Kilometers,decimal>
-Value = 0.6
-```
-
-and:
-
-```csharp
-var surface = area(structural);
+var semantic = volume(structural);
 ```
 
 establishes:
 
-```text
-Area<Kilometers,decimal>
-Value = 0.6
+```csharp
+Volume<Kilometers, decimal>
 ```
 
-The numeric value and coordinate basis are preserved; only the semantic interpretation becomes more specific.
+whose `Q` membership has dimensional shape:
 
-## 9. `AlgebraicSymbol`
+```text
+(Length × Length) × Length
+```
 
-`[AlgebraicSymbol("area")]` names an explicit algebraic establishment operation.
+and an effective scale of:
 
-It does not redefine the dimensional equation and it does not authorize an implicit conversion.
+```text
+Kilometers² × Kilometers
+= Kilometers³
+```
+
+Again, no `CubicKilometers` CLR type is required.
+
+A complete pipeline now looks like:
+
+```csharp
+using static VSlices.Space.Quantities.Conversions;
+
+var surface = area(width * depth);
+var capacity = volume(surface * height);
+```
+
+The structural operators and semantic establishment functions remain separate steps.
+
+## 10. `AlgebraicSymbol`
+
+`[AlgebraicSymbol("area")]` and `[AlgebraicSymbol("volume")]` name explicit algebraic establishment operations.
+
+They do not redefine the dimensional equations and they do not authorize implicit conversions.
 
 The intended consumer syntax is:
 
@@ -398,17 +403,18 @@ The intended consumer syntax is:
 using static VSlices.Space.Quantities.Conversions;
 
 var surface = area(width * depth);
+var capacity = volume(surface * height);
 ```
 
-The structural relationship is already represented by the type system. The symbol supplies a concise explicit operation for establishing the semantic space.
+The structural relationships are already represented by the type system. The symbols supply concise explicit operations for establishing semantic spaces.
 
 Current working rule:
 
 > **Source generation may complete a declared semantic relation; it must not invent the relation.**
 
-The present `Conversions.area(...)` implementation is manual and intentionally shaped like the code a future source generator may emit.
+The present `Conversions.area(...)` and `Conversions.volume(...)` implementations are manual and intentionally shaped like code a future source generator may emit.
 
-## 10. What the model intentionally does not do
+## 11. What the model intentionally does not do
 
 The current model intentionally avoids several convenient-looking shortcuts:
 
@@ -416,19 +422,20 @@ The current model intentionally avoids several convenient-looking shortcuts:
 - it does not turn every structural Product into a semantic quantity;
 - it does not automatically expose every mathematically representable multiplication operator;
 - it does not implicitly promote different numeric carriers during Product formation;
-- it does not use an implicit `Product -> Area` conversion;
+- it does not use implicit `Product -> Area` or `Product -> Volume` conversions;
 - it does not treat dimensional equivalence as semantic identity.
 
 These limits are features of the model, not missing convenience APIs.
 
-## 11. Current boundaries and open questions
+## 12. Current boundaries and open questions
 
-This surface is still being discovered through executable examples. In particular:
+This surface is still being discovered through executable examples. Current evidence says:
 
-- the homogeneous Product currently assumes a shared coordinate basis can be truthfully reused after convergence;
-- the heterogeneous Product preserves both coordinate bases because no common basis exists by default;
+- homogeneous quantities can converge the right coordinate into the left coordinate before multiplication;
+- composed semantic quantities can still expose a primitive basis such as `Kilometers` while their `Q` coordinate is structurally lifted;
+- full Product is about preserving different operand dimensional shapes, not necessarily about primitive bases being impossible to align;
 - operator authority remains explicit and separate from structural representability;
-- `Area * Length -> Volume` is the next pressure case and may reveal whether a semantic quantity such as Area should remain visible as an operand or must expose an explicit structural expansion;
+- Area and Volume currently forget their semantic name when widened to their structural Product base; whether later algebra requires preserving semantic operands such as `Area` inside a Product remains open;
 - Power, Quotient, dimensional normalization, equivalence, and source-generated algebraic symbols remain later work.
 
 The implementation should continue to be treated as evidence about the model rather than as a reason to force the model around current C# mechanics.
