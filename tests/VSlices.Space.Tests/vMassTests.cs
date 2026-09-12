@@ -11,8 +11,16 @@ public class vMassTests
     {
         var mass = new vMass(2.5d);
 
-        Assert.IsAssignableFrom<Q<Dimension.Mass, Kilograms, double>>(mass);
+        Assert.IsAssignableFrom<Q<M.Mass, Kilograms, double>>(mass);
         Assert.Equal(2.5d, mass.Value);
+    }
+
+    [Fact]
+    public void reference_scale_orientation_is_explicit()
+    {
+        Assert.Equal(1m, Grams.ReferenceScale);
+        Assert.Equal(1_000m, Kilograms.ReferenceScale);
+        Assert.Equal(453.59237m, Pounds.ReferenceScale);
     }
 
     [Fact]
@@ -24,7 +32,10 @@ public class vMassTests
         vMass result = left + right;
 
         Assert.IsType<vMass>(result);
-        Assert.Equal(1d + (double)(Pounds.Scale / Kilograms.Scale), result.Value, precision: 12);
+        Assert.Equal(
+            1d + (double)(Pounds.ReferenceScale / Kilograms.ReferenceScale),
+            result.Value,
+            precision: 12);
     }
 
     [Fact]
@@ -62,12 +73,10 @@ public class vMassTests
         Assert.Equal(1.5m, result.Value);
     }
 
-    private sealed class ProbeMass<C, T> : Mass<C, T, ProbeMass<C, T>>
-        where C : Coordinate<Dimension.Mass>
+    private sealed class ProbeMass<C, T> : Mass<ProbeMass<C, T>, C, T>
+        where C : Coordinate<M.Mass>
         where T : INumber<T>
     {
-        public ProbeMass(T value) : base(value)
-        {
-        }
+        public ProbeMass(T value) : base(value) { }
     }
 }
