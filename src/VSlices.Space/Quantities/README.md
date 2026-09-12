@@ -18,11 +18,11 @@ Q<F, C, T>
 
 where `F : M`, `C : Coordinate`, and `T` is the numeric carrier.
 
-A new design question is now intentionally open:
+A design question is intentionally open:
 
 > **Is `Q<F,C,T>` actually the universal shape of a quantity, or only one useful quantity shape?**
 
-`M.Div` is the first production pressure that makes this question concrete.
+`M.Div` shows a multi-basis quantity that does not fit one `C`; `M.Pow` now pressures the opposite case, where repeated algebraic structure still uses one primitive basis naturally.
 
 The guiding rule remains:
 
@@ -42,23 +42,17 @@ M.Div<A, B>
 M.Pow<A, N>
 ```
 
-These types describe algebraic shape only. They do not by themselves authorize operators or establish semantic quantities such as Area, Volume, Speed, Energy, or Torque.
+These types describe algebraic shape only. They do not by themselves authorize operations or establish semantic quantities such as Area, Volume, Speed, Energy, or Torque.
 
-For example:
+Examples:
 
 ```csharp
 M.Mul<M.Length, M.Length>
-```
-
-means `Length x Length`; it does not automatically mean Area.
-
-Likewise:
-
-```csharp
 M.Div<M.Length, M.Duration>
+M.Pow<M.Length, N2>
 ```
 
-means `Length / Duration`; it does not automatically mean Speed.
+respectively describe `Length x Length`, `Length / Duration`, and `Length²` algebraic shapes.
 
 ## Coordinates
 
@@ -129,7 +123,13 @@ is a length expressed in kilometers.
 Q<M.Mul<M.Length, M.Length>, Kilometers, decimal>
 ```
 
-is a `Length x Length` magnitude expressed on the kilometer primitive basis and is naturally read in `km²`.
+is a `Length x Length` magnitude expressed on the kilometer primitive basis.
+
+```csharp
+Q<M.Pow<M.Length, N2>, Kilometers, decimal>
+```
+
+is a `Length²` magnitude expressed on that same primitive kilometer basis.
 
 No `SquaredKilometers`, `CubicKilometers`, or parallel coordinate algebra is required.
 
@@ -150,33 +150,14 @@ Length<SELF, C, T>
     where C : Coordinate<M.Length>
 ```
 
-and:
+The important limitation exposed by division is that some quantities naturally contain more than one primitive coordinate basis. `km/h` genuinely contains both Length and Duration bases, so forcing it into one synthetic `C` would recreate coordinate algebra we deliberately removed.
 
-```csharp
-Area<C, T>
-    where C : Coordinate<M.Length>
-```
+Power provides the complementary evidence: `km²` produced from one Length basis can still truthfully use `Kilometers` as its single primitive `C`, because the exponent belongs to the magnitude shape rather than the coordinate.
 
-The important limitation is now visible: some quantities are naturally expressed by **more than one primitive coordinate basis**.
-
-For example:
+The current hypothesis is therefore:
 
 ```text
-km/h
-```
-
-contains both a Length basis and a Duration basis. Inventing one synthetic `C` would recreate the coordinate algebra the model deliberately removed.
-
-So the current hypothesis is no longer:
-
-```text
-all quantities are Q<F,C,T>
-```
-
-but rather:
-
-```text
-Q<F,C,T> is one quantity shape for values with one truthful primitive basis.
+Q<F,C,T> is a useful quantity shape for values with one truthful primitive basis.
 ```
 
 Whether `Q` should survive as a named abstraction, be generalized, or be replaced remains deliberately unresolved.
@@ -226,6 +207,89 @@ Product<LEFT_F, LEFT_C, RIGHT_F, RIGHT_C, T>
 
 and intentionally does not implement `Q<F,C,T>`.
 
+## Structural Quotient
+
+`M.Div` is pressured by:
+
+```text
+Length / Duration
+```
+
+The authorized operator materializes:
+
+```csharp
+Quotient<
+    M.Length,
+    LENGTH_C,
+    M.Duration,
+    DURATION_C,
+    T>
+```
+
+For example:
+
+```text
+120 km / 2 h = 60 km/h
+```
+
+The Quotient preserves both primitive coordinate bases and does **not** implement `Q<F,C,T>`.
+
+## Structural Power
+
+`M.Pow` is now pressured by the real case of squaring a Length.
+
+Exponent vocabulary is introduced only as needed; the first exponent is:
+
+```csharp
+N2
+```
+
+and the structural value is:
+
+```csharp
+Power<BASE_F, EXPONENT, C, T>
+    : Q<M.Pow<BASE_F, EXPONENT>, C, T>
+```
+
+For example:
+
+```csharp
+using static VSlices.Space.Quantities.PowerOperations;
+
+var side = new Length<decimal>(3m);
+var structural = square(side);
+```
+
+conceptually yields:
+
+```text
+3 m -> 9 m²
+```
+
+with the type:
+
+```csharp
+Power<M.Length, N2, Meters, decimal>
+```
+
+The coordinate remains `Meters`; the square lives entirely in `M.Pow<M.Length,N2>`.
+
+This pressure also makes an algebraic-equivalence question concrete:
+
+```csharp
+M.Pow<M.Length, N2>
+```
+
+and:
+
+```csharp
+M.Mul<M.Length, M.Length>
+```
+
+may describe equivalent dimensional structure, but they are intentionally still distinct CLR/algebraic forms. No normalization or equivalence rule has been introduced yet.
+
+Likewise, `Power<M.Length,N2,...>` is not automatically established as `Area`. Doing so would require deciding how semantic Area relates to multiple structural representations (`Mul` and `Pow`), which is a separate pressure rather than something Power should silently decide.
+
 ## Area and Volume
 
 Area is explicitly established from structural `Length x Length`:
@@ -259,86 +323,24 @@ Volume<C, T>
 
 Both remain single-basis quantities, so the current `Q` shape fits them naturally.
 
-## Structural Quotient
-
-`M.Div` is now pressured by the real case:
-
-```text
-Length / Duration
-```
-
-The authorized operator materializes:
-
-```csharp
-Quotient<
-    M.Length,
-    LENGTH_C,
-    M.Duration,
-    DURATION_C,
-    T>
-```
-
-For example:
-
-```text
-120 km / 2 h = 60 km/h
-```
-
-materializes as:
-
-```csharp
-Quotient<
-    M.Length,
-    Kilometers,
-    M.Duration,
-    Hours,
-    decimal>
-```
-
-The structural Quotient deliberately preserves both primitive coordinate bases and does **not** implement `Q<F,C,T>`.
-
-This is not an implementation workaround. `km/h` genuinely does not have one truthful primitive `C`.
-
-The quotient also preserves the chosen coordinate pair instead of silently normalizing it:
-
-```text
-120 km / 2 h   = 60 km/h
-120 km / 120 m = 1 km/min
-```
-
-Both values describe the same physical rate after conversion, but they are expressed in different coordinate pairs.
-
 ## Speed
 
 Speed semantics are established explicitly:
 
 ```csharp
-var velocityMagnitude = distance / duration;
-var semanticSpeed = speed(velocityMagnitude);
+var structural = distance / duration;
+var semanticSpeed = speed(structural);
 ```
 
-The semantic type is currently:
+The semantic type is:
 
 ```csharp
 Speed<LENGTH_C, DURATION_C, T>
 ```
 
-and is a `DerivedSpace` of:
+and is a `DerivedSpace` of the corresponding structural Quotient.
 
-```csharp
-Quotient<
-    M.Length,
-    LENGTH_C,
-    M.Duration,
-    DURATION_C,
-    T>
-```
-
-`Speed<Kilometers,Hours,T>` is therefore naturally read as km/h.
-
-Crucially, Speed currently does **not** implement `Q<F,C,T>` because doing so would require inventing one coordinate parameter where two primitive bases are semantically real.
-
-That makes Speed the first direct evidence that `Q<F,C,T>` may not be the universal quantity abstraction.
+Crucially, Speed does **not** implement `Q<F,C,T>` because doing so would require inventing one coordinate parameter where two primitive bases are semantically real.
 
 ## Structural meaning vs semantic meaning
 
@@ -347,28 +349,31 @@ The separation remains:
 ```text
 M.Mul<Length,Length>
     algebraic magnitude shape
-
 Product<...>
     materialized multiplication
-
 Area<...>
     established semantic quantity
 ```
 
-and now:
-
 ```text
 M.Div<Length,Duration>
     algebraic magnitude shape
-
 Quotient<...>
     materialized division
-
 Speed<...>
     established semantic quantity
 ```
 
-`[AlgebraicSymbol("area")]`, `[AlgebraicSymbol("volume")]`, and `[AlgebraicSymbol("speed")]` name explicit establishment operations. Tooling may materialize those operations, but must not invent their semantic relations.
+and Power currently stops deliberately at the structural layer:
+
+```text
+M.Pow<Length,N2>
+    algebraic magnitude shape
+Power<...>
+    materialized exponentiation
+```
+
+No semantic interpretation is inferred merely because a structural value exists.
 
 ## Tooling boundary
 
@@ -378,7 +383,9 @@ The analyzer is a complement to the type system, not a hidden replacement for it
 
 ## Current open questions
 
-- Is `Q<F,C,T>` a useful specialized shape, or should it evolve into a more general quantity abstraction?
+- Is `Q<F,C,T>` a useful specialized single-basis shape, or should it evolve into a more general quantity abstraction?
 - Should multi-basis semantic quantities share a common abstraction with single-basis quantities at all?
-- Should quotient coordinates later support explicit conversion as a pair, rather than normalization into one synthetic coordinate?
-- `M.Pow`, structural Power values, algebraic normalization/equivalence, and source-generated algebraic symbols remain later pressures.
+- Should quotient coordinates later support explicit conversion as a pair?
+- What algebraic equivalence, if any, should relate `M.Pow<X,N2>` and `M.Mul<X,X>`?
+- Should semantic Area eventually accept both Product and Power structural representations, and if so what owns their normalization?
+- Source-generated algebraic symbols remain later work.
