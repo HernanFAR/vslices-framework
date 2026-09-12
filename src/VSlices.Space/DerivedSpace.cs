@@ -1,3 +1,5 @@
+using VSlices.Space.Laws;
+
 namespace VSlices.Space;
 
 /// <summary>
