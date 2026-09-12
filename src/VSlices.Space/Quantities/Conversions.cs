@@ -17,4 +17,15 @@ public static partial class Conversions
         where C : Coordinate<Dimension.Length>
         where T : INumber<T> =>
         new(product);
+
+    public static Volume<C, T> volume<C, T>(
+        Product<
+            Dimension.Product<Dimension.Length, Dimension.Length>,
+            ProductCoordinate<Dimension.Length, Dimension.Length, C>,
+            Dimension.Length,
+            C,
+            T> product)
+        where C : Coordinate<Dimension.Length>
+        where T : INumber<T> =>
+        new(product);
 }
