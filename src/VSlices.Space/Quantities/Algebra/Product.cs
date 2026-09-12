@@ -4,34 +4,27 @@ using VSlices.Space.Quantities.Abstract;
 namespace VSlices.Space.Quantities;
 
 /// <summary>
-/// Canonical structural result for a homogeneous multiplication whose operand
-/// coordinates were first converged to one shared base coordinate C.
-/// The algebraic shape is carried by Dimension.Product; C remains the base
-/// coordinate used to express that shape (for example Kilometers -> km²).
+/// Structural multiplication whose operands can be expressed on one shared
+/// primitive coordinate basis C. The algebraic shape lives in M.Mul; C only names
+/// the basis used to express the resulting magnitude.
 /// </summary>
 public sealed record Product<LEFT_F, RIGHT_F, C, T>(T Value) :
-    Q<
-        Dimension.Product<LEFT_F, RIGHT_F>,
-        ProductCoordinate<LEFT_F, RIGHT_F, C>,
-        T>,
+    Q<M.Mul<LEFT_F, RIGHT_F>, C, T>,
     DiscreteSpace<Product<LEFT_F, RIGHT_F, C, T>>
-    where LEFT_F : Dimension
-    where RIGHT_F : Dimension
-    where C : Coordinate<LEFT_F>
+    where LEFT_F : M
+    where RIGHT_F : M
+    where C : Coordinate
     where T : INumber<T>;
 
 /// <summary>
-/// Canonical structural result for a heterogeneous multiplication where the
-/// operands cannot share one coordinate basis. Both coordinates remain visible.
+/// Structural multiplication whose operand coordinate bases remain independently
+/// represented. Because there is no single truthful C, this form intentionally does
+/// not implement Q&lt;F,C,T&gt;.
 /// </summary>
 public sealed record Product<LEFT_F, LEFT_C, RIGHT_F, RIGHT_C, T>(T Value) :
-    Q<
-        Dimension.Product<LEFT_F, RIGHT_F>,
-        ProductCoordinate<LEFT_F, LEFT_C, RIGHT_F, RIGHT_C>,
-        T>,
     DiscreteSpace<Product<LEFT_F, LEFT_C, RIGHT_F, RIGHT_C, T>>
-    where LEFT_F : Dimension
-    where LEFT_C : Coordinate<LEFT_F>
-    where RIGHT_F : Dimension
-    where RIGHT_C : Coordinate<RIGHT_F>
+    where LEFT_F : M
+    where LEFT_C : Coordinate
+    where RIGHT_F : M
+    where RIGHT_C : Coordinate
     where T : INumber<T>;
