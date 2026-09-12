@@ -2,317 +2,270 @@
 
 This folder contains the current quantity model used by `VSlices.Space`.
 
-The model is intentionally small and semantic-first. It distinguishes:
+The model separates three concerns:
 
-- **what is being measured**;
-- **how that quantity is expressed**;
-- **how the numeric value is carried**;
-- **which algebraic compositions are structurally representable**;
-- **which semantic interpretations are explicitly established**.
+```text
+M            algebraic magnitude shape
+Coordinate   primitive measurement basis
+T            numeric carrier
+```
 
-The guiding rule is:
-
-> **Dimension tells us what is composed. Coordinate tells us how the basis is measured.**
-
-That distinction is the key to reading the API.
-
-## 1. The core shape: `Q<F, C, T>`
-
-Every quantity belongs to a dimensional family, is expressed using a coordinate, and carries a numeric value:
+A quantity value is represented by:
 
 ```csharp
 Q<F, C, T>
 ```
 
-where:
+where `F : M`, `C : Coordinate`, and `T` is the numeric carrier.
 
-```text
-F = dimensional family
-C = effective coordinate for that family
-T = numeric carrier
+The guiding rule is:
+
+> **M tells us what is composed. Coordinate tells us how the primitive basis is measured.**
+
+## Magnitudes
+
+The algebraic magnitude vocabulary is intentionally compact:
+
+```csharp
+M.Mass
+M.Length
+M.Duration
+
+M.Mul<A, B>
+M.Div<A, B>
+M.Pow<A, N>
 ```
+
+`M.Mul`, `M.Div`, and `M.Pow` describe algebraic shape. They do not themselves authorize operators or establish domain semantics such as Area, Volume, Energy, or Velocity.
 
 For example:
 
 ```csharp
-Q<Dimension.Length, Kilometers, double>
+M.Mul<M.Length, M.Length>
 ```
 
-means a quantity of Length expressed in Kilometers with a `double` numeric carrier.
+means `Length x Length`; it does not by itself mean Area.
 
-`C` replaces the earlier separation between unit and prefix. `Kilometers`, for example, is already the effective coordinate rather than `Meters + Kilo` being carried independently through every generic type.
+## Coordinates
 
-For composed quantities, the public semantic type may expose only the primitive basis while its `Q` membership uses a lifted coordinate such as `ProductCoordinate<...>`.
-
-## 2. Base quantities
-
-The current built-in dimensional families are:
+Coordinates represent primitive measurement bases:
 
 ```csharp
-Dimension.Mass
-Dimension.Length
-Dimension.Duration
+Coordinate
+Coordinate<F> : Coordinate
 ```
 
-The corresponding quantity families are `Mass`, `Length`, and `Duration`.
-
-For example:
+Examples:
 
 ```csharp
-Length<Kilometers, decimal, MyLength>
-Mass<Kilograms, double, MyMass>
-Duration<Seconds, double, MyDuration>
+Kilometers : Coordinate<M.Length>
+Kilograms  : Coordinate<M.Mass>
+Seconds    : Coordinate<M.Duration>
 ```
 
-The extra `SELF` parameter used by these nominal families is not part of `Q<F,C,T>`. It exists so arithmetic can preserve the exact nominal type after re-materialization.
-
-Conceptually:
+A coordinate exposes `ReferenceScale` with one fixed orientation:
 
 ```text
-Q<F,C,T>
-    describes quantity-family membership
-
-SELF
-    describes nominal closure / re-materialization
+1 coordinate unit
+=
+ReferenceScale x canonical reference unit
 ```
 
-## 3. Coordinates
+VSlices currently fixes these canonical references:
 
-A coordinate belongs to one dimensional family and provides a scale relative to that family's canonical coordinate:
+```text
+Mass      -> Gram
+Length    -> Meter
+Duration  -> Second
+```
+
+Therefore:
+
+```text
+Grams.ReferenceScale      = 1
+Kilograms.ReferenceScale  = 1000
+Pounds.ReferenceScale     = 453.59237
+
+Meters.ReferenceScale     = 1
+Kilometers.ReferenceScale = 1000
+
+Seconds.ReferenceScale    = 1
+Minutes.ReferenceScale    = 60
+```
+
+The reference coordinate is currently a VSlices convention, not a customizable setting.
+
+The reference coordinate is also not the same thing as a preferred display/default coordinate. For example, recommended `Mass<T>` uses Kilograms while Mass reference scaling is defined relative to Grams.
+
+## Coordinate is not algebraic shape
+
+Coordinates do not encode squares, cubes, products, quotients, or powers.
+
+This is deliberate.
 
 ```csharp
-public interface Coordinate<F>
-    where F : Dimension
-{
-    static abstract decimal Scale { get; }
-}
+Q<M.Length, Kilometers, decimal>
 ```
 
-Examples include:
-
-```text
-Mass:      Grams, Kilograms, Micrograms, Pounds
-Length:    Meters, Kilometers, Micrometers, Feet
-Duration:  Seconds, Minutes, Microseconds
-```
-
-Coordinates describe a **basis of expression**. They do not have to encode the whole algebraic shape of a composed dimension.
-
-This is why the model does not require types such as `SquaredKilometers` or `CubicMeters`.
-
-## 4. Same-family arithmetic converges to the left coordinate
-
-Addition and subtraction between quantities of the same dimensional family are left-biased.
-
-For example:
-
-```text
-2 km + 300 m
-```
-
-is interpreted as:
-
-```text
-300 m -> 0.3 km
-2 km + 0.3 km
-= 2.3 km
-```
-
-The result therefore keeps the left coordinate.
-
-This gives a useful general rule:
-
-```text
-LEFT operation RIGHT
-    -> convert RIGHT coordinate to LEFT coordinate when a truthful conversion exists
-    -> perform the operation
-    -> express the result using LEFT's basis
-```
-
-The current multiplication examples follow the same principle where applicable.
-
-## 5. Structural Product
-
-`Product` represents structural dimensional multiplication. It does **not** by itself introduce domain semantics such as Area, Volume, Energy, or Torque.
-
-Two Product shapes are currently useful because two materially different structural situations exist.
-
-### 5.1 Homogeneous / coordinate-converged Product
-
-When both operands belong to the same convertible dimensional family, the right coordinate can be converted to the left coordinate before multiplication.
-
-```text
-Q<F,C1,T> * Q<F,C2,T>
-    -> convert C2 to C1
-    -> Product<F,F,C1,T>
-```
-
-For example:
-
-```text
-2 km * 3 m
-```
-
-becomes:
-
-```text
-3 m -> 0.003 km
-2 km * 0.003 km
-= 0.006 km²
-```
-
-The structural result is represented as:
+is a length expressed in kilometers.
 
 ```csharp
-Product<
-    Dimension.Length,
-    Dimension.Length,
+Q<M.Mul<M.Length, M.Length>, Kilometers, decimal>
+```
+
+is a `Length x Length` magnitude expressed on the kilometer basis and is naturally read in `km²`.
+
+```csharp
+Q<
+    M.Mul<M.Mul<M.Length, M.Length>, M.Length>,
     Kilometers,
     decimal>
 ```
 
-Notice that the coordinate parameter is still `Kilometers`, not `SquaredKilometers`.
+is naturally read in `km³`.
 
-The squared shape is already described by:
+No `SquaredKilometers`, `CubicKilometers`, or parallel coordinate algebra is required.
+
+## Why `Q` accepts `Coordinate` instead of `Coordinate<F>`
+
+For primitive quantities the compiler can express the strongest relation directly:
 
 ```csharp
-Dimension.Product<
-    Dimension.Length,
-    Dimension.Length>
+Length<SELF, C, T>
+    where C : Coordinate<M.Length>
 ```
 
-and `ProductCoordinate<Length,Length,Kilometers>` lifts the Kilometer basis into that composed dimension.
+But composed magnitudes may still be expressed on a primitive basis:
 
-### 5.2 Full Product
+```csharp
+Area<Kilometers, T>
+    : Q<M.Mul<M.Length, M.Length>, Kilometers, T>
+```
 
-The full Product form preserves a coordinate for each operand dimensional shape:
+`Kilometers` belongs to primitive `M.Length`, not to `M.Mul<M.Length,M.Length>`.
+
+Trying to force `Coordinate<F>` onto every composed magnitude previously required types such as `ProductCoordinate<...>`, which duplicated algebra already present in `M` and created substantial visual noise.
+
+The public core therefore uses:
+
+```csharp
+Q<F, C, T>
+    where F : M
+    where C : Coordinate
+```
+
+Concrete semantic types retain stronger coordinate-family constraints wherever C# can express them cleanly. Coherence rules that cannot be represented without distorting the public model are candidates for static analyzer/tooling checks rather than a second coordinate type system.
+
+## Nominal quantities and `SELF`
+
+Nominally closed primitive families place `SELF` first:
+
+```csharp
+Length<SELF, C, T>
+Mass<SELF, C, T>
+Duration<SELF, C, T>
+```
+
+`SELF` is the nominal type arithmetic preserves. `C` is the coordinate basis and `T` is the numeric carrier.
+
+For example, cross-coordinate addition remains left-biased:
+
+```text
+2 km + 300 m
+300 m -> 0.3 km
+= 2.3 km
+```
+
+The conversion uses:
+
+```text
+right.Value
+* RIGHT_C.ReferenceScale
+/ LEFT_C.ReferenceScale
+```
+
+## Structural Product
+
+`Product` is the materialized structural value produced by an authorized multiplication. It is distinct from `M.Mul`, which is only the algebraic magnitude shape.
+
+### One shared coordinate basis
+
+When the result can truthfully be expressed on one primitive basis:
+
+```csharp
+Product<LEFT_F, RIGHT_F, C, T>
+    : Q<M.Mul<LEFT_F, RIGHT_F>, C, T>
+```
+
+For example:
+
+```text
+2 km x 300 m
+300 m -> 0.3 km
+= 0.6 km²
+```
+
+materializes as:
+
+```csharp
+Product<M.Length, M.Length, Kilometers, decimal>
+```
+
+### Independent coordinate bases
+
+Some structural products do not have one truthful coordinate basis:
+
+```text
+Mass<Kilograms> x Length<Meters>
+```
+
+That case uses:
 
 ```csharp
 Product<LEFT_F, LEFT_C, RIGHT_F, RIGHT_C, T>
 ```
 
-It is necessary whenever the operand dimensions cannot be represented truthfully by the compact homogeneous shape.
+and intentionally does **not** implement `Q<F,C,T>`, because inventing one `C` would misrepresent the value.
 
-A simple example is:
-
-```text
-Mass<Kilograms,T> * Length<Meters,T>
-```
-
-where `Meters` cannot be converted into `Kilograms`:
-
-```csharp
-Product<
-    Dimension.Mass,
-    Kilograms,
-    Dimension.Length,
-    Meters,
-    T>
-```
-
-The Volume pressure revealed an important refinement: **using the full Product form does not imply that the primitive coordinate bases are unrelated.**
-
-For example, `Area<Kilometers,T> * Length<Meters,T>` can convert the Length from Meters to Kilometers before multiplication, because both ultimately use Length as their primitive basis. But the operand dimensional shapes remain different:
-
-```text
-Area coordinate shape   = km²
-Length coordinate shape = km
-```
-
-so the structural result still uses the full Product form:
-
-```csharp
-Product<
-    Dimension.Product<Dimension.Length, Dimension.Length>,
-    ProductCoordinate<Dimension.Length, Dimension.Length, Kilometers>,
-    Dimension.Length,
-    Kilometers,
-    T>
-```
-
-In short:
+This is the current distinction:
 
 ```text
 compact Product
-    -> same dimensional family, one converged basis parameter is sufficient
+    one shared primitive coordinate basis exists
 
 full Product
-    -> operand dimensional shapes remain independently represented
-       even when their primitive bases can first be aligned
+    operand coordinate bases remain independently represented
 ```
 
-## 6. Representability does not grant operator authority
+Representability still does not imply operator authority. Operators remain deny-by-default.
 
-The fact that `Product<A,B,...>` can represent a structural result does not mean every multiplication is automatically available.
+## Area
 
-The current production surface explicitly exposes:
-
-```text
-Length * Length
-Area   * Length
-```
-
-This is deliberate:
-
-```text
-Product can represent A × B
-!=
-A × B is authorized
-```
-
-Algebraic syntax remains deny-by-default. A relationship must be intentionally exposed rather than inferred merely because the result type is structurally representable.
-
-## 7. Structural quantity is not semantic quantity
-
-A structural `Length × Length` result is not automatically an `Area`.
+`Length x Length` first produces a structural Product:
 
 ```csharp
 var structural = width * depth;
 ```
 
-produces a structural Product. Semantic interpretation is established explicitly:
+and only then receives Area semantics explicitly:
 
 ```csharp
-using static VSlices.Space.Quantities.Conversions;
+using static VSlices.Space.Conversions;
 
-Area<Kilometers, decimal> surface = area(structural);
+var surface = area(structural);
 ```
 
-The distinction is intentional:
-
-```text
-representable as Length × Length
-!=
-semantically established as Area
-```
-
-The same rule now applies to Volume:
-
-```text
-representable as (Length × Length) × Length
-!=
-semantically established as Volume
-```
-
-## 8. Area
-
-`Area<C,T>` is a semantic quantity established from a homogeneous Length Product.
-
-Its current shape is equivalent to:
+The semantic type is:
 
 ```csharp
-[AlgebraicSymbol("area")]
-Area<C,T>
-    : Q<
-        Dimension.Product<Dimension.Length,Dimension.Length>,
-        ProductCoordinate<Dimension.Length,Dimension.Length,C>,
-        T>
+Area<C, T>
+    : Q<M.Mul<M.Length, M.Length>, C, T>
 ```
 
-and it is a `DerivedSpace` of:
+and is a `DerivedSpace` of:
 
 ```csharp
-Product<Dimension.Length, Dimension.Length, C, T>
+Product<M.Length, M.Length, C, T>
 ```
 
 So:
@@ -321,121 +274,95 @@ So:
 Area<Kilometers, decimal>
 ```
 
-is naturally read in `km²` without introducing a separate `SquaredKilometers` type.
+is read in `km²` without a squared-coordinate CLR type.
 
-## 9. Volume
+## Volume
 
-`Volume<C,T>` is established explicitly from `Area<C,T> * Length<...,T>`.
+`Area x Length` is explicitly authorized. The incoming Length is converted to the Area's primitive Length basis first.
 
-Suppose:
+Example:
 
 ```text
 surface = 0.6 km²
 height  = 500 m
-```
-
-The authorized multiplication aligns the primitive Length basis first:
-
-```text
 500 m -> 0.5 km
-0.6 km² * 0.5 km
-= 0.3 km³
+0.6 km² x 0.5 km = 0.3 km³
 ```
 
-The structural result is still a full Product because Area and Length have different dimensional shapes:
+Because both operands can be expressed on the kilometer primitive basis, the structural result is compact:
 
 ```csharp
 Product<
-    Dimension.Product<Dimension.Length, Dimension.Length>,
-    ProductCoordinate<Dimension.Length, Dimension.Length, Kilometers>,
-    Dimension.Length,
+    M.Mul<M.Length, M.Length>,
+    M.Length,
     Kilometers,
     decimal>
 ```
 
-Then:
+Semantic establishment remains explicit:
 
 ```csharp
-var semantic = volume(structural);
-```
-
-establishes:
-
-```csharp
-Volume<Kilometers, decimal>
-```
-
-whose `Q` membership has dimensional shape:
-
-```text
-(Length × Length) × Length
-```
-
-and an effective scale of:
-
-```text
-Kilometers² × Kilometers
-= Kilometers³
-```
-
-Again, no `CubicKilometers` CLR type is required.
-
-A complete pipeline now looks like:
-
-```csharp
-using static VSlices.Space.Quantities.Conversions;
-
-var surface = area(width * depth);
 var capacity = volume(surface * height);
 ```
 
-The structural operators and semantic establishment functions remain separate steps.
-
-## 10. `AlgebraicSymbol`
-
-`[AlgebraicSymbol("area")]` and `[AlgebraicSymbol("volume")]` name explicit algebraic establishment operations.
-
-They do not redefine the dimensional equations and they do not authorize implicit conversions.
-
-The intended consumer syntax is:
+and:
 
 ```csharp
-using static VSlices.Space.Quantities.Conversions;
-
-var surface = area(width * depth);
-var capacity = volume(surface * height);
+Volume<C, T>
+    : Q<
+        M.Mul<M.Mul<M.Length, M.Length>, M.Length>,
+        C,
+        T>
 ```
 
-The structural relationships are already represented by the type system. The symbols supply concise explicit operations for establishing semantic spaces.
+No `CubicKilometers` type is needed.
 
-Current working rule:
+## Structural meaning vs semantic meaning
 
-> **Source generation may complete a declared semantic relation; it must not invent the relation.**
+These remain intentionally different:
 
-The present `Conversions.area(...)` and `Conversions.volume(...)` implementations are manual and intentionally shaped like code a future source generator may emit.
+```text
+M.Mul<Length,Length>
+    algebraic magnitude shape
 
-## 11. What the model intentionally does not do
+Product<...>
+    materialized structural multiplication
 
-The current model intentionally avoids several convenient-looking shortcuts:
+Area<...>
+    explicitly established semantic quantity
+```
 
-- it does not generate `SquaredMeters`, `SquaredKilometers`, `CubedFeet`, and similar coordinate types for every algebraic composition;
-- it does not turn every structural Product into a semantic quantity;
-- it does not automatically expose every mathematically representable multiplication operator;
-- it does not implicitly promote different numeric carriers during Product formation;
-- it does not use implicit `Product -> Area` or `Product -> Volume` conversions;
-- it does not treat dimensional equivalence as semantic identity.
+Likewise:
 
-These limits are features of the model, not missing convenience APIs.
+```text
+M.Mul<M.Mul<Length,Length>,Length>
+    algebraic magnitude shape
 
-## 12. Current boundaries and open questions
+Product<...>
+    structural value
 
-This surface is still being discovered through executable examples. Current evidence says:
+Volume<...>
+    semantic quantity
+```
 
-- homogeneous quantities can converge the right coordinate into the left coordinate before multiplication;
-- composed semantic quantities can still expose a primitive basis such as `Kilometers` while their `Q` coordinate is structurally lifted;
-- full Product is about preserving different operand dimensional shapes, not necessarily about primitive bases being impossible to align;
-- operator authority remains explicit and separate from structural representability;
-- Area and Volume currently forget their semantic name when widened to their structural Product base; whether later algebra requires preserving semantic operands such as `Area` inside a Product remains open;
-- Power, Quotient, dimensional normalization, equivalence, and source-generated algebraic symbols remain later work.
+`[AlgebraicSymbol("area")]` and `[AlgebraicSymbol("volume")]` name explicit establishment operations. Tooling may materialize those operations, but must not invent their semantic relations.
 
-The implementation should continue to be treated as evidence about the model rather than as a reason to force the model around current C# mechanics.
+## What the model intentionally does not do
+
+- no `SquaredMeters`, `CubicFeet`, or similar generated coordinate backing types;
+- no parallel `ProductCoordinate` algebra that duplicates `M`;
+- no implicit `Product -> Area` or `Product -> Volume` conversion;
+- no universal multiplication merely because `Product` can represent a result;
+- no configurable canonical reference coordinate yet;
+- no assumption that dimensional/algebraic equivalence implies semantic identity;
+- no attempt to reconstruct every semantic coherence rule inside C# generic constraints.
+
+## Current tooling boundary
+
+C# should enforce the relationships it can express honestly. A future analyzer may verify additional static coherence such as an invalid primitive coordinate basis for a declared semantic quantity.
+
+The analyzer is a complement to the type system, not a hidden replacement for the semantic model.
+
+## Next pressure
+
+`M.Div`, `M.Pow`, quotient/power structural values, algebraic normalization/equivalence, and source-generated algebraic symbols remain open production pressures.
