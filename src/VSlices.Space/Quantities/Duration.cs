@@ -6,106 +6,77 @@ namespace VSlices.Space.Quantities;
 
 /// <summary>
 /// Most general nominally closed Duration family.
-/// C and T describe the effective coordinate and numeric carrier.
-/// SELF describes the nominal type that arithmetic preserves.
+/// SELF is first because nominal closure is the primary type being defined;
+/// C and T describe its coordinate basis and numeric carrier.
 /// </summary>
-public abstract class Duration<C, T, SELF> : Q<Dimension.Duration, C, T>
-    where C : Coordinate<Dimension.Duration>
+public abstract class Duration<SELF, C, T> : Q<M.Duration, C, T>
+    where SELF : Duration<SELF, C, T>
+    where C : Coordinate<M.Duration>
     where T : INumber<T>
-    where SELF : Duration<C, T, SELF>
 {
     private static readonly Func<T, SELF> Reconstruct = IL.Ctor<T, SELF>();
 
-    protected Duration(T value) =>
-        Value = value;
-
+    protected Duration(T value) => Value = value;
     public T Value { get; }
 
-    public SELF Add<RIGHT_C, RIGHT_T, RIGHT_SELF>(
-        Duration<RIGHT_C, RIGHT_T, RIGHT_SELF> right)
-        where RIGHT_C : Coordinate<Dimension.Duration>
-        where RIGHT_T : INumber<RIGHT_T>
-        where RIGHT_SELF : Duration<RIGHT_C, RIGHT_T, RIGHT_SELF> =>
+    public SELF Add<RIGHT_SELF, RIGHT_C, RIGHT_T>(Duration<RIGHT_SELF, RIGHT_C, RIGHT_T> right)
+        where RIGHT_SELF : Duration<RIGHT_SELF, RIGHT_C, RIGHT_T>
+        where RIGHT_C : Coordinate<M.Duration>
+        where RIGHT_T : INumber<RIGHT_T> =>
         Reconstruct(Value + ConvertToLeft(right));
 
-    public SELF Subtract<RIGHT_C, RIGHT_T, RIGHT_SELF>(
-        Duration<RIGHT_C, RIGHT_T, RIGHT_SELF> right)
-        where RIGHT_C : Coordinate<Dimension.Duration>
-        where RIGHT_T : INumber<RIGHT_T>
-        where RIGHT_SELF : Duration<RIGHT_C, RIGHT_T, RIGHT_SELF> =>
+    public SELF Subtract<RIGHT_SELF, RIGHT_C, RIGHT_T>(Duration<RIGHT_SELF, RIGHT_C, RIGHT_T> right)
+        where RIGHT_SELF : Duration<RIGHT_SELF, RIGHT_C, RIGHT_T>
+        where RIGHT_C : Coordinate<M.Duration>
+        where RIGHT_T : INumber<RIGHT_T> =>
         Reconstruct(Value - ConvertToLeft(right));
 
-    private static T ConvertToLeft<RIGHT_C, RIGHT_T, RIGHT_SELF>(
-        Duration<RIGHT_C, RIGHT_T, RIGHT_SELF> right)
-        where RIGHT_C : Coordinate<Dimension.Duration>
+    private static T ConvertToLeft<RIGHT_SELF, RIGHT_C, RIGHT_T>(Duration<RIGHT_SELF, RIGHT_C, RIGHT_T> right)
+        where RIGHT_SELF : Duration<RIGHT_SELF, RIGHT_C, RIGHT_T>
+        where RIGHT_C : Coordinate<M.Duration>
         where RIGHT_T : INumber<RIGHT_T>
-        where RIGHT_SELF : Duration<RIGHT_C, RIGHT_T, RIGHT_SELF>
     {
         var rightValue = T.CreateChecked(right.Value);
-        var rightScale = T.CreateChecked(RIGHT_C.Scale);
-        var leftScale = T.CreateChecked(C.Scale);
-
+        var rightScale = T.CreateChecked(RIGHT_C.ReferenceScale);
+        var leftScale = T.CreateChecked(C.ReferenceScale);
         return rightValue * rightScale / leftScale;
     }
 }
 
-/// <summary>
-/// VSlices recommendation: Seconds is the default Duration coordinate.
-/// Carrier and nominal closure remain free.
-/// </summary>
-public abstract class Duration<T, SELF> : Duration<Seconds, T, SELF>
-    where T : INumber<T>
-    where SELF : Duration<T, SELF>
-{
-    protected Duration(T value) : base(value)
-    {
-    }
-}
-
-/// <summary>
-/// Recommended Duration with only the numeric carrier left open.
-/// </summary>
-public class Duration<T> : Duration<T, Duration<T>>
+public abstract class Duration<SELF, T> : Duration<SELF, Seconds, T>
+    where SELF : Duration<SELF, T>
     where T : INumber<T>
 {
-    public Duration(T value) : base(value)
-    {
-    }
+    protected Duration(T value) : base(value) { }
 }
 
-/// <summary>
-/// Fully recommended Duration: Seconds + double.
-/// </summary>
-public sealed class vDuration : Duration<double, vDuration>
+public class Duration<T> : Duration<Duration<T>, T>
+    where T : INumber<T>
 {
-    public vDuration(double value) : base(value)
-    {
-    }
+    public Duration(T value) : base(value) { }
 }
 
-/// <summary>
-/// C# 14 extension operators expose Duration algebra while keeping conversion policy in Duration.
-/// Results are left-biased in coordinate, carrier, and nominal SELF.
-/// </summary>
+public sealed class vDuration : Duration<vDuration, double>
+{
+    public vDuration(double value) : base(value) { }
+}
+
 public static class DurationOperators
 {
-    extension<LEFT_C, LEFT_T, LEFT_SELF, RIGHT_C, RIGHT_T, RIGHT_SELF>(
-        Duration<LEFT_C, LEFT_T, LEFT_SELF>)
-        where LEFT_C : Coordinate<Dimension.Duration>
+    extension<LEFT_SELF, LEFT_C, LEFT_T, RIGHT_SELF, RIGHT_C, RIGHT_T>(Duration<LEFT_SELF, LEFT_C, LEFT_T>)
+        where LEFT_SELF : Duration<LEFT_SELF, LEFT_C, LEFT_T>
+        where LEFT_C : Coordinate<M.Duration>
         where LEFT_T : INumber<LEFT_T>
-        where LEFT_SELF : Duration<LEFT_C, LEFT_T, LEFT_SELF>
-        where RIGHT_C : Coordinate<Dimension.Duration>
+        where RIGHT_SELF : Duration<RIGHT_SELF, RIGHT_C, RIGHT_T>
+        where RIGHT_C : Coordinate<M.Duration>
         where RIGHT_T : INumber<RIGHT_T>
-        where RIGHT_SELF : Duration<RIGHT_C, RIGHT_T, RIGHT_SELF>
     {
         public static LEFT_SELF operator +(
-            Duration<LEFT_C, LEFT_T, LEFT_SELF> left,
-            Duration<RIGHT_C, RIGHT_T, RIGHT_SELF> right) =>
-            left.Add(right);
+            Duration<LEFT_SELF, LEFT_C, LEFT_T> left,
+            Duration<RIGHT_SELF, RIGHT_C, RIGHT_T> right) => left.Add(right);
 
         public static LEFT_SELF operator -(
-            Duration<LEFT_C, LEFT_T, LEFT_SELF> left,
-            Duration<RIGHT_C, RIGHT_T, RIGHT_SELF> right) =>
-            left.Subtract(right);
+            Duration<LEFT_SELF, LEFT_C, LEFT_T> left,
+            Duration<RIGHT_SELF, RIGHT_C, RIGHT_T> right) => left.Subtract(right);
     }
 }
