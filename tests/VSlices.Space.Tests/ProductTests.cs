@@ -1,4 +1,7 @@
 using VSlices.Space.Quantities;
+using VSlices.Space.Quantities.Abstract;
+using VSlices.Space.Quantities.Algebra;
+using VSlices.Space.Quantities.Derived;
 using static VSlices.Space.Quantities.Conversions;
 
 namespace VSlices.Space.Tests;

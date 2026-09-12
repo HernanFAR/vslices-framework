@@ -1,50 +1,4 @@
-using System.Numerics;
-
-namespace VSlices.Space.Quantities;
-
-/// <summary>
-/// Identifies a dimensional quantity family.
-/// </summary>
-public abstract class Dimension
-{
-    private Dimension()
-    {
-    }
-
-    public sealed class Mass : Dimension
-    {
-        private Mass()
-        {
-        }
-    }
-
-    public sealed class Length : Dimension
-    {
-        private Length()
-        {
-        }
-    }
-
-    public sealed class Duration : Dimension
-    {
-        private Duration()
-        {
-        }
-    }
-
-    /// <summary>
-    /// Structural dimensional multiplication. The operands remain visible in
-    /// the type; no semantic interpretation such as Area or Energy is implied.
-    /// </summary>
-    public sealed class Product<LEFT, RIGHT> : Dimension
-        where LEFT : Dimension
-        where RIGHT : Dimension
-    {
-        private Product()
-        {
-        }
-    }
-}
+namespace VSlices.Space.Quantities.Abstract;
 
 /// <summary>
 /// An effective coordinate belonging to a dimensional family.
@@ -140,15 +94,4 @@ public readonly struct ProductCoordinate<LEFT_F, LEFT_C, RIGHT_F, RIGHT_C> :
     where RIGHT_C : Coordinate<RIGHT_F>
 {
     public static decimal Scale => LEFT_C.Scale * RIGHT_C.Scale;
-}
-
-/// <summary>
-/// Quantity-family membership, effective coordinate, and numeric carrier.
-/// </summary>
-public interface Q<F, C, T>
-    where F : Dimension
-    where C : Coordinate<F>
-    where T : INumberBase<T>
-{
-    T Value { get; }
 }

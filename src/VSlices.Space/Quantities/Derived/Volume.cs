@@ -1,4 +1,6 @@
 using System.Numerics;
+using VSlices.Space.Quantities.Abstract;
+using VSlices.Space.Quantities.Algebra;
 
 namespace VSlices.Space.Quantities;
 
