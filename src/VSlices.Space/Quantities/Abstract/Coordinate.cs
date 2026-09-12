@@ -1,97 +1,79 @@
 namespace VSlices.Space.Quantities.Abstract;
 
 /// <summary>
-/// An effective coordinate belonging to a dimensional family.
-/// Scale is expressed relative to the family's current canonical coordinate.
-/// A coordinate may already encode what would otherwise be modeled as a unit
-/// plus a multiplicative prefix.
+/// Primitive measurement basis for a quantity value.
+///
+/// ReferenceScale is oriented as:
+///
+///   1 coordinate unit = ReferenceScale * canonical reference unit
+///
+/// The current canonical references are fixed by VSlices and are not configurable:
+/// Mass -> Gram, Length -> Meter, Duration -> Second.
 /// </summary>
-public interface Coordinate<F>
-    where F : Dimension
+public interface Coordinate
 {
-    static abstract decimal Scale { get; }
-}
-
-public readonly struct Grams : Coordinate<Dimension.Mass>
-{
-    public static decimal Scale => 1m;
-}
-
-public readonly struct Kilograms : Coordinate<Dimension.Mass>
-{
-    public static decimal Scale => 1_000m;
-}
-
-public readonly struct Micrograms : Coordinate<Dimension.Mass>
-{
-    public static decimal Scale => 0.000001m;
-}
-
-public readonly struct Pounds : Coordinate<Dimension.Mass>
-{
-    public static decimal Scale => 453.59237m;
-}
-
-public readonly struct Meters : Coordinate<Dimension.Length>
-{
-    public static decimal Scale => 1m;
-}
-
-public readonly struct Kilometers : Coordinate<Dimension.Length>
-{
-    public static decimal Scale => 1_000m;
-}
-
-public readonly struct Micrometers : Coordinate<Dimension.Length>
-{
-    public static decimal Scale => 0.000001m;
-}
-
-public readonly struct Feet : Coordinate<Dimension.Length>
-{
-    public static decimal Scale => 0.3048m;
-}
-
-public readonly struct Seconds : Coordinate<Dimension.Duration>
-{
-    public static decimal Scale => 1m;
-}
-
-public readonly struct Minutes : Coordinate<Dimension.Duration>
-{
-    public static decimal Scale => 60m;
-}
-
-public readonly struct Microseconds : Coordinate<Dimension.Duration>
-{
-    public static decimal Scale => 0.000001m;
+    static abstract decimal ReferenceScale { get; }
 }
 
 /// <summary>
-/// Effective coordinate for a homogeneous product whose operands were first
-/// converged to one shared base coordinate C. The algebraic shape lives in the
-/// composed Dimension; C names the base coordinate used to express it.
+/// Declares the primitive magnitude family to which a coordinate belongs.
+/// Composed magnitudes may reuse a primitive coordinate basis without manufacturing
+/// synthetic coordinates such as SquaredKilometers or CubicMeters.
 /// </summary>
-public readonly struct ProductCoordinate<LEFT_F, RIGHT_F, C> :
-    Coordinate<Dimension.Product<LEFT_F, RIGHT_F>>
-    where LEFT_F : Dimension
-    where RIGHT_F : Dimension
-    where C : Coordinate<LEFT_F>
+public interface Coordinate<F> : Coordinate
+    where F : M;
+
+public readonly struct Grams : Coordinate<M.Mass>
 {
-    public static decimal Scale => C.Scale * C.Scale;
+    public static decimal ReferenceScale => 1m;
 }
 
-/// <summary>
-/// Effective coordinate produced by multiplying quantities whose dimensional
-/// families cannot share one coordinate basis. Both operand coordinates remain
-/// explicit because neither can be converted into the other.
-/// </summary>
-public readonly struct ProductCoordinate<LEFT_F, LEFT_C, RIGHT_F, RIGHT_C> :
-    Coordinate<Dimension.Product<LEFT_F, RIGHT_F>>
-    where LEFT_F : Dimension
-    where LEFT_C : Coordinate<LEFT_F>
-    where RIGHT_F : Dimension
-    where RIGHT_C : Coordinate<RIGHT_F>
+public readonly struct Kilograms : Coordinate<M.Mass>
 {
-    public static decimal Scale => LEFT_C.Scale * RIGHT_C.Scale;
+    public static decimal ReferenceScale => 1_000m;
+}
+
+public readonly struct Micrograms : Coordinate<M.Mass>
+{
+    public static decimal ReferenceScale => 0.000001m;
+}
+
+public readonly struct Pounds : Coordinate<M.Mass>
+{
+    public static decimal ReferenceScale => 453.59237m;
+}
+
+public readonly struct Meters : Coordinate<M.Length>
+{
+    public static decimal ReferenceScale => 1m;
+}
+
+public readonly struct Kilometers : Coordinate<M.Length>
+{
+    public static decimal ReferenceScale => 1_000m;
+}
+
+public readonly struct Micrometers : Coordinate<M.Length>
+{
+    public static decimal ReferenceScale => 0.000001m;
+}
+
+public readonly struct Feet : Coordinate<M.Length>
+{
+    public static decimal ReferenceScale => 0.3048m;
+}
+
+public readonly struct Seconds : Coordinate<M.Duration>
+{
+    public static decimal ReferenceScale => 1m;
+}
+
+public readonly struct Minutes : Coordinate<M.Duration>
+{
+    public static decimal ReferenceScale => 60m;
+}
+
+public readonly struct Microseconds : Coordinate<M.Duration>
+{
+    public static decimal ReferenceScale => 0.000001m;
 }
