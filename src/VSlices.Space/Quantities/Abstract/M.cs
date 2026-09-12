@@ -46,11 +46,11 @@ public abstract class M
     }
 
     /// <summary>
-    /// Structural exponentiation of a magnitude. The exponent vocabulary is intentionally
-    /// left open until Power is pressured by production cases.
+    /// Structural exponentiation of a magnitude.
     /// </summary>
     public sealed class Pow<BASE, EXPONENT> : M
         where BASE : M
+        where EXPONENT : Exponent
     {
         private Pow() { }
     }
