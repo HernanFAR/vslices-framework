@@ -73,6 +73,11 @@ public readonly struct Minutes : Coordinate<M.Duration>
     public static decimal ReferenceScale => 60m;
 }
 
+public readonly struct Hours : Coordinate<M.Duration>
+{
+    public static decimal ReferenceScale => 3_600m;
+}
+
 public readonly struct Microseconds : Coordinate<M.Duration>
 {
     public static decimal ReferenceScale => 0.000001m;

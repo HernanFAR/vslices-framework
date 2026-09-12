@@ -21,4 +21,11 @@ public static partial class Conversions
         where C : Coordinate<M.Length>
         where T : INumber<T> =>
         new(product);
+
+    public static Speed<LENGTH_C, DURATION_C, T> speed<LENGTH_C, DURATION_C, T>(
+        Quotient<M.Length, LENGTH_C, M.Duration, DURATION_C, T> quotient)
+        where LENGTH_C : Coordinate<M.Length>
+        where DURATION_C : Coordinate<M.Duration>
+        where T : INumber<T> =>
+        new(quotient);
 }
